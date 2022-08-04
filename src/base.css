@@ -8,6 +8,10 @@
   margin-left: calc(-.5 * var(--bs-gutter-x));
 }
 
+.mt-2 {
+  margin-top: 0.5rem!important;
+}
+
 .mt-3 {
   margin-top: 1rem!important;
 }
@@ -19,6 +23,13 @@
 .col-6 {
   width: 50%;
 }
+
+.col-12 {
+  width: 100%;
+}
+
+
+
 .col-auto {
   flex: 1 1 auto;
   width: auto;
@@ -69,8 +80,46 @@
   width: 90%;
 }
 
+.btn {
+  color: white;
+  font-weight: bold;
+  transition: all 0.1s ease-in-out;
+}
+
 .btn.btn-primary {
   color: white;
   font-weight: bold;
   background: deepskyblue;
+}
+
+
+.btn-secondary {
+  color: white;
+  font-weight: bold;
+  background: rgba(0,0,0,0.3);
+  transition: all 0.1s ease-in-out;
+}
+
+
+.btn-secondary:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+
+.btn-danger {
+  color: white;
+  font-weight: bold;
+  border: 2px solid rgba(255, 0, 0, 0.3);
+  background: transparent;
+  transition: all 0.1s ease-in-out;
+}
+
+
+.btn-danger:hover {
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  background: rgba(255, 0, 0, 0.2);
+}
+
+.btn-settings {
+  padding: 0.75rem 0.75rem;
 }

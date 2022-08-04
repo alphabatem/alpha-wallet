@@ -3,10 +3,8 @@ import {Transaction} from "@solana/web3.js";
 import {web3} from "@project-serum/anchor";
 
 export class JupAg {
-
   USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
   SOL_MINT = "So11111111111111111111111111111111111111112";
-  SHDW_MINT = "SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y";
 
   client
 

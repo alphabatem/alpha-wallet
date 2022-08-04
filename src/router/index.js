@@ -2,12 +2,23 @@ import TokenView from "../views/TokenView.js";
 import NFTView from "../views/NFTView.js";
 import TransferView from "../views/TransferView.js";
 import SettingsView from "../views/SettingsView.js";
+import LanguageView from "../views/settings/LanguageView";
+import TrustedAppsView from "../views/settings/TrustedAppsView";
+import RPCSelectView from "../views/settings/RPCSelectView";
+import LockTimeoutView from "../views/settings/LockTimeoutView";
+import DefaultExplorerView from "../views/settings/DefaultExplorerView";
 
 const routes = [
   {hash: "tokens", view: TokenView},
   {hash: "nft", view: NFTView},
   {hash: "transfer", view: TransferView},
-  {hash: "settings", view: SettingsView}
+  {hash: "settings", view: SettingsView},
+
+  {hash: "settings/language", view: LanguageView},
+  {hash: "settings/trusted_apps", view: TrustedAppsView},
+  {hash: "settings/rpc", view: RPCSelectView},
+  {hash: "settings/lock_timeout", view: LockTimeoutView},
+  {hash: "settings/default_explorer", view: DefaultExplorerView},
 ]
 
 export class Router {
@@ -22,7 +33,7 @@ export class Router {
   onNavigate(hash = "tokens") {
     console.log("onNavigate", hash)
     let match = routes.find(potentialMatch => {
-      return hash.match(potentialMatch.hash)
+      return hash === potentialMatch.hash
     });
     console.log("Match", match)
 
