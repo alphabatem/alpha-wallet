@@ -11,10 +11,12 @@ export class Manager {
   }
 
   configure(ctx) {
+    console.log("setting ctx", ctx)
     this.ctx = ctx
   }
 
   getManager(id) {
+    console.log("Getting mgr", this.ctx)
     return this.ctx.getManager(id)
   }
 

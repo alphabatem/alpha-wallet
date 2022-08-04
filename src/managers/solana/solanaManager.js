@@ -1,22 +1,9 @@
-import {Manager} from "./manager";
-import {SolanaRPC} from "../chains/solanaRpc";
+import {Manager} from "../manager";
+import {SolanaRPC} from "../../chains/solanaRpc";
 
 export class SolanaManager extends Manager {
 
   _rpc
-
-  solBalance = 0
-
-  _tokens = {
-    staked: {},
-    liquid: {},
-  }
-
-  _nfts = {
-    staked: {},
-    listed: {},
-    liquid: {},
-  }
 
   constructor(ctx, store) {
     super(ctx, store);
@@ -24,7 +11,6 @@ export class SolanaManager extends Manager {
     //Get config & load rpc settings
     this.store.getConfig().then(cfg => {
       this._rpc = new SolanaRPC(cfg.rpcUrl, cfg.commitment)
-      this.onConnected()
     }).catch(e => {
       console.error("getConfig err", e)
     })
@@ -34,11 +20,11 @@ export class SolanaManager extends Manager {
     return SOLANA_MANAGER
   }
 
-  onConnected() {
-
+  rpc() {
+    return this._rpc
   }
 
 
 }
 
-const SOLANA_MANAGER = "solana_mgr"
+export const SOLANA_MANAGER = "solana_mgr"

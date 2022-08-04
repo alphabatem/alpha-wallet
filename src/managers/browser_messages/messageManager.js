@@ -1,20 +1,10 @@
-import {SolanaRPC} from "./solanaRpc";
+import {Manager} from "../manager";
 
-export class SolanaAdapter {
-  walletStore
-  rpc
+export class MessageManager extends Manager {
 
-  constructor(storage) {
-    this.walletStore = storage
-
-    //Get config & load rpc settings
-    this.walletStore.getConfig().then(cfg => {
-      this.rpc = new SolanaRPC(cfg.rpcUrl, cfg.commitment)
-    }).catch(e => {
-      console.error("getConfig err", e)
-    })
+  id() {
+    return MESSAGE_MGR
   }
-
 
   /**
    * Handle inbound message
@@ -42,17 +32,10 @@ export class SolanaAdapter {
     }
   }
 
-  /**
-   * Return the users Solana Address
-   * @returns {string}
-   */
-  getAddress() {
-    return "0x0"
-  }
-
 
   /**
    * Called upon connect from dapp
+   *
    * @param data
    */
   connect(data) {
@@ -61,6 +44,7 @@ export class SolanaAdapter {
 
   /**
    * Called upon disconnect from dapp
+   *
    * @param data
    */
   disconnect(data) {
@@ -100,10 +84,18 @@ export class SolanaAdapter {
   }
 
 
+  /**
+   * Returns if we can execute message functions or not
+   *
+   * @returns {boolean}
+   * @private
+   */
   _canExecute() {
-    if (this.walletStore.isLocked() || !this.rpc)
+    if (this.walletStore.isLocked())
       return false
 
     return true
   }
 }
+
+export const MESSAGE_MGR = "message_mgr"

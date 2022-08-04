@@ -1,9 +1,10 @@
-import {SolanaAdapter} from "../chains/solanaAdapter";
 import {WalletStorage} from "../storage/walletStorage";
 import {ManagerContext} from "../managers/managerContext";
-import {TokenManager} from "../managers/tokenManager";
-import {NFTManager} from "../managers/nftManager";
-import {SolanaManager} from "../managers/solanaManager";
+import {TokenManager} from "../managers/tokens/tokenManager";
+import {NFTManager} from "../managers/nft/nftManager";
+import {SolanaManager} from "../managers/solana/solanaManager";
+import {MessageManager} from "../managers/browser_messages/messageManager";
+import {PriceManager} from "../managers/pricing/priceManager";
 
 export class AlphaWallet {
 
@@ -11,27 +12,35 @@ export class AlphaWallet {
 
   managerCtx
 
-  //Chain adapters
-  adapters = {
-    "solana": null
-  }
-
   constructor() {
     this.walletStore = new WalletStorage()
   }
 
 
   /**
-   * Returns if the passcode has been set before
-   * @returns {Promise<*|boolean>}
+   * Returns the composition of mangers/plugins to use in the wallet
+   *
+   * @returns {ManagerContext}
    */
-  async isPasscodeSet() {
-    return this.walletStore.isPasscodeSet()
+  newWalletContext() {
+    return new ManagerContext([
+      new SolanaManager(this.walletStore),
+      new MessageManager(this.walletStore),
+      new TokenManager(this.walletStore),
+      new NFTManager(this.walletStore),
+      new PriceManager(),
+      //TODO Transfer manager?
+    ])
   }
 
-
-  isLocked() {
-    return this.walletStore.isLocked()
+  /**
+   * Return a manager from our shared context
+   *
+   * @param id
+   * @returns {*}
+   */
+  getManager(id) {
+    return this.managerCtx.getManager(id)
   }
 
   /**
@@ -48,23 +57,16 @@ export class AlphaWallet {
 
     const cfg = await this.walletStore.getConfig().catch(e => console.log("config fetch err", e))
     const walletAddr = await this.walletStore.getWalletAddr()
-    const walletName = await this.walletStore.getPlain("wallet_name").catch(e => {})
+    const walletName = await this.walletStore.getPlain("wallet_name").catch(e => {
+    })
 
-    this.managerCtx = new ManagerContext([
-      new SolanaManager(this.walletStore),
-      new TokenManager(this.walletStore),
-      new NFTManager(this.walletStore),
-      //TODO Transfer manager?
-    ]).start()
-
-
-    //Event listeners
-    this.adapters["solana"] = new SolanaAdapter(this.walletStore)
+    this.managerCtx = this.newWalletContext()
+    this.managerCtx.start()
 
     setTimeout(() => this.lock(), cfg.lockTimeout)
 
     //Wallet connected
-    this.onConnected({wallet_addr: walletAddr, wallet_name: walletName, cfg})
+    this.onUnlocked({wallet_addr: walletAddr, wallet_name: walletName, cfg})
     return true
   }
 
@@ -104,16 +106,38 @@ export class AlphaWallet {
     sendResponse(response) //TODO check
   }
 
-  getAdapter(adapter) {
-    return this.adapters[adapter]
+  /**
+   * Returns if the passcode has been set before
+   * @returns {Promise<*|boolean>}
+   */
+  async isPasscodeSet() {
+    return this.walletStore.isPasscodeSet()
   }
 
 
+  /**
+   * Return if the wallet is locker or not
+   * @returns Boolean
+   */
+  isLocked() {
+    return this.walletStore.isLocked()
+  }
+
+
+  /**
+   * Return wallet store
+   *
+   * @returns WalletStorage
+   */
   getStore() {
     return this.walletStore
   }
 
-  onConnected(cfg) {
+  /**
+   * Event - Called when wallet is unlocked
+   * @param cfg
+   */
+  onUnlocked(cfg) {
     const e = new CustomEvent("unlock", {detail: cfg})
     document.dispatchEvent(e)
   }

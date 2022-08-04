@@ -8,6 +8,7 @@ export class ManagerContext {
   }
 
   addManager(manager) {
+    console.log("Adding manager", manager.id())
     if (this._managers[manager.id()])
       throw new Error(`manager ${manager.id()} already registered`)
 
@@ -20,8 +21,13 @@ export class ManagerContext {
 
   //Bind managers & call their configure method
   start() {
-    for (let i = 0; i < this._managers.length; i++) {
-      this._managers[i].configure(this)
+
+    const ok = Object.keys(this._managers)
+
+    console.log(`Starting ${ok.length}`)
+    for (let i = 0; i < ok.length; i++) {
+      console.log("Configuring", this._managers[ok[i]].id())
+      this._managers[ok[i]].configure(this)
     }
 
     return this

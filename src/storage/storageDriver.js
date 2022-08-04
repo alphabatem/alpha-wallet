@@ -177,7 +177,6 @@ export class StorageDriver {
       return null
 
     const inp = await this._getLocal(`${this._zonePrivate}.${key}`)
-    console.log("get Inpu", inp)
     return CryptoJS.AES.decrypt(inp, passcode, {format: new AESJsonFormatter()}).toString(CryptoJS.enc.Utf8)
   }
 
@@ -194,7 +193,6 @@ export class StorageDriver {
       return null
 
     const out = CryptoJS.AES.encrypt(value, passcode, {format: new AESJsonFormatter()});
-    console.log("Out", out)
     return this._setLocal(`${this._zonePrivate}.${key}`, out)
   }
 

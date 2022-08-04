@@ -148,3 +148,18 @@
 .btn-enabled {
   border: 2px solid rgba(0, 128, 0, 0.6);
 }
+
+.table {
+  width: 100%;
+}
+
+
+.card {
+  background: rgba(0,0,0,0.2);
+  border-radius: 9px;
+  margin-bottom: 5px;
+}
+
+.card-body {
+  padding: 5px;
+}

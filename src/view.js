@@ -6,9 +6,12 @@ export default class {
 
   document
 
-  constructor(router, wallet) {
+  _data = {}
+
+  constructor(router, wallet, data = {}) {
     this._wallet = wallet;
     this._router = router
+    this._data = data
   }
 
   /**
@@ -67,6 +70,14 @@ export default class {
   }
 
   /**
+   * Returns the view data (if set)
+   * @returns {{}}
+   */
+  getData() {
+    return this._data
+  }
+
+  /**
    * Return a manager from shared context
    * @param manager
    * @returns {*}
@@ -82,5 +93,15 @@ export default class {
    */
   getRouter() {
     return this._router
+  }
+
+  /**
+   * Add a sub view & bind with required items to satisfy interface
+   * @param view
+   * @param data
+   * @returns {*}
+   */
+  addSubView(view, data = {}) {
+    return new view(this._router, this._wallet, data)
   }
 }

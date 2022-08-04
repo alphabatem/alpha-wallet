@@ -126,3 +126,8 @@ body {
   margin-right: 1em;
   font-weight: bold;
 }
+
+.token-img {
+  max-width: 40px;
+  /*max-height: 40px;*/
+}

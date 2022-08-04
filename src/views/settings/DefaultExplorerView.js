@@ -1,4 +1,4 @@
-import AbstractView from "../view.js";
+import AbstractView from "../../view.js";
 
 export default class DefaultExplorerView extends AbstractView {
   constructor(router,wallet) {

@@ -63,6 +63,9 @@ const common = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     //Add override for process
     new webpack.DefinePlugin({
       process: {env: {}}
