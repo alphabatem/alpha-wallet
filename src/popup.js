@@ -2,74 +2,33 @@
 
 import './popup.css';
 import './base.css';
+import {Router} from "./router";
 
 (function () {
-  function setupCounter(initialValue = 0) {
-    document.getElementById('counter').innerHTML = initialValue;
+  const router = new Router()
 
-    document.getElementById('incrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'INCREMENT',
-      });
-    });
+  function beforeMount() {
+    router.bind(document)
 
-    document.getElementById('decrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'DECREMENT',
-      });
-    });
+    mounted() //Call next step
   }
 
-  function updateCounter({ type }) {
-    counterStorage.get((count) => {
-      let newCount;
-
-      if (type === 'INCREMENT') {
-        newCount = count + 1;
-      } else if (type === 'DECREMENT') {
-        newCount = count - 1;
-      } else {
-        newCount = count;
-      }
-
-      counterStorage.set(newCount, () => {
-        document.getElementById('counter').innerHTML = newCount;
-
-        // Communicate with content script of
-        // active tab by sending a message
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          const tab = tabs[0];
-
-          chrome.tabs.sendMessage(
-            tab.id,
-            {
-              type: 'COUNT',
-              payload: {
-                count: newCount,
-              },
-            },
-            (response) => {
-              console.log('Current count value passed to contentScript file');
-            }
-          );
-        });
-      });
-    });
-  }
-
-  function restoreWallet() {
+  function mounted() {
     // Restore count value
-    counterStorage.get((count) => {
-      if (typeof count === 'undefined') {
-        // Set counter value as 0
-        counterStorage.set(0, () => {
-          setupCounter(0);
-        });
-      } else {
-        setupCounter(count);
-      }
-    });
+    // counterStorage.get((count) => {
+    //   if (typeof count === 'undefined') {
+    //     // Set counter value as 0
+    //     counterStorage.set(0, () => {
+    //       setupCounter(0);
+    //     });
+    //   } else {
+    //     setupCounter(count);
+    //   }
+    // });
+
+    router.onNavigate()
+    console.log("Router bound")
   }
 
-  document.addEventListener('DOMContentLoaded', restoreWallet);
+  document.addEventListener('DOMContentLoaded', beforeMount);
 })();

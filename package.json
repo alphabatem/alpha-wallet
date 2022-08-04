@@ -19,6 +19,20 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.2.2",
+    "@project-serum/anchor": "^0.25.0",
+    "assert": "^2.0.0",
+    "axios": "^0.27.2",
     "crypto-js": "^4.1.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }

@@ -1,4 +1,19 @@
+import {SolanaRPC} from "./solanaRpc";
+
 export class SolanaAdapter {
+  walletStore
+  rpc
+
+  constructor(storage) {
+    this.walletStore = storage
+
+    //Get config & load rpc settings
+    this.walletStore.getConfig().then(cfg => {
+      this.rpc = new SolanaRPC(cfg.rpcUrl, cfg.commitment)
+    }).catch(e => {
+      console.error("getConfig err", e)
+    })
+  }
 
 
   /**
@@ -8,6 +23,9 @@ export class SolanaAdapter {
    * @returns {*}
    */
   onMessage(request) {
+    if (!this._canExecute())
+      return false
+
     switch (request.method) {
       case "connect":
         return this.connect(request.data)
@@ -81,4 +99,11 @@ export class SolanaAdapter {
     //
   }
 
+
+  _canExecute() {
+    if (this.walletStore.isLocked() || !this.rpc)
+      return false
+
+    return true
+  }
 }

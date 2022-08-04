@@ -1,24 +1,59 @@
 import {StorageDriver} from "./storageDriver";
-import CryptoJS from "crypto-js/aes"
+
+const DEFAULT_CONFIG = {
+    rpcUrl: "https://ssc-dao.genesysgo.net/",
+    commitment: "finalized",
+    lockTimeout: 30 * 60 * 60,
+    explorer: "solscan",
+    language: "en"
+  }
 
 export class WalletStorage extends StorageDriver {
 
   passcode = null;
 
-  constructor(passcode) {
+  constructor() {
     super()
+    this.lock()
+  }
+
+  isLocked() {
+    return this.passcode === null
+  }
+
+  lock() {
+    this.passcode = null
+  }
+
+  unlock(passcode) {
     this.passcode = passcode
   }
 
-
   async getWalletAddr() {
-    const inp = this.getLocal("wallet_addr")
-    return CryptoJS.AES.decrypt(inp, this.passcode)
+    const inp = this.getPrivate("wallet_addr", this.passcode)
   }
 
   async setWalletAddr(walletAddr) {
-    const out = CryptoJS.AES.encrypt(walletAddr, this.passcode);
-    return this.setLocal("wallet_addr", out)
+    return this.setPrivate("wallet_addr", walletAddr, this.passcode)
   }
 
+
+  async getPrivateKey() {
+    return this.getPrivate("private_key", this.passcode)
+  }
+
+  async getConfig() {
+    let cfg = await this.getLocal("config").catch(e => {
+      //
+    })
+
+    if (!cfg)
+      cfg = DEFAULT_CONFIG
+
+    return cfg
+  }
+
+  async setConfig(cfg = DEFAULT_CONFIG) {
+    return this.setLocal("config", cfg)
+  }
 }

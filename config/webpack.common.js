@@ -1,6 +1,7 @@
 'use strict';
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const PATHS = require('./paths');
@@ -61,6 +62,10 @@ const common = {
     // Extract CSS into separate files
     new MiniCssExtractPlugin({
       filename: '[name].css',
+    }),
+    //Add override for process
+    new webpack.DefinePlugin({
+      process: {env: {}}
     }),
   ],
 };

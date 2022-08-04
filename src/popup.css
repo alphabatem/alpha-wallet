@@ -98,3 +98,8 @@ body {
 .footer-link:hover {
   color: white;
 }
+
+
+#app {
+  padding: 10px;
+}

@@ -1,12 +1,47 @@
-import {SolanaAdapter} from "../chains/solana";
+import {SolanaAdapter} from "../chains/solanaAdapter";
+import {WalletStorage} from "../storage/walletStorage";
+import {ManagerContext} from "../managers/managerContext";
+import {TokenManager} from "../managers/tokenManager";
+import {NFTManager} from "../managers/nftManager";
+import {SolanaManager} from "../managers/solanaManager";
+import {Router} from "../router";
 
 export class AlphaWallet {
 
+  router
+
+  walletStore
+
+  managerCtx
+
   //Chain adapters
   adapters = {
-    "solana": new SolanaAdapter()
+    "solana": null
   }
 
+
+  constructor() {
+    this.walletStore = new WalletStorage()
+    this.router = new Router()
+
+    this.managerCtx = new ManagerContext([
+      new SolanaManager(this.walletStore),
+      new TokenManager(this.walletStore),
+      new NFTManager(this.walletStore),
+      //TODO Transfer manager?
+    ]).start()
+
+    //Event listeners
+    this.adapters["solana"] = new SolanaAdapter(this.walletStore)
+  }
+
+  unlock(passcode) {
+    this.walletStore.unlock(passcode)
+  }
+
+  lock() {
+    this.walletStore.lock()
+  }
 
   /**
    * Called from our background script on a page event

@@ -1,3 +1,5 @@
+import CryptoJS from "crypto-js/aes";
+
 export class StorageDriver {
 
   async getSession(key) {
@@ -27,7 +29,7 @@ export class StorageDriver {
   async getLocal(key) {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get([key], function (result) {
-        if (result[key] === undefined) {
+        if (!result[key]) {
           reject();
         } else {
           resolve(result[key]);
@@ -47,4 +49,14 @@ export class StorageDriver {
       });
     });
   };
+
+  async getPrivate(key, passcode) {
+    const inp = this.getLocal(key)
+    return CryptoJS.AES.decrypt(inp, passcode)
+  }
+
+  async setPrivate(key, value, passcode) {
+    const out = CryptoJS.AES.encrypt(value, passcode);
+    return this.setLocal(key, out)
+  }
 }
