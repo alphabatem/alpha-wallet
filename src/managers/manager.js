@@ -16,7 +16,6 @@ export class Manager {
   }
 
   getManager(id) {
-    console.log("Getting mgr", this.ctx)
     return this.ctx.getManager(id)
   }
 

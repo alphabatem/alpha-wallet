@@ -1,7 +1,6 @@
 import {Manager} from "../manager";
 import {SOLANA_MANAGER} from "../solana/solanaManager";
 import {web3} from "@project-serum/anchor";
-import {Metadata} from "@metaplex-foundation/mpl-token-metadata";
 
 export class TokenManager extends Manager {
 
@@ -13,9 +12,6 @@ export class TokenManager extends Manager {
   tokenMetadata = {}
 
   solBalance = 0
-
-  TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s')
-  TOKEN_PROGRAM = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
 
   id() {
     return TOKEN_MGR
@@ -71,16 +67,9 @@ export class TokenManager extends Manager {
    */
   async getLiquidTokens() {
     const walletAddr = await this.store.getWalletAddr()
-
-    const accounts = await this.rpc().getParsedTokenAccountsByOwner(
-      new web3.PublicKey(walletAddr),
-      {
-        programId: new web3.PublicKey(this.TOKEN_PROGRAM),
-      }
-    )
+    const accounts = await this.rpc().getParsedTokenAccountsByOwner(new web3.PublicKey(walletAddr))
 
     console.log("Accounts", accounts)
-    const metadataAccs = {}
 
     for (const a of accounts.value) {
       const acc = a.account.data.parsed
@@ -101,41 +90,11 @@ export class TokenManager extends Manager {
     return this._tokens.liquid
   }
 
-  /**
-   *
-   * @param tokenMint<web3.PublicKey>
-   * @returns {Promise<void>}
-   */
-  async getMetadataPDA(tokenMint) {
-    return (
-      await web3.PublicKey.findProgramAddress(
-        [
-          Buffer.from('metadata'),
-          this.TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-          tokenMint.toBuffer(),
-        ],
-        this.TOKEN_METADATA_PROGRAM_ID,
-      )
-    )[0]
-  }
-
   async getTokenMetadata(tokenMint) {
     if (this.tokenMetadata[tokenMint])
       return this.tokenMetadata[tokenMint]
 
-    const pda = await this.getMetadataPDA(new web3.PublicKey(tokenMint))
-    const data = await this.rpc().getAccountInfo(pda, "finalized")
-    if (!data)
-      return null
-
-    const metadata = Metadata.deserialize(data.data)
-    if (!metadata)
-      return null
-
-    this.tokenMetadata[tokenMint] = metadata[0]
-
-
-
+    this.tokenMetadata[tokenMint] = this.rpc().getTokenMetadata(tokenMint)
     return this.tokenMetadata[tokenMint]
   }
 

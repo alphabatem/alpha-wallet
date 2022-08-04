@@ -6,6 +6,9 @@ export class SolanaRPC {
 
   connection = null
 
+  TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s')
+  TOKEN_PROGRAM = new web3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
+
   constructor(endpoint, commitment) {
     this._startConnection(endpoint, commitment)
   }
@@ -34,17 +37,6 @@ export class SolanaRPC {
     return largestAccountInfo.value.data.parsed.info.owner
   }
 
-  /**
-   * Returns the metadata for a given account
-   *
-   * @param acc
-   * @returns {Promise<*>}
-   */
-  async getMetadata(acc) {
-    const tokenmetaPubkey = await Metadata.getPDA(new web3.PublicKey(acc));
-    return Metadata.load(this.connection, tokenmetaPubkey);
-  }
-
   getParsedAccountInfo(tokenAccountAddr, commitment = "finalized") {
     return this.connection.getParsedAccountInfo(tokenAccountAddr, commitment)
   }
@@ -53,11 +45,58 @@ export class SolanaRPC {
     return this.connection.getAccountInfo(tokenAccountAddr, commitment)
   }
 
-  getParsedTokenAccountsByOwner(tokenAccountAddr, filter) {
+  getParsedTokenAccountsByOwner(tokenAccountAddr, filter = {
+    programId: this.TOKEN_PROGRAM,
+  }) {
     return this.connection.getParsedTokenAccountsByOwner(tokenAccountAddr, filter)
   }
 
+  /**
+   * Returns mutliple account info data
+   * @param tokens
+   * @param commitment
+   * @returns {*}
+   */
   getMultipleAccountsInfo(tokens, commitment = "finalized") {
     return this.connection.getMultipleAccountsInfo(tokens, commitment)
+  }
+
+
+  /**
+   * Returns the associated metadata for a given mint
+   *
+   * @param tokenMint
+   * @returns {Promise<Metadata|null>}
+   */
+  async getTokenMetadata(tokenMint) {
+    const pda = await this.getMetadataPDA(new web3.PublicKey(tokenMint))
+    const data = await this.connection.getAccountInfo(pda, "finalized")
+    if (!data)
+      return null
+
+    const metadata = Metadata.deserialize(data.data)
+    if (!metadata)
+      return null
+
+    return metadata[0]
+  }
+
+
+  /**
+   *
+   * @param tokenMint<web3.PublicKey>
+   * @returns {Promise<void>}
+   */
+  async getMetadataPDA(tokenMint) {
+    return (
+      await web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from('metadata'),
+          this.TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+          tokenMint.toBuffer(),
+        ],
+        this.TOKEN_METADATA_PROGRAM_ID,
+      )
+    )[0]
   }
 }

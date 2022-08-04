@@ -8,6 +8,10 @@
   margin-left: calc(-.5 * var(--bs-gutter-x));
 }
 
+.m-1 {
+  margin: 0.25rem !important;
+}
+
 .mt-2 {
   margin-top: 0.5rem!important;
 }
