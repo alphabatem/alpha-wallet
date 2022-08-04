@@ -167,3 +167,9 @@
 .card-body {
   padding: 5px;
 }
+
+
+.img-fluid {
+  width: 100%;
+  border-radius: 9px;
+}

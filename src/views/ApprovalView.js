@@ -23,4 +23,9 @@ export default class ApprovalView extends AbstractView {
     document.getElementById("approve").addEventListener("click", this.onApprove)
     document.getElementById("reject").addEventListener("click", this.onReject)
   }
+
+  async onDismount() {
+    document.getElementById("approve").removeEventListener("click", this.onApprove)
+    document.getElementById("reject").removeEventListener("click", this.onReject)
+  }
 }

@@ -52,10 +52,10 @@ export default class TokenView extends AbstractView {
 
     <div class="row mt-3 mb-3">
       <div class="col-6">
-        <button class="btn btn-primary btn-block">Deposit</button>
+        <button data-link="transfer/deposit" class="btn btn-primary btn-block">Deposit</button>
       </div>
       <div class="col-6">
-        <button class="btn btn-primary btn-block">Send</button>
+        <button data-link="transfer/send" class="btn btn-primary btn-block">Send</button>
       </div>
     </div>`
 

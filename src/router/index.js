@@ -11,12 +11,20 @@ import PluginsView from "../views/settings/PluginsView";
 import LoginView from "../views/LoginView";
 import SetPasscodeView from "../views/SetPasscodeView";
 import WalletNameView from "../views/settings/WalletNameView";
+import ComingSoonView from "../views/ComingSoonView";
+import NFTShowView from "../views/NFTShowView";
 
 const routes = [
   {hash: "login", view: LoginView},
   {hash: "tokens", view: TokenView},
   {hash: "nft", view: NFTView},
+  {hash: "nft/show", view: NFTShowView},
+
   {hash: "transfer", view: TransferView},
+  {hash: "transfer/deposit", view: ComingSoonView},
+  {hash: "transfer/send", view: ComingSoonView},
+
+
   {hash: "settings", view: SettingsView},
   {hash: "set_passcode", view: SetPasscodeView},
 
@@ -43,12 +51,12 @@ export class Router {
     this.wallet = wallet
   }
 
-  navigateTo = hash => {
+  navigateTo(hash, data = {}) {
     history.pushState(null, null, hash);
-    return this.onNavigate(hash);
+    return this.onNavigate(hash, data);
   };
 
-  onNavigate(hash = "login") {
+  onNavigate(hash = "login", data = {}) {
     if (this.wallet.isLocked())
       hash = "login"
 
@@ -61,11 +69,11 @@ export class Router {
       match = routes[0];
     }
 
-    return this.updateView(match)
+    return this.updateView(match, data)
   }
 
-  async updateView(match) {
-    this.currentView = new match.view(this, this.wallet);
+  async updateView(match, data = {}) {
+    this.currentView = new match.view(this, this.wallet, data);
     this.appContainer.innerHTML = await this.currentView.getHtml();
 
     await this.currentView.onMounted(this.appContainer);
