@@ -10,6 +10,7 @@ import DefaultExplorerView from "../views/settings/DefaultExplorerView";
 import PluginsView from "../views/settings/PluginsView";
 import LoginView from "../views/LoginView";
 import SetPasscodeView from "../views/SetPasscodeView";
+import WalletNameView from "../views/settings/WalletNameView";
 
 const routes = [
   {hash: "login", view: LoginView},
@@ -19,8 +20,11 @@ const routes = [
   {hash: "settings", view: SettingsView},
   {hash: "set_passcode", view: SetPasscodeView},
 
-  {hash: "settings/language", view: LanguageView},
+  //Used to set wallet_addr prior to wallet creation implemented
+  {hash: "settings/wallet_name", view: WalletNameView},
+
   {hash: "settings/trusted_apps", view: TrustedAppsView},
+  {hash: "settings/language", view: LanguageView},
   {hash: "settings/rpc", view: RPCSelectView},
   {hash: "settings/lock_timeout", view: LockTimeoutView},
   {hash: "settings/default_explorer", view: DefaultExplorerView},

@@ -7,8 +7,10 @@ export default class TokenView extends AbstractView {
   }
 
   async getHtml() {
+    const walletName = await this.getWallet().getStore().getPlain("wallet_name").catch(e => {})
+
     return `
-    <h5 class="text-start mb-3">Welcome Back, Cloakd</h5>
+    <h5 class="text-start mb-3">Welcome Back, ${walletName}!</h5>
 
     <h1>$0,000.00</h1>
     <h3>-$999.99</h3>

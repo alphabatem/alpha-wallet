@@ -24,12 +24,12 @@ body {
 }
 
 .topnav {
-  padding-top: 5px;
+  padding: 5px;
   display: flex;
   align-items: stretch;
   justify-content: space-evenly;
   flex-direction: row;
-  text-align: center;
+  text-align: left;
   flex-wrap: nowrap;
   align-content: center;
 }
@@ -119,4 +119,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.connection_status {
+  float: right;
+  margin-right: 1em;
+  font-weight: bold;
 }

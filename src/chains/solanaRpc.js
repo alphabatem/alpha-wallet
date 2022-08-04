@@ -14,6 +14,7 @@ export class SolanaRPC {
 
   _startConnection(endpoint = "https://ssc-dao.genesysgo.net/", commitment = "finalized") {
     this.connection = new web3.Connection(endpoint, commitment)
+    console.log("Connected to", endpoint)
   }
 
 

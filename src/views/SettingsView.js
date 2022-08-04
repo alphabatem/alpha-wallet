@@ -11,6 +11,7 @@ export default class SettingsView extends AbstractView {
             <h1>Settings</h1>
 
             <div class="row mt-2">
+            <div class="col-12"><button data-link="settings/wallet_name" class="btn btn-secondary btn-block btn-settings mt-2">Wallet</button></div>
             <div class="col-12"><button data-link="settings/language" class="btn btn-secondary btn-block btn-settings mt-2">Language</button></div>
             <div class="col-12"><button data-link="settings/trusted_apps" class="btn btn-secondary btn-block btn-settings mt-2">Trusted Apps</button></div>
             <div class="col-12"><button data-link="settings/rpc" class="btn btn-secondary btn-block btn-settings mt-2">RPC</button></div>

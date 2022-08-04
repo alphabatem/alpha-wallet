@@ -16,10 +16,10 @@ export class AlphaWallet {
     "solana": null
   }
 
-
   constructor() {
     this.walletStore = new WalletStorage()
   }
+
 
   /**
    * Returns if the passcode has been set before
@@ -47,7 +47,8 @@ export class AlphaWallet {
     console.log("Wallet unlocked", new Date())
 
     const cfg = await this.walletStore.getConfig().catch(e => console.log("config fetch err", e))
-    console.log("Config", cfg)
+    const walletAddr = await this.walletStore.getWalletAddr()
+    const walletName = await this.walletStore.getPlain("wallet_name").catch(e => {})
 
     this.managerCtx = new ManagerContext([
       new SolanaManager(this.walletStore),
@@ -61,6 +62,9 @@ export class AlphaWallet {
     this.adapters["solana"] = new SolanaAdapter(this.walletStore)
 
     setTimeout(() => this.lock(), cfg.lockTimeout)
+
+    //Wallet connected
+    this.onConnected({wallet_addr: walletAddr, wallet_name: walletName, cfg})
     return true
   }
 
@@ -72,6 +76,8 @@ export class AlphaWallet {
   async lock() {
     console.log("Locking wallet", new Date())
     this.walletStore.lock()
+
+    this.passcode = null
 
     //Clear active plugins
     this.managerCtx = null
@@ -105,5 +111,10 @@ export class AlphaWallet {
 
   getStore() {
     return this.walletStore
+  }
+
+  onConnected(cfg) {
+    const e = new CustomEvent("unlock", {detail: cfg})
+    document.dispatchEvent(e)
   }
 }

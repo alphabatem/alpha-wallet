@@ -1,4 +1,5 @@
 import CryptoJS from "crypto-js";
+import {AESJsonFormatter} from "./AESJsonFormatter";
 
 export class StorageDriver {
 
@@ -43,7 +44,7 @@ export class StorageDriver {
     return new Promise((resolve, reject) => {
       chrome.storage.session.get([key], function (result) {
         if (result[key] === undefined) {
-          reject(new Error("key not found"));
+          reject(new Error(`key not found ${key}`));
         } else {
           resolve(result[key]);
         }
@@ -63,7 +64,7 @@ export class StorageDriver {
     return new Promise((resolve, reject) => {
       chrome.storage.session.set({key: value}, function (result) {
         if (result[key] === undefined) {
-          reject(new Error("key not found"));
+          reject(new Error(`key not found ${key}`));
         } else {
           resolve(result[key]);
         }
@@ -82,7 +83,7 @@ export class StorageDriver {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get([key], function (result) {
         if (!result[key]) {
-          reject(new Error("key not found"));
+          reject(new Error(`key not found ${key}`));
         } else {
           resolve(result[key]);
         }
@@ -175,8 +176,9 @@ export class StorageDriver {
     if (!passcode)
       return null
 
-    const inp = this._getLocal(`${this._zonePrivate}.${key}`)
-    return CryptoJS.AES.decrypt(inp, passcode)
+    const inp = await this._getLocal(`${this._zonePrivate}.${key}`)
+    console.log("get Inpu", inp)
+    return CryptoJS.AES.decrypt(inp, passcode, {format: new AESJsonFormatter()}).toString(CryptoJS.enc.Utf8)
   }
 
   /**
@@ -191,7 +193,8 @@ export class StorageDriver {
     if (!passcode)
       return null
 
-    const out = CryptoJS.AES.encrypt(value, passcode);
+    const out = CryptoJS.AES.encrypt(value, passcode, {format: new AESJsonFormatter()});
+    console.log("Out", out)
     return this._setLocal(`${this._zonePrivate}.${key}`, out)
   }
 
