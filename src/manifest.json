@@ -1,0 +1,29 @@
+{
+  "name": "Alpha Wallet",
+  "author": "@alpha_batem",
+  "version": "0.0.1",
+  "description": "Open Source Non-Custodial Solana Wallet",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "alpha_black.png",
+    "default_title": "AlphaWallet",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {"matches":  ["<all_urls>"], "js": ["content-script.js"]}
+  ],
+  "web_acessible_resources": ["inject-script.js"],
+  "permissions": [
+    "activeTab",
+    "background",
+    "storage"
+  ],
+  "manifest_version": 2,
+  "web_accessible_resources": [
+    "*.js",
+    "*.css"
+  ]
+}

@@ -1,0 +1,100 @@
+/* normalize css starts here */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* normalize css ends here */
+
+html {
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+
+body {
+  width: 350px;
+  height: 500px;
+  font-size: 18px;
+
+  background: #16181a;
+  color: #fcfcfc;
+}
+
+.topnav {
+  padding-top: 5px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-evenly;
+  flex-direction: row;
+  text-align: center;
+  flex-wrap: nowrap;
+  align-content: center;
+}
+
+.topnav div {
+  flex-grow: 1;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+.badge {
+  border-radius: 27px;
+  font-size: 0.7rem;
+  line-height: 0.7rem;
+  padding: 3px;
+  width: fit-content;
+  margin: auto;
+}
+
+.bg-primary {
+  color: white;
+  background: deepskyblue;
+}
+
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+.token-container {
+  height: 100%;
+  /*background: rgba(0, 0, 0, 0.15);*/
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.be-1 {
+  border-right: 1px solid black;
+  cursor: pointer;
+}
+
+.footer-link {
+  color: gray;
+}
+
+.footer-link:hover {
+  color: white;
+}
