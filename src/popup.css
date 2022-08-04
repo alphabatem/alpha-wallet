@@ -77,7 +77,7 @@ body {
 }
 
 .token-container {
-  height: 100%;
+  min-height: 50%;
   /*background: rgba(0, 0, 0, 0.15);*/
   border-radius: 7px;
   display: flex;

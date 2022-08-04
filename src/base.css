@@ -77,7 +77,7 @@
 }
 
 .btn-block {
-  width: 90%;
+  width: 80%;
 }
 
 .btn {
@@ -122,4 +122,13 @@
 
 .btn-settings {
   padding: 0.75rem 0.75rem;
+}
+
+.form-control {
+  width: 80%;
+  padding: 5px;
+  background: rgba(0,0,0,0.2);
+  border: 2px solid white;
+  border-radius: 4px;
+  font-size: 1.1rem;
 }
