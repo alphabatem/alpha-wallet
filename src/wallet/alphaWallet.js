@@ -4,11 +4,8 @@ import {ManagerContext} from "../managers/managerContext";
 import {TokenManager} from "../managers/tokenManager";
 import {NFTManager} from "../managers/nftManager";
 import {SolanaManager} from "../managers/solanaManager";
-import {Router} from "../router";
 
 export class AlphaWallet {
-
-  router
 
   walletStore
 
@@ -22,7 +19,35 @@ export class AlphaWallet {
 
   constructor() {
     this.walletStore = new WalletStorage()
-    this.router = new Router()
+  }
+
+  /**
+   * Returns if the passcode has been set before
+   * @returns {Promise<*|boolean>}
+   */
+  async isPasscodeSet() {
+    return this.walletStore.isPasscodeSet()
+  }
+
+
+  isLocked() {
+    return this.walletStore.isLocked()
+  }
+
+  /**
+   * Attempt to unlock the wallet
+   *
+   * @param passcode
+   * @returns {Promise<boolean>}
+   */
+  async unlock(passcode) {
+    if (!await this.walletStore.unlock(passcode))
+      return false
+
+    console.log("Wallet unlocked", new Date())
+
+    const cfg = await this.walletStore.getConfig().catch(e => console.log("config fetch err", e))
+    console.log("Config", cfg)
 
     this.managerCtx = new ManagerContext([
       new SolanaManager(this.walletStore),
@@ -31,26 +56,39 @@ export class AlphaWallet {
       //TODO Transfer manager?
     ]).start()
 
+
     //Event listeners
     this.adapters["solana"] = new SolanaAdapter(this.walletStore)
+
+    setTimeout(() => this.lock(), cfg.lockTimeout)
+    return true
   }
 
-  unlock(passcode) {
-    this.walletStore.unlock(passcode)
-  }
-
-  lock() {
+  /**
+   * Lock the wallet & stop any plugins
+   *
+   * @returns {Promise<void>}
+   */
+  async lock() {
+    console.log("Locking wallet", new Date())
     this.walletStore.lock()
+
+    //Clear active plugins
+    this.managerCtx = null
+    this.adapters = {}
   }
 
   /**
    * Called from our background script on a page event
+   *
    * @param request
    * @param sender
    * @param sendResponse
    * @returns {Promise<void>}
    */
   async onMessage(request, sender, sendResponse) {
+    console.log("alphaWallet:onMessage", request, sender)
+
     if (!this.adapters[request.provider]) {
       console.error("adapter not registered", request.provider)
       return
@@ -64,4 +102,8 @@ export class AlphaWallet {
     return this.adapters[adapter]
   }
 
+
+  getStore() {
+    return this.walletStore
+  }
 }

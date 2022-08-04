@@ -1,8 +1,8 @@
 import AbstractView from "../view.js";
 
 export default class LanguageView extends AbstractView {
-  constructor(params) {
-    super(params);
+  constructor(router,wallet) {
+    super(router,wallet);
     this.setTitle("Language");
   }
 

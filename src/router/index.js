@@ -7,35 +7,50 @@ import TrustedAppsView from "../views/settings/TrustedAppsView";
 import RPCSelectView from "../views/settings/RPCSelectView";
 import LockTimeoutView from "../views/settings/LockTimeoutView";
 import DefaultExplorerView from "../views/settings/DefaultExplorerView";
+import PluginsView from "../views/settings/PluginsView";
+import LoginView from "../views/LoginView";
+import SetPasscodeView from "../views/SetPasscodeView";
 
 const routes = [
+  {hash: "login", view: LoginView},
   {hash: "tokens", view: TokenView},
   {hash: "nft", view: NFTView},
   {hash: "transfer", view: TransferView},
   {hash: "settings", view: SettingsView},
+  {hash: "set_passcode", view: SetPasscodeView},
 
   {hash: "settings/language", view: LanguageView},
   {hash: "settings/trusted_apps", view: TrustedAppsView},
   {hash: "settings/rpc", view: RPCSelectView},
   {hash: "settings/lock_timeout", view: LockTimeoutView},
   {hash: "settings/default_explorer", view: DefaultExplorerView},
+  {hash: "settings/plugins", view: PluginsView},
 ]
 
 export class Router {
 
   appContainer
 
+  wallet
+
+  currentView
+
+  constructor(wallet) {
+    this.wallet = wallet
+  }
+
   navigateTo = hash => {
     history.pushState(null, null, hash);
-    this.onNavigate(hash);
+    return this.onNavigate(hash);
   };
 
-  onNavigate(hash = "tokens") {
-    console.log("onNavigate", hash)
+  onNavigate(hash = "login") {
+    if (this.wallet.isLocked())
+      hash = "login"
+
     let match = routes.find(potentialMatch => {
       return hash === potentialMatch.hash
     });
-    console.log("Match", match)
 
     /* Route not found - return first route OR a specific "not-found" route */
     if (!match) {
@@ -46,9 +61,17 @@ export class Router {
   }
 
   async updateView(match) {
-    console.log("Updating view", match)
-    const view = new match.view();
-    this.appContainer.innerHTML = await view.getHtml();
+    this.currentView = new match.view(this, this.wallet);
+    this.appContainer.innerHTML = await this.currentView.getHtml();
+
+    await this.currentView.onMounted(this.appContainer);
+  }
+
+
+  async refresh() {
+    await this.currentView.onDismount()
+    this.appContainer.innerHTML = await this.currentView.getHtml();
+    await this.currentView.onMounted(this.appContainer);
   }
 
   bind(document) {
@@ -56,7 +79,6 @@ export class Router {
     this.appContainer = document.querySelector("#app")
 
     document.body.addEventListener("click", e => {
-      console.log("bclick", e, e.target)
       if (e.target.matches("[data-link]")) {
         e.preventDefault();
         this.navigateTo(e.target.dataset.link);

@@ -20,6 +20,14 @@
   margin-bottom: 1rem!important;
 }
 
+.mb-5 {
+  margin-bottom: 2rem!important;
+}
+
+.mt-5 {
+  margin-top: 2rem!important;
+}
+
 .col-6 {
   width: 50%;
 }
@@ -105,6 +113,9 @@
   background: rgba(0,0,0,0.1);
 }
 
+.text-danger {
+  color: rgba(255, 0, 0, 0.4);
+}
 
 .btn-danger {
   color: white;
@@ -125,10 +136,15 @@
 }
 
 .form-control {
+  color: white;
   width: 80%;
   padding: 5px;
   background: rgba(0,0,0,0.2);
   border: 2px solid white;
   border-radius: 4px;
   font-size: 1.1rem;
+}
+
+.btn-enabled {
+  border: 2px solid rgba(0, 128, 0, 0.6);
 }

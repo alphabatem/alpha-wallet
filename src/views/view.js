@@ -1,8 +1,14 @@
 export default class {
   title = ""
 
-  constructor(params) {
-    this.params = params;
+  _wallet //AlphaWallet
+  _router
+
+  document
+
+  constructor(router, wallet) {
+    this._wallet = wallet;
+    this._router = router
   }
 
   setTitle(title) {
@@ -16,5 +22,22 @@ export default class {
 
   async getHtml() {
     return "";
+  }
+
+  async onMounted(app) {
+    this.document = app
+  }
+
+  async onDismount() {
+    //
+  }
+
+
+  getWallet() {
+    return this._wallet
+  }
+
+  getRouter() {
+    return this._router
   }
 }

@@ -3,9 +3,11 @@
 import './popup.css';
 import './base.css';
 import {Router} from "./router";
+import {AlphaWallet} from "./wallet/alphaWallet";
 
 (function () {
-  const router = new Router()
+  const wallet = new AlphaWallet()
+  const router = new Router(wallet)
 
   function beforeMount() {
     router.bind(document)
@@ -27,7 +29,6 @@ import {Router} from "./router";
     // });
 
     router.onNavigate()
-    console.log("Router bound")
   }
 
   document.addEventListener('DOMContentLoaded', beforeMount);
