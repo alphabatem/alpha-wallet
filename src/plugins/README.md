@@ -16,7 +16,7 @@
 
 ```
 /{plugin_name}
-  - index.js
+  - settings.js
   - view.js
   - view.css
 ```
