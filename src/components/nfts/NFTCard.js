@@ -37,7 +37,7 @@ export class NFTCard extends AbstractView {
 
     return `<div class="col-6"><div class="card m-1 nft-card-container">
     <div data-mint="${this._data.token.mint}" class="nft-card" style="background-image: url('${data.image}'); background-size: cover; background-position: center"></div>
-		<div class="nft-detail"><span class="small">${tokenName}</span></div>
+		<div class="nft-detail noselect"><span class="small">${tokenName}</span></div>
 </div>
 </div>`
   }

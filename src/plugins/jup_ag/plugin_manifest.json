@@ -1,0 +1,11 @@
+{
+  "name": "Jupiter AG",
+  "description": "Jupiter AG Exchange plugin",
+  "icon": "logo.svg",
+  "author": "@CloakdDev",
+  "version": "0.0.1",
+  "index_page": "JupAGView.js",
+  "settings_page": "JupSettingsView.js",
+  "extra_routes": [],
+  "permissions": []
+}

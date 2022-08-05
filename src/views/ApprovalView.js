@@ -1,12 +1,10 @@
 import AbstractView from "../view.js";
 
 export default class ApprovalView extends AbstractView {
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Approval");
-  }
 
   async getHtml() {
+    this.setTitle("Approval");
+
     return ``;
   }
 

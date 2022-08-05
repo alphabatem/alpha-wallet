@@ -1,0 +1,20 @@
+{
+  "name": "AlphaBatem",
+  "description": "AlphaBatem MetaVerse",
+  "icon": "icon.png",
+  "author": "@CloakdDev",
+  "version": "0.0.1",
+  "index_page": "view.js",
+  "settings_page": "settings.js",
+  "extra_routes": [
+    {
+      "hash": "profile",
+      "page": "profileView.js"
+    },
+    {
+      "hash": "land",
+      "page": "landView.js"
+    }
+  ],
+  "permissions": []
+}

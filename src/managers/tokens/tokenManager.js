@@ -1,6 +1,7 @@
 import {Manager} from "../manager";
 import {SOLANA_MANAGER} from "../solana/solanaManager";
 import {web3} from "@project-serum/anchor";
+import {PRICE_MANAGER} from "../pricing/priceManager";
 
 export class TokenManager extends Manager {
 
@@ -48,6 +49,17 @@ export class TokenManager extends Manager {
     return this._tokens
   }
 
+  async getToken(tokenAddr) {
+    const price = await this.getManager(PRICE_MANAGER).getPrice(tokenAddr)
+    const meta = await this.getTokenMetadata(tokenAddr)
+    return {
+      liquid: this._tokens.liquid[tokenAddr] ? this._tokens.liquid[tokenAddr] : {},
+      staked: this._tokens.staked[tokenAddr] ? this._tokens.staked[tokenAddr] : {},
+      meta: meta,
+      price: price
+    }
+  }
+
   /**
    * Accessor to rpc client
    *
@@ -80,6 +92,7 @@ export class TokenManager extends Manager {
       const meta = await this.getTokenMetadata(acc.info.mint)
 
       this._tokens.liquid[acc.info.mint] = {
+        publicKey: a.pubkey.toString(),
         mint: acc.info.mint,
         owner: acc.info.owner,
         amount: acc.info.tokenAmount,

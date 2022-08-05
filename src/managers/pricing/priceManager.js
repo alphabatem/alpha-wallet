@@ -25,7 +25,7 @@ export class PriceManager extends Manager {
   async getPrices() {
     if (this.priceCache && this.lastFetch) {
       //Keep price cache for 5 mins
-      if (this.lastFetch < (new Date().getTime() - (5 * 60 * 60 * 1000))) {
+      if (this.lastFetch > (new Date().getTime() - (5 * 60 * 1000))) {
         return this.priceCache
       }
     }
@@ -40,7 +40,16 @@ export class PriceManager extends Manager {
    *
    * @param tokenAddr
    */
-  getPrice(tokenAddr) {
+  async getPrice(tokenAddr) {
+    console.log("Getting token price", tokenAddr, this.lastFetch > (new Date().getTime() - (5 * 60 * 1000)))
+    if (this.priceCache && this.lastFetch) {
+      //Keep price cache for 5 mins
+      if (this.lastFetch > (new Date().getTime() - (5 * 60 * 1000))) {
+        return this.priceCache[tokenAddr]
+      }
+    }
+
+    console.log("Getting token price from provider", tokenAddr, this.priceCache)
     return this.provider.getPrice(tokenAddr)
   }
 

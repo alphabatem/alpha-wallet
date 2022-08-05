@@ -1,4 +1,4 @@
-export default class {
+export default class AbstractView {
   title = ""
 
   _wallet //AlphaWallet
@@ -67,6 +67,14 @@ export default class {
    */
   getWallet() {
     return this._wallet
+  }
+
+  /**
+   * Returns the wallet address
+   * @returns {Promise<*|null>}
+   */
+  async getWalletAddr() {
+    return this._wallet.getStore().getWalletAddr()
   }
 
   /**

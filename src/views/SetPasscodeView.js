@@ -1,11 +1,6 @@
 import AbstractView from "../view.js";
 
 export default class SetPasscodeView extends AbstractView {
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Set Passcode");
-  }
-
   error = ""
 
   existingCode
@@ -64,6 +59,8 @@ export default class SetPasscodeView extends AbstractView {
   }
 
   async getHtml() {
+    this.setTitle("Set Passcode");
+
     const isPasscodeSet = await this.getWallet().isPasscodeSet()
     if (!isPasscodeSet) {
       const walletUnlocked = await this.getWallet().unlock("").catch((e) => console.error("unlock err", e))

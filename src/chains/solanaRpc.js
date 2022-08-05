@@ -83,6 +83,21 @@ export class SolanaRPC {
 
 
   /**
+   * Returns the txn signatures for a given address
+   *
+   * @param tokenAddr
+   * @param opts
+   * @returns {Promise<*|Array<ConfirmedSignatureInfo>>}
+   */
+  async getSignaturesForAddress(tokenAddr, opts) {
+    return this.connection.getSignaturesForAddress(new web3.PublicKey(tokenAddr), opts)
+  }
+
+  async getTransaction(signature, opts) {
+    return this.connection.getTransaction(signature, opts)
+  }
+
+  /**
    *
    * @param tokenMint<web3.PublicKey>
    * @returns {Promise<void>}

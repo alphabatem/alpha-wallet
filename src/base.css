@@ -7,9 +7,37 @@
   margin-right: calc(-.5 * var(--bs-gutter-x));
   margin-left: calc(-.5 * var(--bs-gutter-x));
 }
+.py-1 {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+.py-2 {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+.py-3 {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+.p-1 {
+  padding: 0.25rem !important;
+}
+
+.p-2 {
+  padding: 0.5rem !important;
+}
 
 .m-1 {
   margin: 0.25rem !important;
+}
+
+.m-2 {
+  margin: 0.5rem !important;
+}
+
+.mt-1 {
+  margin-top: 0.25rem!important;
 }
 
 .mt-2 {
@@ -32,8 +60,40 @@
   margin-top: 2rem!important;
 }
 
+.col-1 {
+  width: 8.3%;
+}
+
+.col-2 {
+  width: 16.6%;
+}
+
+.col-3 {
+  width: 25%;
+}
+
+.col-4 {
+  width: 33.3%;
+}
+
 .col-6 {
   width: 50%;
+}
+
+.col-7 {
+  width: 58.3%;
+}
+
+.col-8 {
+  width: 66.4%;
+}
+
+.col-9 {
+  width: 75%;
+}
+
+.col-10 {
+  width: 83.3%;
 }
 
 .col-12 {
@@ -45,6 +105,10 @@
 .col-auto {
   flex: 1 1 auto;
   width: auto;
+}
+
+.text-upper {
+  text-transform: uppercase;
 }
 
 .text-start {
@@ -121,6 +185,14 @@
   color: rgba(255, 0, 0, 0.4);
 }
 
+.text-success {
+  color: rgba(0, 255, 0, 0.4);
+}
+
+.d-inline {
+  display: inline-block;
+}
+
 .btn-danger {
   color: white;
   font-weight: bold;
@@ -149,6 +221,10 @@
   font-size: 1.1rem;
 }
 
+.form-control-lg {
+  font-size: 1.5rem;
+}
+
 .btn-enabled {
   border: 2px solid rgba(0, 128, 0, 0.6);
 }
@@ -172,4 +248,20 @@
 .img-fluid {
   width: 100%;
   border-radius: 9px;
+}
+
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+
+.col-row div {
+  display: inline-block;
 }

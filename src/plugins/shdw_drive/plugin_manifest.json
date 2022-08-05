@@ -1,0 +1,16 @@
+{
+  "name": "Shadow Drive",
+  "description": "GenesysGO Shadow Drive File Storage",
+  "icon": "logo.svg",
+  "author": "@CloakdDev",
+  "version": "0.0.1",
+  "index_page": "view.js",
+  "settings_page": "settings.js",
+  "extra_routes": [
+    {
+      "hash": "drive",
+      "page": "drive_show.js"
+    }
+  ],
+  "permissions": []
+}

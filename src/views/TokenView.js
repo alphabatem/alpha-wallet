@@ -4,22 +4,15 @@ import {TokenCard} from "../components/tokens/TokenCard";
 import {PRICE_MANAGER} from "../managers/pricing/priceManager";
 
 export default class TokenView extends AbstractView {
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Tokens");
-  }
 
-  async onMounted(app) {
-    super.onMounted(app)
-  }
-
+  tokenPrices = {}
 
   async getHtml() {
     const walletName = await this.getWallet().getStore().getPlain("wallet_name").catch(e => {
     })
 
-    const tokenPrices = await this.getManager(PRICE_MANAGER).getPrices()
-    console.log("tokenPrices", tokenPrices)
+    this.tokenPrices = await this.getManager(PRICE_MANAGER).getPrices()
+    console.log("tokenPrices", this.tokenPrices)
 
     const mgr = this.getManager(TOKEN_MGR)
     const tokens = await mgr.getTokens()
@@ -29,16 +22,14 @@ export default class TokenView extends AbstractView {
     let tokenViews = ""
 
     const sorted = Object.values(tokens.liquid).sort((a,b) => {
-      return (b.amount.uiAmount * (tokenPrices[b.mint] || 0)) - (a.amount.uiAmount * (tokenPrices[a.mint] || 0))
+      return (b.amount.uiAmount * (this.tokenPrices[b.mint] || 0)) - (a.amount.uiAmount * (this.tokenPrices[a.mint] || 0))
     })
 
-    console.log("Sorted", sorted)
-
     for (let i = 0; i < sorted.length; i++) {
-      totalPrice += (sorted[i].amount.uiAmount * (tokenPrices[sorted[i].mint] || 0))
+      totalPrice += (sorted[i].amount.uiAmount * (this.tokenPrices[sorted[i].mint] || 0))
       tokenViews += await this.addSubView(TokenCard, {
         token: sorted[i],
-        price: tokenPrices[sorted[i].mint]
+        price: this.tokenPrices[sorted[i].mint]
       }).getHtml()
     }
 
@@ -71,5 +62,21 @@ export default class TokenView extends AbstractView {
 
 
     return h;
+  }
+
+
+  async onMounted(app) {
+    super.onMounted(app);
+
+    this.setTitle("Tokens");
+    const elems = document.getElementsByClassName("token-card")
+    for (let i = 0; i < elems.length; i++) {
+      elems[i].addEventListener("click", (e) => this.onClick(e))
+    }
+  }
+
+  onClick(e) {
+    console.log("Token click", e)
+    this.getRouter().navigateTo("tokens/show", {mint: e.target.dataset.mint, price: this.tokenPrices[e.target.dataset.mint]})
   }
 }

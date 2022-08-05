@@ -1,11 +1,6 @@
 import AbstractView from "../view.js";
 
 export default class LoginView extends AbstractView {
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Login");
-  }
-
   input
   form
 
@@ -41,6 +36,8 @@ export default class LoginView extends AbstractView {
   }
 
   async getHtml() {
+    this.setTitle("Login");
+
     return `<div class="login text-center" style="height: 100%">
 	<h1 class="mt-3">Login</h1>
 	<p class="small mt-3">Enter your passcode to continue</p>
@@ -49,10 +46,10 @@ export default class LoginView extends AbstractView {
 	<div class="row login-container mt-3">
 	<form method="post" id="login-form">
 		<div class="col-12">
-			<input id="input" type="password" class="form-control" placeholder="">
+			<input id="input" type="password" class="form-control form-control-lg text-center" placeholder="">
 		</div>
 
-		<div class="col-12 text-center mt-2">
+		<div class="col-12 text-center">
 		    <p class="text-danger small">${this.error}</p>
 		</div>
 

@@ -24,7 +24,7 @@ body {
 }
 
 .topnav {
-  padding: 5px;
+  padding: 10px 10px 5px;
   display: flex;
   align-items: stretch;
   justify-content: space-evenly;
@@ -32,6 +32,8 @@ body {
   text-align: left;
   flex-wrap: nowrap;
   align-content: center;
+
+  border-bottom: 2px solid #222222;
 }
 
 .topnav div {
@@ -66,11 +68,12 @@ body {
 
 
 .footer {
+  border-top: 2px solid #222;
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
-  background: rgba(0,0,0,0.3);
+  background: #16181a;
   color: white;
   text-align: center;
   padding: 10px;
@@ -87,12 +90,14 @@ body {
 
 
 .be-1 {
-  border-right: 1px solid black;
+  border-right: 1px solid #222;
   cursor: pointer;
 }
 
 .footer-link {
   color: gray;
+  font-weight: bold;
+  transition: all 0.1s ease-out;
 }
 
 .footer-link:hover {
@@ -105,8 +110,8 @@ body {
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
   margin-bottom: 45px;
 }
 
@@ -132,14 +137,22 @@ body {
   /*max-height: 40px;*/
 }
 
-.nft-card-container {
+.nft-card-container, .plugin-card-container {
   position: relative;
   height: 150px;
   overflow: hidden;
   transition: all 0.2s ease;
 }
 
-.nft-card-container:hover {
+.plugin-card-container {
+  height: 100px;
+}
+
+.plugin-card-container .nft-card {
+  transform: scale(1.1);
+}
+
+.nft-card-container:hover, .plugin-card-container:hover {
   box-shadow: 0 0 5px white;
 }
 
@@ -162,7 +175,35 @@ body {
   bottom: 0;
   color: white;
   width: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   border-bottom-left-radius: 9px;
   border-bottom-right-radius: 9px;
+  pointer-events: none;
+}
+
+#wallet_addr {
+  margin-left: 10px;
+}
+
+.token-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.token-card-body {
+  pointer-events: none;
+}
+
+
+.txn-card {
+  color: white;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.token-card:hover, .txn-card:hover {
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 5px white;
 }

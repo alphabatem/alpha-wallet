@@ -1,0 +1,10 @@
+{
+  "name": "Validators.APP",
+  "description": "Solana Validator statistics",
+  "icon": "logo.png",
+  "author": "@CloakdDev",
+  "version": "0.0.1",
+  "index_page": "view.js",
+  "settings_page": "settings.js",
+  "permissions": []
+}

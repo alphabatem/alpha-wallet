@@ -1,0 +1,10 @@
+{
+  "name": "Sonar Watch",
+  "description": "Sonar Watch profile",
+  "icon": "logo.png",
+  "author": "@CloakdDev",
+  "version": "0.0.1",
+  "index_page": "view.js",
+  "settings_page": "settings.js",
+  "permissions": []
+}

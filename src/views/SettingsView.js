@@ -1,14 +1,12 @@
 import AbstractView from "../view.js";
 
 export default class SettingsView extends AbstractView {
-  constructor(router,wallet) {
-    super(router,wallet);
-    this.setTitle("Settings");
-  }
 
   async getHtml() {
+    this.setTitle("Settings");
+
     return `
-            <h1>Settings</h1>
+            <h1>${this.title}</h1>
 
             <div class="row mt-2">
             <div class="col-12"><button data-link="settings/wallet_name" class="btn btn-secondary btn-block btn-settings mt-2">Wallet</button></div>

@@ -3,7 +3,7 @@ import {StorageDriver} from "./storageDriver";
 const DEFAULT_CONFIG = {
   rpcUrl: "https://ssc-dao.genesysgo.net/",
   commitment: "finalized",
-  lockTimeout: 30 * 60 * 60,
+  lockTimeout: 30 * 60 * 1000,
   explorer: "solscan",
   language: "en"
 }

@@ -1,6 +1,4 @@
 import axios from "axios";
-import {Transaction} from "@solana/web3.js";
-import {web3} from "@project-serum/anchor";
 
 export class JupAg {
   USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
@@ -46,31 +44,28 @@ export class JupAg {
     return this.client.post(`/v1/swap`, payload)
   }
 
-  getConnection() {
-    return new web3.Connection(
-      "https://ssc-dao.genesysgo.net/"
-    );
-  }
 
   async doSwap(wallet, serializedTransactions) {
-    const connection = this.getConnection()
-    console.log("Seapping: ", wallet)
+    //TODO bind with ab wallet
 
-    for (let serializedTransaction of serializedTransactions) {
-      console.log("Running txn: ", serializedTransaction)
-      const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
-
-      console.log("TXN: ", transaction)
-
-      const txid = await wallet.signAndSendTransaction(transaction, {
-        skipPreflight: true,
-        maxRetries: 3,
-      })
-      console.log("TXN:", txid)
-
-      await connection.confirmTransaction(txid.signature, "processed")
-      return txid.signature
-    }
+    // const connection = this.getConnection()
+    // console.log("Swapping: ", wallet)
+    //
+    // for (let serializedTransaction of serializedTransactions) {
+    //   console.log("Running txn: ", serializedTransaction)
+    //   const transaction = Transaction.from(Buffer.from(serializedTransaction, 'base64'))
+    //
+    //   console.log("TXN: ", transaction)
+    //
+    //   const txid = await wallet.signAndSendTransaction(transaction, {
+    //     skipPreflight: true,
+    //     maxRetries: 3,
+    //   })
+    //   console.log("TXN:", txid)
+    //
+    //   await connection.confirmTransaction(txid.signature, "processed")
+    //   return txid.signature
+    // }
   }
 
   routeMap(onlyDirectRoutes = null) {

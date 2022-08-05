@@ -1,30 +1,32 @@
 import TokenView from "../views/TokenView.js";
 import NFTView from "../views/NFTView.js";
-import TransferView from "../views/TransferView.js";
 import SettingsView from "../views/SettingsView.js";
 import LanguageView from "../views/settings/LanguageView";
 import TrustedAppsView from "../views/settings/TrustedAppsView";
 import RPCSelectView from "../views/settings/RPCSelectView";
 import LockTimeoutView from "../views/settings/LockTimeoutView";
 import DefaultExplorerView from "../views/settings/DefaultExplorerView";
-import PluginsView from "../views/settings/PluginsView";
+import PluginSettingsView from "../views/settings/PluginsView";
 import LoginView from "../views/LoginView";
 import SetPasscodeView from "../views/SetPasscodeView";
 import WalletNameView from "../views/settings/WalletNameView";
 import ComingSoonView from "../views/ComingSoonView";
 import NFTShowView from "../views/NFTShowView";
+import PluginView from "../views/PluginView";
+import TokenShowView from "../views/TokenShowView";
 
-const routes = [
+const _routes = [
   {hash: "login", view: LoginView},
   {hash: "tokens", view: TokenView},
+  {hash: "tokens/show", view: TokenShowView},
   {hash: "nft", view: NFTView},
   {hash: "nft/show", view: NFTShowView},
 
-  {hash: "transfer", view: TransferView},
   {hash: "transfer/deposit", view: ComingSoonView},
   {hash: "transfer/send", view: ComingSoonView},
 
-
+  {hash: "plugins", view: PluginView},
+  {hash: "plugin_hub", view: ComingSoonView},
   {hash: "settings", view: SettingsView},
   {hash: "set_passcode", view: SetPasscodeView},
 
@@ -36,7 +38,7 @@ const routes = [
   {hash: "settings/rpc", view: RPCSelectView},
   {hash: "settings/lock_timeout", view: LockTimeoutView},
   {hash: "settings/default_explorer", view: DefaultExplorerView},
-  {hash: "settings/plugins", view: PluginsView},
+  {hash: "settings/plugins", view: PluginSettingsView},
 ]
 
 export class Router {
@@ -47,6 +49,8 @@ export class Router {
 
   currentView
 
+  pluginRoutes = [];
+
   constructor(wallet) {
     this.wallet = wallet
   }
@@ -56,10 +60,19 @@ export class Router {
     return this.onNavigate(hash, data);
   };
 
+  /**
+   * Returns routes & plugin routes
+   * @returns {[]}
+   */
+  getRoutes() {
+    return _routes.concat(this.pluginRoutes)
+  }
+
   onNavigate(hash = "login", data = {}) {
     if (this.wallet.isLocked())
       hash = "login"
 
+    const routes = this.getRoutes()
     let match = routes.find(potentialMatch => {
       return hash === potentialMatch.hash
     });
@@ -91,6 +104,12 @@ export class Router {
     this.appContainer = document.querySelector("#app")
 
     document.body.addEventListener("click", e => {
+
+      if (e.target.matches('[target="_blank"]')) {
+        console.log("External link", e.target.props.href)
+        return
+      }
+
       if (e.target.matches("[data-link]")) {
         e.preventDefault();
         this.navigateTo(e.target.dataset.link);

@@ -23,8 +23,8 @@ export class TokenCard extends AbstractView {
       data = r.data
     }
 
-    return `<div class="card">
-	<div class="card-body">
+    return `<div class="card token-card" data-mint="${this._data.token.mint}">
+	<div class="card-body token-card-body">
 		<table class="table">
 			<tbody>
 			<tr class="text-start">
