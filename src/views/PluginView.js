@@ -48,8 +48,7 @@ export default class PluginView extends AbstractView {
     }
 
 
-    return `<div class="plugins text-center">
-	<h2 class="text-upper">${this.title}</h2>
+    return `<div class="plugins text-center p-2">
 	<div class="row">${pluginList}</div>
 	<button data-link="plugin_hub" class="btn btn-secondary btn-block mt-5">FIND PLUGINS</button>
 </div>`;

@@ -185,12 +185,17 @@ body {
   margin-left: 10px;
 }
 
+#wallet_swap {
+  min-width: 20px;
+  font-weight: bold;
+}
+
 .token-card {
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.token-card-body {
+.token-card-body, .ns-card-body {
   pointer-events: none;
 }
 
@@ -203,7 +208,21 @@ body {
   font-weight: bold;
 }
 
-.token-card:hover, .txn-card:hover {
+.token-card:hover, .txn-card:hover, .ns-card:hover {
+  cursor: pointer;
   background: rgba(0, 0, 0, 0.8);
   box-shadow: 0 0 5px white;
+}
+
+.ns-card {
+  width: 90%;
+  margin-left: 5%;
+}
+
+
+#entropy_canvas {
+  width: 80%;
+  height: 200px;
+  border: 2px solid rgba(0,0,0,0.8);
+  border-radius: 9px;
 }

@@ -18,9 +18,10 @@ export default class LoginView extends AbstractView {
 
     this.getWallet().unlock(this.input.value).then(ok => {
       if (ok) {
-        this.getRouter().navigateTo("tokens")
+        this.getRouter().navigateTo("wallets/swap")
       } else {
         this.onError("Invalid password")
+        this.input.focus()
       }
     }).catch(e => {
       console.log("unlock err", e)
@@ -46,10 +47,10 @@ export default class LoginView extends AbstractView {
 	<div class="row login-container mt-3">
 	<form method="post" id="login-form">
 		<div class="col-12">
-			<input id="input" type="password" class="form-control form-control-lg text-center" placeholder="">
+			<input id="input" type="password" class="form-control form-control-lg text-center" placeholder="Password">
 		</div>
 
-		<div class="col-12 text-center">
+		<div class="col-12 text-center mt-3">
 		    <p class="text-danger small">${this.error}</p>
 		</div>
 
@@ -62,7 +63,8 @@ export default class LoginView extends AbstractView {
   }
 
 
-  async onMounted() {
+  async onMounted(app) {
+    await super.onMounted(app)
 
     const passcodeSet = await this.getWallet().isPasscodeSet()
     if (!passcodeSet) {
@@ -75,6 +77,8 @@ export default class LoginView extends AbstractView {
     this.form = document.getElementById("login-form")
 
     this.form.addEventListener("submit", (e) => this.login(e))
+
+    this.input.focus()
   }
 
   async onDismount() {

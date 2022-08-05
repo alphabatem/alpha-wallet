@@ -46,8 +46,6 @@ export class NFTManager extends Manager {
   async getLiquidNFTs(walletAddr) {
     const accounts = await this.rpc().getParsedTokenAccountsByOwner(new web3.PublicKey(walletAddr))
 
-    console.log("Accounts", accounts)
-
     for (const a of accounts.value) {
       const acc = a.account.data.parsed
 

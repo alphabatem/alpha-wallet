@@ -1,4 +1,4 @@
-import {StorageDriver} from "./storageDriver";
+import {DEFAULT_NAMESPACE, StorageDriver} from "./storageDriver";
 
 const DEFAULT_CONFIG = {
   rpcUrl: "https://ssc-dao.genesysgo.net/",
@@ -12,9 +12,15 @@ export class WalletStorage extends StorageDriver {
 
   passcode = null;
 
+  namespace = "_default"
+
   constructor() {
     super()
     this.lock()
+  }
+
+  setNamespace(ns) {
+    this.namespace = ns
   }
 
   /**
@@ -40,20 +46,25 @@ export class WalletStorage extends StorageDriver {
   }
 
   async getWalletAddr() {
-    return this.getEncrypted("wallet_addr", this.passcode)
+    return this.getEncrypted(this.namespace, "wallet_addr", this.passcode)
   }
 
   async setWalletAddr(walletAddr) {
-    return this.setEncrypted("wallet_addr", walletAddr, this.passcode)
+    return this.setEncrypted(this.namespace, "wallet_addr", walletAddr, this.passcode)
+  }
+
+
+  async setPrivateKey(walletAddr, privateKey) {
+    return this.setEncrypted(this.namespace, "private_key", privateKey, this.passcode)
   }
 
 
   async getPrivateKey() {
-    return this.getEncrypted("private_key", this.passcode)
+    return this.getEncrypted(this.namespace, "private_key", this.passcode)
   }
 
   async getConfig() {
-    let cfg = await this.getPlain("config").catch(e => {
+    let cfg = await this.getPlain(DEFAULT_NAMESPACE, "config").catch(e => {
       //
     })
 
@@ -64,6 +75,6 @@ export class WalletStorage extends StorageDriver {
   }
 
   async setConfig(cfg = DEFAULT_CONFIG) {
-    return this.setPlain("config", cfg)
+    return this.setPlain(DEFAULT_NAMESPACE, "config", cfg)
   }
 }

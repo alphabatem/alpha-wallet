@@ -12,11 +12,8 @@ export default class TokenView extends AbstractView {
     })
 
     this.tokenPrices = await this.getManager(PRICE_MANAGER).getPrices()
-    console.log("tokenPrices", this.tokenPrices)
-
     const mgr = this.getManager(TOKEN_MGR)
     const tokens = await mgr.getTokens()
-    console.log("Tokens", tokens)
 
     let totalPrice = 0
     let tokenViews = ""

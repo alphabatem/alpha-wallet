@@ -1,6 +1,9 @@
 import CryptoJS from "crypto-js";
 import {AESJsonFormatter} from "./AESJsonFormatter";
 
+
+export const DEFAULT_NAMESPACE = {key: "_default", name: "Default Wallet"}
+
 export class StorageDriver {
 
   _locked = false
@@ -9,6 +12,27 @@ export class StorageDriver {
   _zonePlain = "plain" //Unencrypted
   _zonePasscode = "passcode" //Hash
 
+
+  _namespaces = [DEFAULT_NAMESPACE]; //Array of storage keys for wallet namespaces
+
+  constructor() {
+    this.loadNamespaces().then((ns) => {
+      console.log("NS loaded", ns)
+      this._namespaces = ns
+    })
+  }
+
+  getNamespaces() {
+    return this._namespaces
+  }
+
+  async loadNamespaces() {
+    const ns = await this._getLocal("namespaces").catch(e => {
+      //No exist
+    })
+
+    return ns || [DEFAULT_NAMESPACE]
+  }
 
   isLocked() {
     return this._locked
@@ -142,7 +166,8 @@ export class StorageDriver {
   }
 
   async isPasscodeSet() {
-    const pkHash = await this.getPasscodeHash().catch(e => {})
+    const pkHash = await this.getPasscodeHash().catch(e => {
+    })
     return Boolean(pkHash)
   }
 
@@ -168,11 +193,12 @@ export class StorageDriver {
   /**
    * Get an encrypted value
    *
+   * @param namespace
    * @param key
    * @param passcode
    * @returns {Promise<null|*>}
    */
-  async getEncrypted(key, passcode = null) {
+  async getEncrypted(namespace, key, passcode = null) {
     if (!passcode)
       return null
 
@@ -183,12 +209,13 @@ export class StorageDriver {
   /**
    * Set an encrypted value
    *
+   * @param namespace
    * @param key
    * @param value
    * @param passcode
    * @returns {Promise<unknown>}
    */
-  async setEncrypted(key, value, passcode = null) {
+  async setEncrypted(namespace, key, value, passcode = null) {
     if (!passcode)
       return null
 
@@ -199,21 +226,23 @@ export class StorageDriver {
   /**
    * Get unencrypted user data
    *
+   * @param namespace
    * @param key
    * @returns {Promise<*>}
    */
-  async getPlain(key) {
+  async getPlain(namespace, key) {
     return this._getLocal(`${this._zonePlain}.${key}`)
   }
 
   /**
    * Set unencrypted user data
    *
+   * @param namespace
    * @param key
    * @param value
    * @returns {Promise<unknown>}
    */
-  async setPlain(key, value) {
+  async setPlain(namespace, key, value) {
     return this._setLocal(`${this._zonePlain}.${key}`, value)
   }
 }

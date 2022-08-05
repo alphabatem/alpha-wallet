@@ -11,7 +11,6 @@ export class Manager {
   }
 
   configure(ctx) {
-    console.log("setting ctx", ctx)
     this.ctx = ctx
   }
 

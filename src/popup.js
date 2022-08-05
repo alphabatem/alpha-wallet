@@ -13,7 +13,12 @@ import {AlphaWallet} from "./wallet/alphaWallet";
   function setupHeader() {
     // const walletName = document.getElementById("wallet_name")
     const walletAddr = document.getElementById("wallet_addr")
+    const walletSwapper = document.getElementById("wallet_swap")
     const connectionStatus = document.getElementById("connection_status")
+
+    walletSwapper.addEventListener("click", (e) => {
+      router.navigateTo("wallets/swap")
+    })
 
     document.addEventListener("unlock", (e) => {
       console.log("Wallet unlocked", e.detail)

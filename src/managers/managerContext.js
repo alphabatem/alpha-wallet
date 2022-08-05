@@ -24,9 +24,8 @@ export class ManagerContext {
 
     const ok = Object.keys(this._managers)
 
-    console.log(`Starting ${ok.length}`)
     for (let i = 0; i < ok.length; i++) {
-      console.log("Configuring", this._managers[ok[i]].id())
+      console.debug("Configuring", this._managers[ok[i]].id())
       this._managers[ok[i]].configure(this)
     }
 

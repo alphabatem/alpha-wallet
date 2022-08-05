@@ -28,6 +28,18 @@
   padding: 0.5rem !important;
 }
 
+.p-3 {
+  padding: 0.75rem !important;
+}
+
+.p-4 {
+  padding: 1rem !important;
+}
+
+.p-5 {
+  padding: 1.25rem !important;
+}
+
 .m-1 {
   margin: 0.25rem !important;
 }

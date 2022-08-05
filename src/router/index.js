@@ -14,6 +14,10 @@ import ComingSoonView from "../views/ComingSoonView";
 import NFTShowView from "../views/NFTShowView";
 import PluginView from "../views/PluginView";
 import TokenShowView from "../views/TokenShowView";
+import SwapWalletView from "../views/SwapWalletView";
+import AddWalletView from "../views/creation/AddWalletView";
+import WalletCreateView from "../views/creation/WalletCreateView";
+import WalletImportView from "../views/creation/WalletImportView";
 
 const _routes = [
   {hash: "login", view: LoginView},
@@ -29,6 +33,12 @@ const _routes = [
   {hash: "plugin_hub", view: ComingSoonView},
   {hash: "settings", view: SettingsView},
   {hash: "set_passcode", view: SetPasscodeView},
+
+  {hash: "wallets/swap", view: SwapWalletView},
+  {hash: "wallets/add", view: AddWalletView},
+  {hash: "wallets/create", view: WalletCreateView},
+  {hash: "wallets/import", view: WalletImportView},
+  {hash: "wallets/connect", view: ComingSoonView},
 
   //Used to set wallet_addr prior to wallet creation implemented
   {hash: "settings/wallet_name", view: WalletNameView},
