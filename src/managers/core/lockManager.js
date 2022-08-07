@@ -9,8 +9,16 @@ export class LockManager extends AbstractManager {
 
   _lockTimeout = null
 
+  statusIndicatorDom
+
   id() {
     return LOCK_MGR
+  }
+
+  configure(ctx) {
+    super.configure(ctx);
+
+    this.statusIndicatorDom = document.getElementById("connection_status")
   }
 
   /**
@@ -37,16 +45,17 @@ export class LockManager extends AbstractManager {
    * @returns {Promise<boolean>}
    */
   async unlock(passcode) {
-    const ok = await this.getStore().testPasscode(passcode)
-    if (!ok) {
+    const lockTimeout = await this.getTimeout()
+
+    //Store for the duration of our usage in encrypted session
+    const ok = await this.getStorageManager().unlock(passcode, lockTimeout)
+    if (!ok)
       throw new Error("invalid passcode")
-    }
 
     this._locked = false
-
-    const lockTimeout = await this.getTimeout()
     this._lockTimeout = setTimeout(() => this.lock(), lockTimeout)
 
+    this.statusIndicatorDom.innerText = "Unlocked"
     return true
   }
 
@@ -55,9 +64,10 @@ export class LockManager extends AbstractManager {
    */
   lock() {
     this._locked = true
-
     if (this._lockTimeout)
       clearTimeout(this._lockTimeout)
+
+    this.statusIndicatorDom.innerText = "Locked"
   }
 
 

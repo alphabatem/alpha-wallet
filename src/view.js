@@ -1,3 +1,5 @@
+import {STORAGE_MGR} from "./managers/storage/storageManager";
+
 export default class AbstractView {
   title = ""
 

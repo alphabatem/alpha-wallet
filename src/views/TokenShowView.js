@@ -21,6 +21,7 @@ export default class TokenShowView extends AbstractView {
       image: `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${token.mint}/logo.png`
     }
     if (metadataUri) {
+      console.log("Getting token metadata", metadataUri)
       const r = await axios.get(metadataUri)
       data = r.data
     }

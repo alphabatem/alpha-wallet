@@ -12,16 +12,17 @@ export default class WalletNameView extends AbstractView {
   async updateWallet(e) {
     //
     await this.getWallet().getStore().setWalletAddr(this.walletInput.value)
-    await this.getWallet().getStore().setPlain("wallet_name", this.nameInput.value)
+    await this.getWallet().getStore().setWalletName(this.nameInput.value)
 
     this._router.navigateTo("settings")
   }
 
   async getHtml() {
 
-    const walletAddr = await this.getWallet().getStore().getWalletAddr()
+    const walletAddr = await this.getWallet().getStore().getWalletAddr().catch(e => {
+    })
     console.log("WalletAddr", walletAddr)
-    const walletName = await this.getWallet().getStore().getPlain("wallet_name").catch(e => {
+    const walletName = await this.getWallet().getStore().getWalletName().catch(e => {
     })
 
     return `
@@ -29,12 +30,12 @@ export default class WalletNameView extends AbstractView {
 
             <div class="row mt-3">
 		<div class="col-12">
-			<input id="name-input" class="form-control" placeholder="Wallet Name" value="${walletName}">
+			<input id="name-input" autocomplete="off" class="form-control" placeholder="Wallet Name" value="${walletName}">
 		</div>
 		<div class="col-12 mt-3"></div>
 
 		<div class="col-12 mt-3">
-			<input id="wallet-input" class="form-control" placeholder="Wallet Address" value="${walletAddr}">
+			<input id="wallet-input" autocomplete="off" class="form-control" placeholder="Wallet Address" value="${walletAddr}">
 		</div>
 
 		<div class="col-12 text-center mt-3">

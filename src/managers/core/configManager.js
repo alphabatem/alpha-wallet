@@ -31,18 +31,19 @@ export class ConfigManager extends AbstractManager {
   }
 
   async getConfig() {
-    let cfg = await this.getPlain(DEFAULT_NAMESPACE, "config").catch(e => {
+    let cfg = await this.getStore().getPlain(DEFAULT_NAMESPACE, "config").catch(e => {
       //
     })
 
     if (!cfg)
       cfg = DEFAULT_CONFIG
 
+    this.notify()
     return cfg
   }
 
   async setConfig(cfg = DEFAULT_CONFIG) {
-    return this.setPlain(DEFAULT_NAMESPACE, "config", cfg)
+    return this.getStore().setPlain(DEFAULT_NAMESPACE, "config", cfg)
   }
 
   notify(data = {}) {

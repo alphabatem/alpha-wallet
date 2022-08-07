@@ -7,8 +7,8 @@ export class SolanaManager extends AbstractManager {
   _rpc
 
   configure(ctx) {
+    console.log("Configuring solana manager")
     super.configure(ctx);
-
     this.getManager(EVENT_MGR).subscribe(EVENTS.onConfig, (c) => this.onConfig(c))
   }
 

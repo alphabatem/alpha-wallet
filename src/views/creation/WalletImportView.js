@@ -21,7 +21,7 @@ export default class WalletImportView extends AbstractView {
 
             <div class="row mt-5">
 		<div class="col-12">
-			<input id="name-input" class="form-control" placeholder="Wallet Name">
+			<input autocomplete="off" id="name-input" class="form-control" placeholder="Wallet Name">
 		</div>
 		<div class="col-12 mt-3"></div>
 

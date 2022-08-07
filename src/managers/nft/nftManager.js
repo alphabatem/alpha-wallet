@@ -31,7 +31,7 @@ export class NFTManager extends AbstractManager {
 
 
   async getNFTs() {
-    const walletAddr = await this.getStore.getWalletAddr()
+    const walletAddr = await this.getStore().getWalletAddr()
 
     await this.getLiquidNFTs(walletAddr)
     await this.getListedNFTs(walletAddr)

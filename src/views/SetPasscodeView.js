@@ -78,10 +78,10 @@ export default class SetPasscodeView extends AbstractView {
 	<div class="row login-container mt-3">
 	<form method="post" id="update-code-form">
 		<div class="col-12">
-			<input id="existing-input" type="password" hidden="${!isPasscodeSet}" class="form-control" placeholder="">
+			<input autocomplete="off" id="existing-input" type="password" hidden="${!isPasscodeSet}" class="form-control" placeholder="">
 		</div>
 		<div class="col-12">
-			<input id="new-input" type="password" class="form-control" placeholder="">
+			<input autocomplete="off" id="new-input" type="password" class="form-control" placeholder="">
 		</div>
 
 		<div class="col-12 text-center">

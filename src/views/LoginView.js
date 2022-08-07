@@ -25,6 +25,7 @@ export default class LoginView extends AbstractView {
       }
     }).catch(e => {
       console.log("unlock err", e)
+      this.onError(e)
     })
       .finally(() => {
         this.input.value = "";
@@ -47,7 +48,7 @@ export default class LoginView extends AbstractView {
 	<div class="row login-container mt-3">
 	<form method="post" id="login-form">
 		<div class="col-12">
-			<input id="input" type="password" class="form-control form-control-lg text-center" placeholder="Password">
+			<input autocomplete="off" id="input" type="password" class="form-control form-control-lg text-center" placeholder="Password">
 		</div>
 
 		<div class="col-12 text-center mt-3">

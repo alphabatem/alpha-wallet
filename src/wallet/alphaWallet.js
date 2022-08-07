@@ -15,11 +15,14 @@ import {NamespaceManager} from "../managers/core/namespaceManager";
 export class AlphaWallet {
 
   _lockMgr = new LockManager()
+  _storageMgr = new StorageManager(new WalletStorage(), new KeyStorage())
 
   _managerCtx
 
   constructor() {
     console.log("Loading Alpha Wallet")
+    this._managerCtx = this.newLockedContext()
+    this._managerCtx.start()
   }
 
 
@@ -31,18 +34,25 @@ export class AlphaWallet {
   newWalletContext() {
     return new ManagerContext([
       //Core
+      this._storageMgr,
       new ConfigManager(),
       this._lockMgr,
       new NamespaceManager(),
       new EventManager(),
-      new StorageManager(new WalletStorage(), new KeyStorage()),
-
       //Plugins
       new SolanaManager(),
       new MessageManager(),
       new TokenManager(),
       new NFTManager(),
       new PriceManager(),
+    ])
+  }
+
+  newLockedContext() {
+    return new ManagerContext([
+      new EventManager(),
+      this._storageMgr,
+      this._lockMgr,
     ])
   }
 
@@ -54,6 +64,14 @@ export class AlphaWallet {
    */
   getManager(id) {
     return this._managerCtx.getManager(id)
+  }
+
+  getStore() {
+    return this._storageMgr.getWalletStore()
+  }
+
+  getKeyStore(pk) {
+    return this._storageMgr.getKeyStore(pk)
   }
 
   /**
@@ -71,16 +89,13 @@ export class AlphaWallet {
     this._managerCtx = this.newWalletContext()
     this._managerCtx.start()
 
-    const cfg = await this.getManager(CFG_MGR).getConfig()
-    //TODO Wallet name
-
     //Wallet connected
-    this.onUnlocked({wallet_addr: "0x0", wallet_name: "TODO", cfg})
     return true
   }
 
   /**
    * Lock the wallet & stop any plugins
+   * TODO Move to event "locked"
    *
    * @returns {Promise<void>}
    */
@@ -88,11 +103,8 @@ export class AlphaWallet {
     console.log("Locking wallet", new Date())
     this._lockMgr.lock()
 
-    this.passcode = null
-
     //Clear active plugins
-    this._managerCtx = null
-    this.adapters = {}
+    this._managerCtx = this.newLockedContext()
   }
 
   /**
@@ -120,7 +132,8 @@ export class AlphaWallet {
    * @returns {Promise<*|boolean>}
    */
   async isPasscodeSet() {
-    return this._lockMgr.getStore().isPasscodeSet()
+    const ws = await this._storageMgr.getWalletStore()
+    return ws.isPasscodeSet()
   }
 
 
@@ -130,15 +143,5 @@ export class AlphaWallet {
    */
   isLocked() {
     return this._lockMgr.isLocked()
-  }
-
-
-  /**
-   * Event - Called when wallet is unlocked
-   * @param cfg
-   */
-  onUnlocked(cfg) {
-    const e = new CustomEvent("unlock", {detail: cfg})
-    document.dispatchEvent(e)
   }
 }

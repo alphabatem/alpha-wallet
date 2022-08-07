@@ -2,14 +2,14 @@ import AbstractView from "../view.js";
 import {TOKEN_MGR} from "../managers/tokens/tokenManager";
 import {TokenCard} from "../components/tokens/TokenCard";
 import {PRICE_MANAGER} from "../managers/pricing/priceManager";
+import {NS_MANAGER} from "../managers/core/namespaceManager";
 
 export default class TokenView extends AbstractView {
 
   tokenPrices = {}
 
   async getHtml() {
-    const walletName = await this.getWallet().getStore().getPlain("wallet_name").catch(e => {
-    })
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
 
     this.tokenPrices = await this.getManager(PRICE_MANAGER).getPrices()
     const mgr = this.getManager(TOKEN_MGR)
@@ -31,7 +31,7 @@ export default class TokenView extends AbstractView {
     }
 
     let h = `
-    <h5 class="text-start mb-3">Welcome Back, ${walletName}!</h5>
+    <h5 class="text-start mb-3">Welcome Back, ${ns.name}!</h5>
 
     <h1 class="mb-3">${totalPrice.toLocaleString("en-US", {
       style: 'currency',

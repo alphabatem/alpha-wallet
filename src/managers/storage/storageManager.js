@@ -17,7 +17,7 @@ export class StorageManager extends AbstractManager {
     return STORAGE_MGR
   }
 
-  async getWalletStore() {
+  getWalletStore() {
     return this._walletStore
   }
 
@@ -29,4 +29,20 @@ export class StorageManager extends AbstractManager {
     return this._keyStore
   }
 
+
+  /**
+   * Unlock the storage for a period of time
+   *
+   * @param passcode
+   * @param lockTimeout
+   * @returns {Promise<boolean>}
+   */
+  async unlock(passcode, lockTimeout) {
+    const ok = await this.getWalletStore().testPasscode(passcode)
+    if (!ok)
+      return false
+
+    console.log("Unlocking wallet storage for", lockTimeout)
+    return await this.getWalletStore().unlock(passcode, lockTimeout)
+  }
 }

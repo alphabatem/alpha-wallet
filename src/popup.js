@@ -16,19 +16,16 @@ import {AlphaWallet} from "./wallet/alphaWallet";
     const walletSwapper = document.getElementById("wallet_swap")
     const connectionStatus = document.getElementById("connection_status")
 
-    walletSwapper.addEventListener("click", (e) => {
-      router.navigateTo("wallets/swap")
+    walletAddr.addEventListener("click", (e) => {
+      navigator.clipboard.writeText(e.target.dataset.addr).then(function() {
+        console.log('Async: Copying to clipboard was successful!');
+      }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+      });
     })
 
-    document.addEventListener("unlock", (e) => {
-      console.log("Wallet unlocked", e.detail)
-
-      const addr = e.detail.wallet_addr
-
-      connectionStatus.innerText = "Unlocked"
-      // walletName.innerText = e.detail.wallet_name
-      walletAddr.innerText = `${addr.substring(0, 6)}...${addr.substring(addr.length - 6)}`
-
+    walletSwapper.addEventListener("click", (e) => {
+      router.navigateTo("wallets/swap")
     })
   }
 

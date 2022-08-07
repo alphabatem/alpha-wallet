@@ -1,4 +1,5 @@
 export class ManagerContext {
+
   _managers = {}
 
   constructor(managers = []) {
@@ -17,6 +18,13 @@ export class ManagerContext {
 
   getManager(id) {
     return this._managers[id]
+  }
+
+  removeManager(id) {
+    if (!this._managers[id])
+      return
+
+    delete this._managers[id]
   }
 
   //Bind managers & call their configure method

@@ -1,5 +1,3 @@
-import {STORAGE_MGR} from "./storage/storageManager";
-
 export class AbstractManager {
   ctx
 
@@ -15,12 +13,12 @@ export class AbstractManager {
     return this.ctx.getManager(id)
   }
 
-  getStore() {
-    return this.getManager(STORAGE_MGR)
+  getStorageManager() {
+    return this.getManager("storage_mgr")
   }
 
-  getWalletStore() {
-    return this.getStore().getWalletStore()
+  getStore() {
+    return this.getStorageManager().getWalletStore()
   }
 
 }

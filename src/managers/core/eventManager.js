@@ -2,7 +2,11 @@ import {AbstractManager} from "../abstractManager";
 
 export class EventManager extends AbstractManager {
 
-  events = {}
+  events = {
+    "locked": [],
+    "unlocked": [],
+    "config_update": [],
+  }
 
   subKey = 0;
 
@@ -54,7 +58,7 @@ export class EventManager extends AbstractManager {
     if (!this.hasEvent(event))
       return
 
-    for (let i = 0; this.events[event].length; i++) {
+    for (let i = 0; i < this.events[event].length; i++) {
       this.events[event][i].handler(data)
     }
 

@@ -1,5 +1,6 @@
 import AbstractView from "../view.js";
 import {NamespaceCard} from "../components/wallet/NamespaceCard";
+import {NS_MANAGER} from "../managers/core/namespaceManager";
 
 export default class SwapWalletView extends AbstractView {
 
@@ -14,13 +15,13 @@ export default class SwapWalletView extends AbstractView {
       return
 
     console.log("Wallet clicked", ns)
-    await this.getWallet().getStore().setNamespace(ns)
+    await this.getManager(NS_MANAGER).setActiveNamespace(ns)
     this.getRouter().navigateTo("tokens")
   }
 
   async getHtml() {
 
-    const namespaces = this.getWallet().getStore().getNamespaces()
+    const namespaces = this.getManager(NS_MANAGER).getNamespaces()
     console.log("Namespaces", namespaces)
 
     let walletCards = ``
