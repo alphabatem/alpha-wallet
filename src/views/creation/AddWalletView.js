@@ -2,11 +2,6 @@ import AbstractView from "../../view.js";
 
 export default class AddWalletView extends AbstractView {
 
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Add Wallet");
-  }
-
   async getHtml() {
 
     const walletAddr = await this.getWallet().getStore().getWalletAddr()
@@ -47,5 +42,6 @@ export default class AddWalletView extends AbstractView {
 
   async onMounted(app) {
     await super.onMounted(app)
+    this.setTitle("Add Wallet");
   }
 }

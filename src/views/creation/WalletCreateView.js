@@ -19,7 +19,7 @@ export default class WalletCreateView extends AbstractView {
 
             <div class="row mt-5">
 		<div class="col-12">
-			<input id="name-input" autocomplete="off" class="form-control" placeholder="Wallet Name">
+			<input id="name-input" autocomplete="chrome-off" class="form-control" placeholder="Wallet Name">
 		</div>
 
 		<div class="col-12 text-center mt-3">

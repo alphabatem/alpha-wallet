@@ -1,8 +1,6 @@
 import {StorageDriver} from "./storageDriver";
 import {TimelockStorage} from "./timelockStorage";
 
-export const DEFAULT_NAMESPACE = {key: "_default", name: "Default Wallet"}
-
 export class WalletStorage extends StorageDriver {
 
   namespace = "_default"
@@ -19,10 +17,10 @@ export class WalletStorage extends StorageDriver {
       //No exist
     })
 
-    return ns || [DEFAULT_NAMESPACE]
+    return ns || []
   }
 
-  async storeNamespaces(ns = [DEFAULT_NAMESPACE]) {
+  async storeNamespaces(ns = []) {
     return this.setPlain("_", "namespaces", ns)
   }
 
@@ -41,7 +39,8 @@ export class WalletStorage extends StorageDriver {
 
   async getWalletAddr() {
     console.log("getting wallet addr for ns: ", this.namespace)
-    return await this.getEncrypted(this.namespace, "wallet_addr", await this.getCachedPasscode()).catch(e => {})
+    return await this.getEncrypted(this.namespace, "wallet_addr", await this.getCachedPasscode()).catch(e => {
+    })
   }
 
   async setWalletAddr(walletAddr) {

@@ -4,10 +4,6 @@ export default class WalletImportView extends AbstractView {
   nameInput
   walletInput
 
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Import Wallet");
-  }
 
   async importWallet(e) {
     console.log("Importing wallet", this.nameInput.value)
@@ -15,13 +11,14 @@ export default class WalletImportView extends AbstractView {
   }
 
   async getHtml() {
+    this.setTitle("Import Wallet");
 
     return `
             <h1>${this.title}</h1>
 
             <div class="row mt-5">
 		<div class="col-12">
-			<input autocomplete="off" id="name-input" class="form-control" placeholder="Wallet Name">
+			<input autocomplete="chrome-off" id="name-input" class="form-control" placeholder="Wallet Name">
 		</div>
 		<div class="col-12 mt-3"></div>
 

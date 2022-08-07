@@ -1,11 +1,10 @@
 import {AbstractManager} from "../abstractManager";
-import {DEFAULT_NAMESPACE} from "../../storage/walletStorage";
 
 export const NS_MANAGER = "namespace_manager"
 
 export class NamespaceManager extends AbstractManager {
 
-  _namespaces = [DEFAULT_NAMESPACE];
+  _namespaces = [];
 
   walletHeader
 
@@ -28,7 +27,10 @@ export class NamespaceManager extends AbstractManager {
     return this._namespaces.find((ns) => ns.key === this.getStore().getActiveNamespace())
   }
 
-  getNamespaces() {
+  async getNamespaces() {
+    if (this._namespaces.length === 0)
+      this._namespaces = await this.getStore().loadNamespaces()
+
     return this._namespaces
   }
 
@@ -42,6 +44,12 @@ export class NamespaceManager extends AbstractManager {
     })
 
     return this.getStore().storeNamespaces(this._namespaces)
+  }
+
+  async removeNamespace(walletAddr) {
+    const ns = this._namespaces.filter((n) => n.key !== walletAddr)
+    await this.getStore().storeNamespaces(ns)
+    this._namespaces = ns
   }
 
   async setActiveNamespace(namespace) {

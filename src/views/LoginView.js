@@ -48,7 +48,7 @@ export default class LoginView extends AbstractView {
 	<div class="row login-container mt-3">
 	<form method="post" id="login-form">
 		<div class="col-12">
-			<input autocomplete="off" id="input" type="password" class="form-control form-control-lg text-center" placeholder="Password">
+			<input autocomplete="chrome-off" id="input" type="password" class="form-control form-control-lg text-center" placeholder="Password">
 		</div>
 
 		<div class="col-12 text-center mt-3">

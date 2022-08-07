@@ -1,13 +1,10 @@
 import AbstractView from "../../view.js";
 
 export default class PluginsView extends AbstractView {
-  constructor(router,wallet) {
-    super(router,wallet);
-    this.setTitle("Plugins");
-  }
 
   //TODO setup click handler
   async getHtml() {
+    this.setTitle("Plugins");
     return `
             <h1>${this.title}</h1>
             <p class="small mt-2">Click to toggle plugins, by disabling a plugin all code execution for that plugin is stopped.</p>

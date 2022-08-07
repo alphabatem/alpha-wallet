@@ -82,7 +82,7 @@ export default class WalletCreateSaveView extends AbstractView {
 
     const msplit = this._mnemonic.split(" ")
     for (let i = 0; i < msplit.length; i++) {
-      validate += `<input autocomplete="off" class="form-control key-input mt-1" id="validate-${i}" placeholder="${i}">`
+      validate += `<input autocomplete="chrome-off" class="form-control key-input mt-1" id="validate-${i}" placeholder="${i}">`
     }
 
     return `<div class="container-fluid">

@@ -245,3 +245,7 @@ body {
   text-align: center;
   padding: 2px !important;
 }
+
+.card.active {
+  box-shadow: 0 0 3px green;
+}

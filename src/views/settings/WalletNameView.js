@@ -4,10 +4,8 @@ export default class WalletNameView extends AbstractView {
   nameInput
   walletInput
 
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Wallet Name");
-  }
+  walletAddr
+
 
   async updateWallet(e) {
     //
@@ -17,11 +15,16 @@ export default class WalletNameView extends AbstractView {
     this._router.navigateTo("settings")
   }
 
-  async getHtml() {
+  async removeWallet(e) {
+    this._router.navigateTo("wallets/remove", {walletAddr: this.walletAddr})
+  }
 
-    const walletAddr = await this.getWallet().getStore().getWalletAddr().catch(e => {
+  async getHtml() {
+    this.setTitle("Wallet Name");
+
+    this.walletAddr = await this.getWallet().getStore().getWalletAddr().catch(e => {
     })
-    console.log("WalletAddr", walletAddr)
+    console.log("WalletAddr", this.walletAddr)
     const walletName = await this.getWallet().getStore().getWalletName().catch(e => {
     })
 
@@ -30,24 +33,38 @@ export default class WalletNameView extends AbstractView {
 
             <div class="row mt-3">
 		<div class="col-12">
-			<input id="name-input" autocomplete="off" class="form-control" placeholder="Wallet Name" value="${walletName}">
+			<input id="name-input" autocomplete="chrome-off" class="form-control" placeholder="Wallet Name" value="${walletName}">
 		</div>
 		<div class="col-12 mt-3"></div>
 
 		<div class="col-12 mt-3">
-			<input id="wallet-input" autocomplete="off" class="form-control" placeholder="Wallet Address" value="${walletAddr}">
+			<input id="wallet-input" disabled="true" class="form-control" placeholder="Wallet Address" value="${this.walletAddr}">
 		</div>
 
 		<div class="col-12 text-center mt-3">
 		    <button id="update-wallet" class="btn btn-primary btn-block">SAVE</button>
 		</div>
-	</div>
-        `;
+
+		<hr>
+
+
+		<div class="col-12 text-center mt-3">
+		    <button id="remove-wallet" class="btn btn-danger btn-block">REMOVE</button>
+		</div>
+
+	</div>`;
   }
 
-  async onMounted() {
+  async onMounted(app) {
+    super.onMounted(app)
+
     this.nameInput = document.getElementById("name-input")
     this.walletInput = document.getElementById("wallet-input")
-    document.getElementById("update-wallet").addEventListener("click", (e) => this.updateWallet(e))
+    document.getElementById("update-wallet").addEventListener("click", (e) => {
+      this.updateWallet(e)
+    })
+    document.getElementById("remove-wallet").addEventListener("click", (e) => {
+      this.removeWallet(e)
+    })
   }
 }

@@ -21,8 +21,12 @@ export default class NFTView extends AbstractView {
     return `<h1>${this.title}</h1>
 
 <div class="token-container">
-	<div class="row">${nftArr.length > 0 ? nftView : '<i class="small">No NFT\'s Detected</i>'}</div>
+	<div class="row">${nftArr.length > 0 ? nftView : this.noNFTSMessage()}</div>
 </div>`;
+  }
+
+  noNFTSMessage() {
+    return `<div class="col-12 text-center"><i class="small">No NFT\'s Detected</i></div>`
   }
 
   async onMounted(app) {

@@ -19,6 +19,8 @@ import AddWalletView from "../views/creation/AddWalletView";
 import WalletCreateView from "../views/creation/WalletCreateView";
 import WalletImportView from "../views/creation/WalletImportView";
 import WalletCreateSaveView from "../views/creation/WalletCreateSaveView";
+import RemoveWalletView from "../views/creation/RemoveWalletView";
+import CustomRPCView from "../views/settings/CustomRPCView";
 
 const _routes = [
   {hash: "login", view: LoginView},
@@ -39,6 +41,7 @@ const _routes = [
   {hash: "wallets/add", view: AddWalletView},
   {hash: "wallets/create", view: WalletCreateView},
   {hash: "wallets/create/save", view: WalletCreateSaveView},
+  {hash: "wallets/remove", view: RemoveWalletView},
   {hash: "wallets/import", view: WalletImportView},
   {hash: "wallets/connect", view: ComingSoonView},
 
@@ -48,6 +51,7 @@ const _routes = [
   {hash: "settings/trusted_apps", view: TrustedAppsView},
   {hash: "settings/language", view: LanguageView},
   {hash: "settings/rpc", view: RPCSelectView},
+  {hash: "settings/rpc/custom", view: CustomRPCView},
   {hash: "settings/lock_timeout", view: LockTimeoutView},
   {hash: "settings/default_explorer", view: DefaultExplorerView},
   {hash: "settings/plugins", view: PluginSettingsView},
@@ -63,11 +67,22 @@ export class Router {
 
   pluginRoutes = [];
 
+  currentRoute = null
+  lastRoute = null
+
   constructor(wallet) {
     this.wallet = wallet
   }
 
+  back() {
+    if (!this.lastRoute)
+      return
+
+    return this.navigateTo(this.lastRoute.hash, this.lastRoute.data)
+  }
+
   navigateTo(hash, data = {}) {
+    this.lastRoute = this.currentRoute
     history.pushState(null, null, hash);
     return this.onNavigate(hash, data);
   };
@@ -94,10 +109,12 @@ export class Router {
       match = routes[0];
     }
 
+    console.log("Navigating to", match, data)
     return this.updateView(match, data)
   }
 
   async updateView(match, data = {}) {
+    this.currentRoute = {hash: match.hash, data: data}
     this.currentView = new match.view(this, this.wallet, data);
     this.appContainer.innerHTML = await this.currentView.getHtml();
 

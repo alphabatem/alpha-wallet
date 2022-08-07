@@ -1,6 +1,6 @@
 import {AbstractManager} from "../abstractManager";
-import {DEFAULT_NAMESPACE} from "../../storage/walletStorage";
 import {EVENT_MGR, EVENTS} from "./eventManager";
+import {NS_MANAGER} from "./namespaceManager";
 
 const DEFAULT_CONFIG = {
   rpcUrl: "https://ssc-dao.genesysgo.net/",
@@ -13,6 +13,16 @@ const DEFAULT_CONFIG = {
 export class ConfigManager extends AbstractManager {
 
   config = DEFAULT_CONFIG
+
+
+  //Allowed keys
+  allowedKeys = {
+    rpcUrl: true,
+    commitment: true,
+    lockTimeout: true,
+    explorer: true,
+    language: true
+  }
 
   id() {
     return CFG_MGR
@@ -31,7 +41,8 @@ export class ConfigManager extends AbstractManager {
   }
 
   async getConfig() {
-    let cfg = await this.getStore().getPlain(DEFAULT_NAMESPACE, "config").catch(e => {
+    const ns = await this.getManager(NS_MANAGER).getActiveNamespace()
+    let cfg = await this.getStore().getPlain(ns, "config").catch(e => {
       //
     })
 
@@ -42,8 +53,23 @@ export class ConfigManager extends AbstractManager {
     return cfg
   }
 
+  getConfigValue(key) {
+    return this.config[key]
+  }
+
+  async setConfigValue(key, value) {
+    console.log("setConfigValue", key, value, this.config)
+    if (!this.allowedKeys[key])
+      return
+
+    this.config[key] = value
+
+    return this.setConfig(this.config)
+  }
+
   async setConfig(cfg = DEFAULT_CONFIG) {
-    return this.getStore().setPlain(DEFAULT_NAMESPACE, "config", cfg)
+    const ns = await this.getManager(NS_MANAGER).getActiveNamespace()
+    return this.getStore().setPlain(ns, "config", cfg)
   }
 
   notify(data = {}) {
@@ -51,6 +77,29 @@ export class ConfigManager extends AbstractManager {
     if (!mgr) return
 
     mgr.onEvent(EVENTS.onConfig, data)
+  }
+
+
+  getRPCUrl() {
+    return this.config.rpcUrl
+  }
+
+  /**
+   * Returns the explorer url to use based on user preference
+   * @returns {string}
+   */
+  getExplorerUrl() {
+    switch (this.config.explorer) {
+      case "solana_fm":
+        return "https://solana.fm"
+      case "solana_explorer":
+        return "https://explorer.solana.com"
+      case "solscan":
+        return "https://solscan.io"
+      case "solanabeach":
+        return "https://solanabeach.io"
+    }
+    return "https://solana.fm"
   }
 
 }

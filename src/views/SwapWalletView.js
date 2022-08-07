@@ -4,10 +4,6 @@ import {NS_MANAGER} from "../managers/core/namespaceManager";
 
 export default class SwapWalletView extends AbstractView {
 
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Wallets");
-  }
 
   async onClick(e) {
     const ns = e.target.dataset.namespace
@@ -20,8 +16,9 @@ export default class SwapWalletView extends AbstractView {
   }
 
   async getHtml() {
+    this.setTitle("Wallets");
 
-    const namespaces = this.getManager(NS_MANAGER).getNamespaces()
+    const namespaces = await this.getManager(NS_MANAGER).getNamespaces()
     console.log("Namespaces", namespaces)
 
     let walletCards = ``

@@ -18,7 +18,7 @@ export default class TokenView extends AbstractView {
     let totalPrice = 0
     let tokenViews = ""
 
-    const sorted = Object.values(tokens.liquid).sort((a,b) => {
+    const sorted = Object.values(tokens.liquid).sort((a, b) => {
       return (b.amount.uiAmount * (this.tokenPrices[b.mint] || 0)) - (a.amount.uiAmount * (this.tokenPrices[a.mint] || 0))
     })
 
@@ -48,10 +48,12 @@ export default class TokenView extends AbstractView {
     </div>`
 
 
-    if (tokens.liquid.length === 0)
+    if (tokenViews === "")
       h += `
     <div class="token-container">
       <i class="small">No Token Assets Detected</i>
+
+      <div><button id="refresh-view" class="btn btn-primary mt-3">REFRESH</button></div>
     </div>`
     else {
       h += tokenViews
@@ -65,6 +67,13 @@ export default class TokenView extends AbstractView {
   async onMounted(app) {
     super.onMounted(app);
 
+    const refresh = document.getElementById("refresh-view")
+    if (refresh)
+      refresh.addEventListener("click", (e) => {
+        console.log("Refreshing view")
+        this.getRouter().refresh()
+      })
+
     this.setTitle("Tokens");
     const elems = document.getElementsByClassName("token-card")
     for (let i = 0; i < elems.length; i++) {
@@ -74,6 +83,9 @@ export default class TokenView extends AbstractView {
 
   onClick(e) {
     console.log("Token click", e)
-    this.getRouter().navigateTo("tokens/show", {mint: e.target.dataset.mint, price: this.tokenPrices[e.target.dataset.mint]})
+    this.getRouter().navigateTo("tokens/show", {
+      mint: e.target.dataset.mint,
+      price: this.tokenPrices[e.target.dataset.mint]
+    })
   }
 }
