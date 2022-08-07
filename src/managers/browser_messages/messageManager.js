@@ -1,6 +1,6 @@
-import {Manager} from "../manager";
+import {AbstractManager} from "../abstractManager";
 
-export class MessageManager extends Manager {
+export class MessageManager extends AbstractManager {
 
   id() {
     return MESSAGE_MGR
@@ -91,7 +91,7 @@ export class MessageManager extends Manager {
    * @private
    */
   _canExecute() {
-    if (this.walletStore.isLocked())
+    if (this.getStore().isLocked())
       return false
 
     return true

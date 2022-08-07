@@ -5,15 +5,21 @@ import {NFTManager} from "../managers/nft/nftManager";
 import {SolanaManager} from "../managers/solana/solanaManager";
 import {MessageManager} from "../managers/browser_messages/messageManager";
 import {PriceManager} from "../managers/pricing/priceManager";
+import {StorageManager} from "../managers/storage/storageManager";
+import {KeyStorage} from "../storage/keyStorage";
+import {CFG_MGR, ConfigManager} from "../managers/core/configManager";
+import {LockManager} from "../managers/core/lockManager";
+import {EventManager} from "../managers/core/eventManager";
+import {NamespaceManager} from "../managers/core/namespaceManager";
 
 export class AlphaWallet {
 
-  walletStore
+  _lockMgr = new LockManager()
 
-  managerCtx
+  _managerCtx
 
   constructor() {
-    this.walletStore = new WalletStorage()
+    console.log("Loading Alpha Wallet")
   }
 
 
@@ -24,12 +30,19 @@ export class AlphaWallet {
    */
   newWalletContext() {
     return new ManagerContext([
-      new SolanaManager(this.walletStore),
-      new MessageManager(this.walletStore),
-      new TokenManager(this.walletStore),
-      new NFTManager(this.walletStore),
+      //Core
+      new ConfigManager(),
+      this._lockMgr,
+      new NamespaceManager(),
+      new EventManager(),
+      new StorageManager(new WalletStorage(), new KeyStorage()),
+
+      //Plugins
+      new SolanaManager(),
+      new MessageManager(),
+      new TokenManager(),
+      new NFTManager(),
       new PriceManager(),
-      //TODO Transfer manager?
     ])
   }
 
@@ -40,7 +53,7 @@ export class AlphaWallet {
    * @returns {*}
    */
   getManager(id) {
-    return this.managerCtx.getManager(id)
+    return this._managerCtx.getManager(id)
   }
 
   /**
@@ -50,23 +63,19 @@ export class AlphaWallet {
    * @returns {Promise<boolean>}
    */
   async unlock(passcode) {
-    if (!await this.walletStore.unlock(passcode))
+    if (!await this._lockMgr.unlock(passcode))
       return false
 
     console.log("Wallet unlocked", new Date())
 
-    const cfg = await this.walletStore.getConfig().catch(e => console.log("config fetch err", e))
-    const walletAddr = await this.walletStore.getWalletAddr()
-    const walletName = await this.walletStore.getPlain("wallet_name").catch(e => {
-    })
+    this._managerCtx = this.newWalletContext()
+    this._managerCtx.start()
 
-    this.managerCtx = this.newWalletContext()
-    this.managerCtx.start()
-
-    setTimeout(() => this.lock(), cfg.lockTimeout)
+    const cfg = await this.getManager(CFG_MGR).getConfig()
+    //TODO Wallet name
 
     //Wallet connected
-    this.onUnlocked({wallet_addr: walletAddr, wallet_name: walletName, cfg})
+    this.onUnlocked({wallet_addr: "0x0", wallet_name: "TODO", cfg})
     return true
   }
 
@@ -77,12 +86,12 @@ export class AlphaWallet {
    */
   async lock() {
     console.log("Locking wallet", new Date())
-    this.walletStore.lock()
+    this._lockMgr.lock()
 
     this.passcode = null
 
     //Clear active plugins
-    this.managerCtx = null
+    this._managerCtx = null
     this.adapters = {}
   }
 
@@ -111,7 +120,7 @@ export class AlphaWallet {
    * @returns {Promise<*|boolean>}
    */
   async isPasscodeSet() {
-    return this.walletStore.isPasscodeSet()
+    return this._lockMgr.getStore().isPasscodeSet()
   }
 
 
@@ -120,18 +129,9 @@ export class AlphaWallet {
    * @returns Boolean
    */
   isLocked() {
-    return this.walletStore.isLocked()
+    return this._lockMgr.isLocked()
   }
 
-
-  /**
-   * Return wallet store
-   *
-   * @returns WalletStorage
-   */
-  getStore() {
-    return this.walletStore
-  }
 
   /**
    * Event - Called when wallet is unlocked

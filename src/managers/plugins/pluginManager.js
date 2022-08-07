@@ -1,4 +1,8 @@
-export class PluginManager {
+import {AbstractManager} from "../abstractManager";
+
+export class PluginManager extends AbstractManager {
+
+
 
   /**
    * Responsibilities:

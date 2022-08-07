@@ -1,6 +1,6 @@
-import {Manager} from "../manager";
+import {AbstractManager} from "../abstractManager";
 
-export class WalletManager extends Manager {
+export class WalletManager extends AbstractManager {
 
 
   id() {

@@ -8,6 +8,11 @@ const PATHS = require('./paths');
 // Merge webpack configuration files
 const config = (env, argv) =>
   merge(common, {
+    resolve: {
+      fallback: {
+        "stream": require.resolve('stream-browserify'),
+      },
+    },
     entry: {
       popup: PATHS.src + '/popup.js',
       contentScript: PATHS.src + '/contentScript.js',

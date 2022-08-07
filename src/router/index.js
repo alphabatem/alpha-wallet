@@ -18,6 +18,7 @@ import SwapWalletView from "../views/SwapWalletView";
 import AddWalletView from "../views/creation/AddWalletView";
 import WalletCreateView from "../views/creation/WalletCreateView";
 import WalletImportView from "../views/creation/WalletImportView";
+import WalletCreateSaveView from "../views/creation/WalletCreateSaveView";
 
 const _routes = [
   {hash: "login", view: LoginView},
@@ -37,6 +38,7 @@ const _routes = [
   {hash: "wallets/swap", view: SwapWalletView},
   {hash: "wallets/add", view: AddWalletView},
   {hash: "wallets/create", view: WalletCreateView},
+  {hash: "wallets/create/save", view: WalletCreateSaveView},
   {hash: "wallets/import", view: WalletImportView},
   {hash: "wallets/connect", view: ComingSoonView},
 

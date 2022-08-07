@@ -1,15 +1,15 @@
 import {SonarWatch} from "./providers/sonar_watch";
-import {Manager} from "../manager";
+import {AbstractManager} from "../abstractManager";
 
-export class PriceManager extends Manager {
+export class PriceManager extends AbstractManager {
 
   provider
 
   priceCache = null
   lastFetch = null
 
-  constructor(store) {
-    super(store)
+  constructor() {
+    super()
     this.provider = new SonarWatch()
   }
 

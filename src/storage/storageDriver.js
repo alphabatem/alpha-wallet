@@ -1,38 +1,15 @@
 import CryptoJS from "crypto-js";
 import {AESJsonFormatter} from "./AESJsonFormatter";
+import {HashStorage} from "./hashStorage";
 
-
-export const DEFAULT_NAMESPACE = {key: "_default", name: "Default Wallet"}
-
-export class StorageDriver {
+//Driver extended off hash storage to provide access to storage calls from
+// client
+export class StorageDriver extends HashStorage {
 
   _locked = false
 
   _zonePrivate = "private" //Encrypted
   _zonePlain = "plain" //Unencrypted
-  _zonePasscode = "passcode" //Hash
-
-
-  _namespaces = [DEFAULT_NAMESPACE]; //Array of storage keys for wallet namespaces
-
-  constructor() {
-    this.loadNamespaces().then((ns) => {
-      console.log("NS loaded", ns)
-      this._namespaces = ns
-    })
-  }
-
-  getNamespaces() {
-    return this._namespaces
-  }
-
-  async loadNamespaces() {
-    const ns = await this._getLocal("namespaces").catch(e => {
-      //No exist
-    })
-
-    return ns || [DEFAULT_NAMESPACE]
-  }
 
   isLocked() {
     return this._locked
@@ -140,57 +117,6 @@ export class StorageDriver {
 
 
   /**
-   * Attempt to update the passcode of the wallet
-   *
-   * @param currentPasscode
-   * @param passcode
-   * @returns {Promise<*>}
-   */
-  async setPasscode(currentPasscode, passcode) {
-    if (await this.isPasscodeSet() && !await this.testPasscode(currentPasscode)) {
-      return false
-    }
-
-    const sha = CryptoJS.SHA3(passcode).toString(CryptoJS.enc.Hex)
-    return this._setLocal(`${this._zonePasscode}:pk`, sha)
-  }
-
-  /**
-   * Return the passcode hash
-   * @returns {Promise<*>}
-   */
-  async getPasscodeHash() {
-    const key = `${this._zonePasscode}:pk`
-    const res = await chrome.storage.local.get(key)
-    return res[key]
-  }
-
-  async isPasscodeSet() {
-    const pkHash = await this.getPasscodeHash().catch(e => {
-    })
-    return Boolean(pkHash)
-  }
-
-  /**
-   * Test if the passcode is valid or not
-   *
-   * @param passcode
-   * @returns {Promise<boolean>}
-   */
-  async testPasscode(passcode) {
-    const hash = CryptoJS.SHA3(passcode).toString(CryptoJS.enc.Hex)
-    const pkHash = await this.getPasscodeHash()
-
-    if (pkHash === null) {
-      console.warn("Passcode not set")
-      return true //Not yet set
-    }
-
-    return pkHash === hash
-  }
-
-
-  /**
    * Get an encrypted value
    *
    * @param namespace
@@ -199,8 +125,9 @@ export class StorageDriver {
    * @returns {Promise<null|*>}
    */
   async getEncrypted(namespace, key, passcode = null) {
-    if (!passcode)
-      return null
+    const ok = await this.testPasscode(passcode)
+    if (!ok)
+      throw new Error("invalid passcode")
 
     const inp = await this._getLocal(`${this._zonePrivate}.${key}`)
     return CryptoJS.AES.decrypt(inp, passcode, {format: new AESJsonFormatter()}).toString(CryptoJS.enc.Utf8)
@@ -216,8 +143,9 @@ export class StorageDriver {
    * @returns {Promise<unknown>}
    */
   async setEncrypted(namespace, key, value, passcode = null) {
-    if (!passcode)
-      return null
+    const ok = await this.testPasscode(passcode)
+    if (!ok)
+      throw new Error("invalid passcode")
 
     const out = CryptoJS.AES.encrypt(value, passcode, {format: new AESJsonFormatter()});
     return this._setLocal(`${this._zonePrivate}.${key}`, out)

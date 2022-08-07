@@ -3,16 +3,16 @@ import AbstractView from "../../view.js";
 export default class WalletCreateView extends AbstractView {
   nameInput
 
-  constructor(router, wallet) {
-    super(router, wallet);
-    this.setTitle("Create Wallet");
-  }
-
   async createWallet(e) {
+    if (this.nameInput.value.length < 1)
+      return
+
+    console.log("Create req", this.nameInput.value)
     this.getRouter().navigateTo("wallets/create/save", {name: this.nameInput.value})
   }
 
   async getHtml() {
+    this.setTitle("Create Wallet");
 
     return `
             <h1>${this.title}</h1>
@@ -27,8 +27,8 @@ export default class WalletCreateView extends AbstractView {
 		</div>
 	</div>`;
   }
-
   async onMounted(app) {
+
     await super.onMounted(app)
     this.nameInput = document.getElementById("name-input")
     document.getElementById("create-wallet").addEventListener("click", (e) => this.createWallet(e))

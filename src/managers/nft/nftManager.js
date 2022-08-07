@@ -1,9 +1,9 @@
-import {Manager} from "../manager";
+import {AbstractManager} from "../abstractManager";
 import axios from "axios";
 import {web3} from "@project-serum/anchor";
 import {SOLANA_MANAGER} from "../solana/solanaManager";
 
-export class NFTManager extends Manager {
+export class NFTManager extends AbstractManager {
 
 
   _nfts = {
@@ -31,7 +31,7 @@ export class NFTManager extends Manager {
 
 
   async getNFTs() {
-    const walletAddr = await this.store.getWalletAddr()
+    const walletAddr = await this.getStore.getWalletAddr()
 
     await this.getLiquidNFTs(walletAddr)
     await this.getListedNFTs(walletAddr)

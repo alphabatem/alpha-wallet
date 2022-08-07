@@ -12,15 +12,18 @@ Responsibilities:
 Managers can communicate via the shared context using `getManager({id})`
 
 Basic manager
-```js
-import {Manager} from "./manager";
 
-export class ExampleManager extends Manager {
+```js
+import {
+  Manager
+} from "./abstractManager";
+
+export class ExampleManager extends AbstractManager {
 
   id() {
     return EXAMPLE_MANAGER
   }
-  
+
   //Custom logic...
 }
 

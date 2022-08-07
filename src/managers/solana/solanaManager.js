@@ -1,19 +1,15 @@
-import {Manager} from "../manager";
+import {AbstractManager} from "../abstractManager";
 import {SolanaRPC} from "../../chains/solanaRpc";
+import {EVENT_MGR, EVENTS} from "../core/eventManager";
 
-export class SolanaManager extends Manager {
+export class SolanaManager extends AbstractManager {
 
   _rpc
 
-  constructor(ctx, store) {
-    super(ctx, store);
+  configure(ctx) {
+    super.configure(ctx);
 
-    //Get config & load rpc settings
-    this.store.getConfig().then(cfg => {
-      this._rpc = new SolanaRPC(cfg.rpcUrl, cfg.commitment)
-    }).catch(e => {
-      console.error("getConfig err", e)
-    })
+    this.getManager(EVENT_MGR).subscribe(EVENTS.onConfig, (c) => this.onConfig(c))
   }
 
   id() {
@@ -24,6 +20,10 @@ export class SolanaManager extends Manager {
     return this._rpc
   }
 
+  onConfig(cfg) {
+    console.log("Config loaded, starting RPC")
+    this._rpc = new SolanaRPC(cfg.rpcUrl, cfg.commitment)
+  }
 
 }
 

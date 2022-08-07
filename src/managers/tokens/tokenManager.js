@@ -1,9 +1,9 @@
-import {Manager} from "../manager";
+import {AbstractManager} from "../abstractManager";
 import {SOLANA_MANAGER} from "../solana/solanaManager";
 import {web3} from "@project-serum/anchor";
 import {PRICE_MANAGER} from "../pricing/priceManager";
 
-export class TokenManager extends Manager {
+export class TokenManager extends AbstractManager {
 
   _tokens = {
     staked: {}, //TODO
@@ -24,7 +24,7 @@ export class TokenManager extends Manager {
    * @returns {Promise<void>}
    */
   async getBalance() {
-    const walletAddr = await this.store.getWalletAddr()
+    const walletAddr = await this.getStore().getWalletAddr()
     this.solBalance = await this.getManager(SOLANA_MANAGER).rpc().getBalance(walletAddr)
     console.log("Sol Balance", this.solBalance)
   }
@@ -78,7 +78,7 @@ export class TokenManager extends Manager {
    * @returns {Promise<void>}
    */
   async getLiquidTokens() {
-    const walletAddr = await this.store.getWalletAddr()
+    const walletAddr = await this.getStore.getWalletAddr()
     const accounts = await this.rpc().getParsedTokenAccountsByOwner(new web3.PublicKey(walletAddr))
 
     for (const a of accounts.value) {
