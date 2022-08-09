@@ -10,14 +10,11 @@ export class TransactionCard extends AbstractView {
   }
 
   async getHtml() {
-    console.log("TXNCard", this._data)
     const txn = this._data.txn
     const txnTime = new Date(txn.blockTime * 1000).toLocaleString()
 
     this.txnDetail = await this.getManager(SOLANA_MANAGER).rpc().getTransaction(this._data.txn.signature).catch((e) => this.txnDetail = {})
     const profit = this.calculateTradeProfit(await this.getWalletAddr(), this.txnDetail)
-    console.log("Profit", profit)
-    console.log("Detail", this.txnDetail)
 
     return `<div class="col-12"><a style="text-decoration: none; color: white" target="_blank" href="https://solscan.io/tx/${this._data.txn.signature}"><div class="card txn-card">
 	<div class="card-body p-2">

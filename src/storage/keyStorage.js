@@ -5,13 +5,15 @@ import {StorageDriver} from "./storageDriver";
  */
 export class KeyStorage extends StorageDriver {
   namespace = "hd_store"
+  privateKey = "private_key"
+  pinKey = "pincode"
 
   async setPrivateKey(publicKey, privateKey, passcode) {
-    return this.setEncrypted(this.namespace, `${publicKey}.private_key`, privateKey, passcode)
+    return this.setEncrypted(this.namespace, `${publicKey}.${this.privateKey}`, privateKey, passcode)
   }
 
   async getPrivateKey(publicKey, passcode) {
-    return this.getEncrypted(this.namespace, `${publicKey}.private_key`, passcode)
+    return this.getEncrypted(this.namespace, `${publicKey}.${this.privateKey}`, passcode)
   }
 
   async incrementKeysUsed(publicKey) {

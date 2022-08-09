@@ -64,6 +64,13 @@ body {
 .bg-primary {
   color: white;
   background: deepskyblue;
+  font-weight: bold;
+}
+
+.bg-secondary {
+  color: white;
+  background: rgba(0,0,0,0.3);
+  font-weight: bold;
 }
 
 
@@ -248,4 +255,11 @@ body {
 
 .card.active {
   box-shadow: 0 0 3px green;
+}
+
+.form-control.pin-control {
+  width: 11%;
+  text-align: center;
+  height: 3rem;
+  font-size: 2rem;
 }

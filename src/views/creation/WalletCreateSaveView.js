@@ -19,17 +19,14 @@ export default class WalletCreateSaveView extends AbstractView {
       return
     }
 
-    console.log("Keys match!")
-
     const walletAddr = this.getNextWalletAddr()
     const pk = await this.getWallet().getStore().getCachedPasscode()
 
-    console.log("Adding private key")
     const store = await this.getWallet().getKeyStore(pk)
 
     const ok = await store.setPrivateKey(walletAddr.publicKey.toString(), this._mnemonic, pk)
     if (!ok) {
-      console.log("unable to add private key")
+      console.error("unable to add private key")
       return
     }
 

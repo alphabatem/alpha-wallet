@@ -6,10 +6,8 @@ export default class NFTShowView extends AbstractView {
   async getHtml() {
     this.setTitle("NFT Show");
 
-    console.log("Showing NFT", this._data)
     const mgr = this.getManager(NFT_MGR)
     const nft = await mgr.getTokenMetadata(this._data.mint)
-    console.log("NFT", nft)
 
     const metadata = nft.data || {}
     const tokenName = metadata.name ? metadata.name.replaceAll("\u0000", "") : this._data.mint.substring(0, 16)

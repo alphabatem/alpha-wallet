@@ -79,7 +79,6 @@ export class TokenManager extends AbstractManager {
    */
   async getLiquidTokens() {
     const walletAddr = await this.getStore().getWalletAddr()
-    console.log("WalletAddr:", walletAddr, this.getManager(SOLANA_MANAGER))
     const accounts = await this.rpc().getParsedTokenAccountsByOwner(new web3.PublicKey(walletAddr))
 
     for (const a of accounts.value) {

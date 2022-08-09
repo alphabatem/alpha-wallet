@@ -49,17 +49,12 @@ export default class TokenShowView extends AbstractView {
   async getHtml() {
     this.setTitle("Token Show");
 
-    console.log("Showing Token", this._data)
-
     const token = await this.getManager(TOKEN_MGR).getToken(this._data.mint)
-    console.log("Token: ", token)
-
     const detail = await this.getTokenDetail(token.liquid)
 
     const history = await this.rpc().getSignaturesForAddress(token.liquid.publicKey, {
       limit: 5,
     })
-    console.log("history", history)
 
     let histView = ``
 

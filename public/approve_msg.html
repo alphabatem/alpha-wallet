@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Alpha Wallet</title>
+  <link rel="stylesheet" href="popup.css"/>
+  <link rel="stylesheet" href="notification.css"/>
+</head>
+<body>
+<div class="app">
+  <div class="topnav">
+    <div id="wallet_swap">@</div>
+    <div>
+      <h4><span
+        id="wallet_addr"></span></h4>
+    </div>
+    <div>
+      <div
+        class="badge bg-primary connection_status px-2"><span
+        id="connection_status">Locked</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="app">
+  </div>
+</div>
+
+<script src="approve_msg.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

@@ -37,7 +37,6 @@ export default class SetPasscodeView extends AbstractView {
   }
 
   onUpdateResponse(ok) {
-    console.log(`onUpdateResponse`,ok)
     if (!ok) {
       console.error("Unable to update passcode")
       if (this.existingCode.value !== null)
@@ -47,13 +46,10 @@ export default class SetPasscodeView extends AbstractView {
       return false
     }
 
-    console.log("Passcode updated")
-
     this.getWallet().getStore().getPasscodeHash().then(r => {
-      console.log("Updated passcode: ", r)
       this.getRouter().navigateTo("login")
     }).catch(e => {
-      console.log("Passcode hash missing", e)
+      console.error("Passcode hash missing", e)
     })
 
   }

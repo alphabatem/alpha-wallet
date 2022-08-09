@@ -1,7 +1,3 @@
-function sendMessage(method, data) {
-  window.postMessage({type: "FROM_PAGE", method: method, payload: data})
-}
-
 class AlphaConnector {
   isConnected = false
 
@@ -17,6 +13,10 @@ class AlphaConnector {
   constructor() {
   }
 
+  sendMessage(method, data) {
+    window.postMessage({type: "alpha_msg", method: method, payload: data})
+  }
+
   on(method, callback) {
     if (!this.eventCallbacks[method])
       return
@@ -26,36 +26,36 @@ class AlphaConnector {
 
   async connect() {
     //
-    sendMessage("connect")
+    this.sendMessage("connect")
     this.isConnected = true
   }
 
   async disconnect() {
-    sendMessage("disconnect")
+    this.sendMessage("disconnect")
     this.isConnected = false
   }
 
   async signAndSendTransaction(txn, sendOptions) {
-    sendMessage("signAndSendTransaction", {
+    this.sendMessage("signAndSendTransaction", {
       transaction: txn,
       opts: sendOptions
     })
   }
 
   async signTransaction(txn) {
-    sendMessage("signTransaction", {
+    this.sendMessage("signTransaction", {
       transaction: txn
     })
   }
 
   async signAllTransactions(txns) {
-    sendMessage("signAllTransactions", {
+    this.sendMessage("signAllTransactions", {
       transactions: txns
     })
   }
 
   async signMessage(msg) {
-    sendMessage("signMessage", {
+    this.sendMessage("signMessage", {
       message: msg
     })
   }

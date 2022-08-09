@@ -5,7 +5,6 @@ export default class DefaultExplorerView extends AbstractView {
 
   async onClick(e) {
     const selected = e.target.dataset.value
-    console.log("Selected", selected)
     await this.getManager(CFG_MGR).setConfigValue("explorer", selected)
     this._router.refresh()
   }

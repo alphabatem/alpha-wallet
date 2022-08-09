@@ -24,7 +24,6 @@ export default class WalletNameView extends AbstractView {
 
     this.walletAddr = await this.getWallet().getStore().getWalletAddr().catch(e => {
     })
-    console.log("WalletAddr", this.walletAddr)
     const walletName = await this.getWallet().getStore().getWalletName().catch(e => {
     })
 

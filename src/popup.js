@@ -1,7 +1,7 @@
 'use strict';
 
-import './popup.css';
-import './base.css';
+import '../public/popup.css';
+import '../public/base.css';
 import {Router} from "./router";
 import {AlphaWallet} from "./wallet/alphaWallet";
 
@@ -17,10 +17,9 @@ import {AlphaWallet} from "./wallet/alphaWallet";
     const connectionStatus = document.getElementById("connection_status")
 
     walletAddr.addEventListener("click", (e) => {
-      navigator.clipboard.writeText(e.target.dataset.addr).then(function() {
-        console.log('Async: Copying to clipboard was successful!');
-      }, function(err) {
-        console.error('Async: Could not copy text: ', err);
+      navigator.clipboard.writeText(e.target.dataset.addr).then(function () {
+      }, function (err) {
+        console.error('Could not copy text: ', err);
       });
     })
 
@@ -38,7 +37,10 @@ import {AlphaWallet} from "./wallet/alphaWallet";
   }
 
   function mounted() {
-    router.onNavigate()
+    if (window.alphaNav)
+      router.onNavigate(window.alphaNav.path, window.alphaNav.data)
+    else
+      router.onNavigate("login_pin")
   }
 
   document.addEventListener('DOMContentLoaded', beforeMount);

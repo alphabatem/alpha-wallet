@@ -7,8 +7,7 @@ export class TimelockStorage {
 
   namespace = "timelock_store"
 
-  // Used to encrypt our stored data while its not in use so no user data is
-  // stored in plain text within memory apart from this val
+  //Additional layer of abstraction
   _tsPasscode
 
   // og_key -> {time: unix, key: abc}
@@ -19,7 +18,8 @@ export class TimelockStorage {
   constructor(storageDriver) {
     this.driver = storageDriver
     this._tsPasscode = crypto.randomUUID()
-    setInterval(() => this.clearOutdated(), 60 * 1000)
+    setInterval(() => this.clearOutdated(), 60 * 1000) //Check storage every
+    // minute
   }
 
   /**
@@ -56,7 +56,7 @@ export class TimelockStorage {
 
 
   async clear(key) {
-    return this.driver.clearSessionEncrypted(key, this._tsPasscode)
+    return this.driver.clearSessionEncrypted(key)
   }
 
   /**
@@ -68,7 +68,7 @@ export class TimelockStorage {
     for (let i = 0; i < sk.length; i++) {
       if (new Date().getTime() > sk[i].time) {
         delete this.storedAt[si[i]]
-        this.driver.clearSessionEncrypted(sk[i].key, this._tsPasscode)
+        this.clear(sk[i].key)
       }
     }
   }

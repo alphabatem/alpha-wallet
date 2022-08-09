@@ -11,7 +11,7 @@ export class StorageDriver extends HashStorage {
   _zonePrivate = "private" //Encrypted
   _zonePlain = "plain" //Unencrypted
 
-  isLocked() {
+  async isLocked() {
     return this._locked
   }
 
@@ -26,10 +26,7 @@ export class StorageDriver extends HashStorage {
   /**
    * Unlock storage calls
    */
-  async unlock(passcode) {
-    if (!await this.testPasscode(passcode))
-      return false
-
+  async unlock() {
     this._locked = false
     return true
   }
@@ -40,9 +37,8 @@ export class StorageDriver extends HashStorage {
    * @returns {Promise<unknown>}
    */
   async _getSession(key) {
-    if (this.isLocked()) return null
+    if (await this.isLocked()) return null
 
-    console.log(`_getSession`, key)
     return new Promise((resolve, reject) => {
       chrome.storage.session.get([key], function (result) {
         if (result[key] === undefined) {
@@ -61,12 +57,11 @@ export class StorageDriver extends HashStorage {
    * @returns {Promise<unknown>}
    */
   async _setSession(key, value) {
-    if (this.isLocked()) return null
+    if (await this.isLocked()) return null
 
     const payload = {}
     payload[key] = value
 
-    console.log(`_setSession`, key, value)
     return new Promise((resolve, reject) => {
       chrome.storage.session.set(payload).then(() => {
         resolve(value);
@@ -81,8 +76,8 @@ export class StorageDriver extends HashStorage {
    * @param key
    * @returns {Promise<unknown>}
    */
-  async _getLocal(key) {
-    if (this.isLocked()) return null
+  async _getLocal(key, skipLockCheck = false) {
+    if (!skipLockCheck && await this.isLocked()) return null
 
     return new Promise((resolve, reject) => {
       chrome.storage.local.get([key], function (result) {
@@ -103,7 +98,7 @@ export class StorageDriver extends HashStorage {
    * @private
    */
   async _setLocal(key, value) {
-    if (this.isLocked()) return null
+    if (await this.isLocked()) return null
 
     const payload = {}
     payload[key] = value
@@ -120,6 +115,33 @@ export class StorageDriver extends HashStorage {
 
 
   /**
+   * Returns if a key exists in plain store
+   *
+   * @param namespace
+   * @param key
+   * @returns {Promise<boolean>}
+   */
+  async existsPlain(namespace, key) {
+    const inp = await this._getLocal(`${namespace}.${this._zonePlain}.${key}`, true).catch(e => {
+    })
+    return Boolean(inp)
+  }
+
+
+  /**
+   * Returns if a key exists in encrypted store
+   *
+   * @param namespace
+   * @param key
+   * @returns {Promise<boolean>}
+   */
+  async existsEncrypted(namespace, key) {
+    const inp = await this._getLocal(`${namespace}.${this._zonePrivate}.${key}`).catch(e => {
+    })
+    return Boolean(inp)
+  }
+
+  /**
    * Get an encrypted value
    *
    * @param namespace
@@ -133,21 +155,7 @@ export class StorageDriver extends HashStorage {
       throw new Error("invalid passcode")
 
     const inp = await this._getLocal(`${namespace}.${this._zonePrivate}.${key}`)
-    return CryptoJS.AES.decrypt(inp, passcode, {format: new AESJsonFormatter()}).toString(CryptoJS.enc.Utf8)
-  }
-
-
-  /**
-   * Get an encrypted value
-   *
-   * @param namespace
-   * @param key
-   * @param passcode
-   * @returns {Promise<null|*>}
-   */
-  async getSessionEncrypted(namespace, key, passcode = null) {
-    const inp = await this._getSession(`${namespace}.${this._zonePrivate}.${key}`)
-    return CryptoJS.AES.decrypt(inp, passcode, {format: new AESJsonFormatter()}).toString(CryptoJS.enc.Utf8)
+    return this.decryptValue(inp, passcode)
   }
 
   /**
@@ -164,8 +172,25 @@ export class StorageDriver extends HashStorage {
     if (!ok)
       throw new Error("invalid passcode")
 
-    const out = CryptoJS.AES.encrypt(value, passcode, {format: new AESJsonFormatter()});
+    const out = this.encryptValue(value, passcode)
     return this._setLocal(`${namespace}.${this._zonePrivate}.${key}`, out)
+  }
+
+
+  /**
+   * Get an encrypted value
+   *
+   * @param namespace
+   * @param key
+   * @param passcode
+   * @returns {Promise<null|*>}
+   */
+  async getSessionEncrypted(namespace, key, passcode = null) {
+    if (!passcode)
+      throw new Error("password not provided")
+
+    const inp = await this._getLocal(`${namespace}.${this._zonePrivate}.${key}`)
+    return this.decryptValue(inp, passcode)
   }
 
   /**
@@ -178,8 +203,21 @@ export class StorageDriver extends HashStorage {
    * @returns {Promise<unknown>}
    */
   async setSessionEncrypted(namespace, key, value, passcode = null) {
-    const out = CryptoJS.AES.encrypt(value, passcode, {format: new AESJsonFormatter()});
-    return this._setSession(`${namespace}.${this._zonePrivate}.${key}`, out)
+    if (!passcode)
+      throw new Error("password not provided")
+
+    const out = this.encryptValue(value, passcode)
+    return this._setLocal(`${namespace}.${this._zonePrivate}.${key}`, out)
+  }
+
+  async clearSessionEncrypted(namespace, key) {
+    return chrome.storage.local.remove(`${namespace}.${this._zonePrivate}.${key}`)
+  }
+
+  async existsSessionEncrypted(namespace, key) {
+    const inp = await this._getLocal(`${namespace}.${this._zonePrivate}.${key}`).catch(e => {
+    })
+    return Boolean(inp)
   }
 
   /**
@@ -219,12 +257,28 @@ export class StorageDriver extends HashStorage {
     return chrome.storage.local.remove(`${this._zonePrivate}.${key}`)
   }
 
+  /**
+   * Decrypt a given value with provided passcode
+   *
+   * @param value
+   * @param passcode
+   * @returns {*}
+   */
+  decryptValue(value, passcode) {
+    if (!passcode) return
+    return CryptoJS.AES.decrypt(value, passcode, {format: new AESJsonFormatter()}).toString(CryptoJS.enc.Utf8)
+  }
 
-  async clearSessionEncrypted(key, passcode) {
-    const ok = await this.testPasscode(passcode)
-    if (!ok)
-      throw new Error("invalid passcode")
-
-    return chrome.storage.session.remove(`${this._zonePrivate}.${key}`)
+  /**
+   * Encrypt a value with given passcode
+   *
+   * @param value
+   * @param passcode
+   * @returns {*}
+   */
+  encryptValue(value, passcode) {
+    if (!passcode) return
+    const encrypted = CryptoJS.AES.encrypt(value, passcode, {format: new AESJsonFormatter()})
+    return encrypted.toString()
   }
 }

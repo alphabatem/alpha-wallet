@@ -1,0 +1,23 @@
+html, head, body {
+  overflow: hidden;
+}
+
+#app {
+  padding-left: 0;
+}
+
+
+.permission-item {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.logo-container {
+  height: 100px;
+  margin: auto;
+  border-radius: 9px;
+}
+
+.detail .xsmall.mono {
+  line-height: 1.2rem !important;
+}

@@ -3,6 +3,7 @@
   --bs-gutter-y: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   margin-top: calc(-1 * var(--bs-gutter-y));
   margin-right: calc(-.5 * var(--bs-gutter-x));
   margin-left: calc(-.5 * var(--bs-gutter-x));
@@ -18,6 +19,31 @@
 .py-3 {
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important;
+}
+
+.px-1 {
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+}
+
+.px-2 {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.px-3 {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.px-5 {
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
 }
 
 .p-1 {
@@ -46,6 +72,11 @@
 
 .m-2 {
   margin: 0.5rem !important;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mt-1 {
@@ -143,6 +174,14 @@
 .xsmall {
   font-size: 0.6em;
   line-height: 0.6;
+}
+
+.mono {
+  font-family: monospace;
+}
+
+.float-end {
+  float:right;
 }
 
 .btn {
@@ -281,4 +320,13 @@
 
 .col-row div {
   display: inline-block;
+}
+
+
+.link {
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
 }

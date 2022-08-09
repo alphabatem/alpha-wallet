@@ -7,7 +7,6 @@ export default class WalletCreateView extends AbstractView {
     if (this.nameInput.value.length < 1)
       return
 
-    console.log("Create req", this.nameInput.value)
     this.getRouter().navigateTo("wallets/create/save", {name: this.nameInput.value})
   }
 

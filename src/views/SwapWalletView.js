@@ -10,7 +10,6 @@ export default class SwapWalletView extends AbstractView {
     if (!ns)
       return
 
-    console.log("Wallet clicked", ns)
     await this.getManager(NS_MANAGER).setActiveNamespace(ns)
     this.getRouter().navigateTo("tokens")
   }
@@ -19,8 +18,6 @@ export default class SwapWalletView extends AbstractView {
     this.setTitle("Wallets");
 
     const namespaces = await this.getManager(NS_MANAGER).getNamespaces()
-    console.log("Namespaces", namespaces)
-
     let walletCards = ``
     for (let i = 0; i < namespaces.length; i++) {
       walletCards += await this.addSubView(NamespaceCard, {namespace: namespaces[i]}).getHtml()

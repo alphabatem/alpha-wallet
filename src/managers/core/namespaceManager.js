@@ -24,7 +24,8 @@ export class NamespaceManager extends AbstractManager {
   }
 
   getActiveNamespace() {
-    return this._namespaces.find((ns) => ns.key === this.getStore().getActiveNamespace())
+    const ans = this.getStore().getActiveNamespace();
+    return this._namespaces.find((ns) => ns.key === ans)
   }
 
   async getNamespaces() {
@@ -53,7 +54,6 @@ export class NamespaceManager extends AbstractManager {
   }
 
   async setActiveNamespace(namespace) {
-    console.log(`Looking for NS ${namespace}`, this._namespaces)
     if (!this._namespaces.find((n) => n.key === namespace)) {
       throw new Error("invalid namespace")
     }

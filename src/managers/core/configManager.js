@@ -5,8 +5,11 @@ import {NS_MANAGER} from "./namespaceManager";
 const DEFAULT_CONFIG = {
   rpcUrl: "https://ssc-dao.genesysgo.net/",
   commitment: "finalized",
-  lockTimeout: 30 * 60 * 1000,
   explorer: "solscan",
+}
+
+const DEFAULT_CONFIG_GLOBAL = {
+  lockTimeout: 30 * 60 * 1000,
   language: "en"
 }
 
@@ -14,14 +17,11 @@ export class ConfigManager extends AbstractManager {
 
   config = DEFAULT_CONFIG
 
-
   //Allowed keys
   allowedKeys = {
     rpcUrl: true,
     commitment: true,
-    lockTimeout: true,
     explorer: true,
-    language: true
   }
 
   id() {

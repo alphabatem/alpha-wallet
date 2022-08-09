@@ -6,7 +6,6 @@ export default class RPCSelectView extends AbstractView {
 
   async onClick(e) {
     const selected = e.target.dataset.value
-    console.log("Selected", selected)
     await this.getManager(CFG_MGR).setConfigValue("rpcUrl", selected)
     this._router.refresh()
   }
@@ -15,7 +14,6 @@ export default class RPCSelectView extends AbstractView {
     this.setTitle("Default RPC");
 
     const current = this.getManager(CFG_MGR).getRPCUrl()
-    console.log("Current", current)
 
     const options = [
       {

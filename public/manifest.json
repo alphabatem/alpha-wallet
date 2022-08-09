@@ -11,14 +11,15 @@
     "512": "icons/icon_512.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "mode": "module"
   },
   "action": {
     "default_title": "Alpha",
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage", "tabs", "alarms"
   ],
   "web_accessible_resources": [{
     "resources": ["injectScript.js"],

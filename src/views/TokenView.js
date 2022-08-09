@@ -70,7 +70,6 @@ export default class TokenView extends AbstractView {
     const refresh = document.getElementById("refresh-view")
     if (refresh)
       refresh.addEventListener("click", (e) => {
-        console.log("Refreshing view")
         this.getRouter().refresh()
       })
 
@@ -82,7 +81,6 @@ export default class TokenView extends AbstractView {
   }
 
   onClick(e) {
-    console.log("Token click", e)
     this.getRouter().navigateTo("tokens/show", {
       mint: e.target.dataset.mint,
       price: this.tokenPrices[e.target.dataset.mint]

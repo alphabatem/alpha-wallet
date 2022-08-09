@@ -19,7 +19,7 @@ export class TokenCard extends AbstractView {
       image: `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${this._data.token.mint}/logo.png`
     }
     if (metadataUri) {
-      console.log("Getting token metadata", metadataUri)
+      console.debug("Getting token metadata", metadataUri)
       const r = await axios.get(metadataUri).catch(e => {
       })
       if (r)

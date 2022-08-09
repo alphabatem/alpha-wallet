@@ -1,11 +1,12 @@
 import {AbstractManager} from "../abstractManager";
-import {CFG_MGR} from "./configManager";
+import {PIN_MGR} from "./pinManager";
+import {EVENT_MGR, EVENTS} from "./eventManager";
 
 export class LockManager extends AbstractManager {
 
   _locked = true
 
-  _defaultTimeout = 5 * 60 * 1000
+  _defaultTimeout = 60 * 1000
 
   _lockTimeout = null
 
@@ -17,8 +18,7 @@ export class LockManager extends AbstractManager {
 
   configure(ctx) {
     super.configure(ctx);
-
-    this.statusIndicatorDom = document.getElementById("connection_status")
+    this.getManager(EVENT_MGR).subscribe(EVENTS.onConfig, (c) => this.onConfig(c))
   }
 
   /**
@@ -39,12 +39,24 @@ export class LockManager extends AbstractManager {
     return this._locked
   }
 
+  async unlock(passcode, pincode = null) {
+    if (!passcode && pincode) {
+      passcode = await this.unlockPincode(pincode)
+      if (!passcode)
+        throw new Error("invalid pin")
+
+      return this.unlockPasscode(passcode)
+    }
+
+    return this.unlockPasscode(passcode)
+  }
+
   /**
    * Attempt to unlock the wallet
    * @param passcode
    * @returns {Promise<boolean>}
    */
-  async unlock(passcode) {
+  async unlockPasscode(passcode) {
     const lockTimeout = await this.getTimeout()
 
     //Store for the duration of our usage in encrypted session
@@ -55,8 +67,26 @@ export class LockManager extends AbstractManager {
     this._locked = false
     this._lockTimeout = setTimeout(() => this.lock(), lockTimeout)
 
-    this.statusIndicatorDom.innerText = "Unlocked"
+    if (this.statusIndicatorDom)
+      this.statusIndicatorDom.innerText = "Unlocked"
+
+    this.notify(EVENTS.onUnlock)
     return true
+  }
+
+  /**
+   * Attempts to unlock the wallet via pincode
+   * @param pincode
+   * @returns {Promise<null|*|null>}
+   */
+  async unlockPincode(pincode) {
+    const pinMgr = this.getManager(PIN_MGR)
+    if (!pinMgr)
+      return null
+
+    return pinMgr.getPasscode(pincode).catch(e => {
+      return null
+    })
   }
 
   /**
@@ -67,20 +97,40 @@ export class LockManager extends AbstractManager {
     if (this._lockTimeout)
       clearTimeout(this._lockTimeout)
 
-    this.statusIndicatorDom.innerText = "Locked"
+    this.notify(EVENTS.onLock)
+
+    //Clear pin allocation
+    const pinMgr = this.getManager(PIN_MGR)
+    if (pinMgr) {
+      pinMgr.clearCache()
+    }
+
+    if (this.statusIndicatorDom)
+      this.statusIndicatorDom.innerText = "Locked"
   }
 
 
   async getTimeout() {
-    const mgr = this.getManager(CFG_MGR)
-    if (!mgr) {
-      console.warn("Config manager not enabled")
-      return this._defaultTimeout
-    }
-
-    const timeout = await mgr.getLockTimeout()
-    return timeout || this._defaultTimeout
+    return this._defaultTimeout
   }
+
+
+  onConfig(cfg) {
+    this._defaultTimeout = cfg.lockTimeout
+  }
+
+  /**
+   * Notify event bus of lock/unlock events
+   *
+   * @param event
+   */
+  notify(event) {
+    const mgr = this.getManager(EVENT_MGR)
+    if (!mgr) return
+
+    mgr.onEvent(event)
+  }
+
 }
 
 const LOCK_MGR = "lock_mgr"

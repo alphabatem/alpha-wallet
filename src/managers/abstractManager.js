@@ -9,6 +9,11 @@ export class AbstractManager {
     this.ctx = ctx
   }
 
+  /**
+   * Called before manager is removed from context
+   */
+  shutdown() {}
+
   getManager(id) {
     return this.ctx.getManager(id)
   }

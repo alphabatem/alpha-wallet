@@ -15,13 +15,13 @@
   "content_scripts": [
     {"matches":  ["<all_urls>"], "js": ["content-script.js"]}
   ],
-  "web_acessible_resources": ["inject-script.js"],
+  "web_acessible_resources": ["injectScript.js", "trusted_site.html"],
   "permissions": [
     "activeTab",
     "background",
     "storage"
   ],
-  "manifest_version": 2,
+  "manifest_version": 3,
   "web_accessible_resources": [
     "*.js",
     "*.css"

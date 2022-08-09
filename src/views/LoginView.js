@@ -18,13 +18,18 @@ export default class LoginView extends AbstractView {
 
     this.getWallet().unlock(this.input.value).then(ok => {
       if (ok) {
-        this.getRouter().navigateTo("wallets/swap")
+        if (this._data.redirect_to)
+          this.getRouter().navigateTo(this._data.redirect_to)
+        else if (this.getWallet().isPinPluginEnabled())
+          this.getRouter().navigateTo("wallets/set_pin", {pk: this.input.value})
+        else
+          this.getRouter().navigateTo("wallets/swap")
       } else {
         this.onError("Invalid password")
         this.input.focus()
       }
     }).catch(e => {
-      console.log("unlock err", e)
+      console.error("unlock err", e)
       this.onError(e)
     })
       .finally(() => {
@@ -40,13 +45,13 @@ export default class LoginView extends AbstractView {
   async getHtml() {
     this.setTitle("Login");
 
-    return `<div class="login text-center" style="height: 100%">
+    return `<div class="login text-center">
 	<h1 class="mt-3">Login</h1>
 	<p class="small mt-3">Enter your passcode to continue</p>
 
 
-	<div class="row login-container mt-3">
-	<form method="post" id="login-form">
+	<div class="row login-container mt-5">
+	<form method="post" class="mt-5" id="login-form">
 		<div class="col-12">
 			<input autocomplete="chrome-off" id="input" type="password" class="form-control form-control-lg text-center" placeholder="Password">
 		</div>
@@ -73,6 +78,12 @@ export default class LoginView extends AbstractView {
       return
     }
 
+
+    // const pincodeSet = await this.getWallet().isPinCodeSet()
+    // if (pincodeSet) {
+    //   this.getRouter().navigateTo("login_pin")
+    //   return
+    // }
 
     this.input = document.getElementById("input")
     this.form = document.getElementById("login-form")
