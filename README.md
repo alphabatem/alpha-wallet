@@ -8,7 +8,13 @@ Open source solana wallet with a focus on simplicity & extensibility.
 
 ### Features
 * Minimal dependencies for reduced attack vectors
-* Solana Support
+* Fully encrypted with AES & SHA3
+* 0 External servers
+  * Your keys & access stays with you at all times
+  * your activity is not monitored from what you do in the wallet
+* BlockChain Support
+  * Solana
+  * EVM (Via Plugin) - _Coming soon_
 * Token View
 * NFT View
 * Plugin system - Builders can easily add their own plugin to the wallet
@@ -22,11 +28,10 @@ Open source solana wallet with a focus on simplicity & extensibility.
 * Solana
 * Browser Messages
 * Token Pricing
-* Jupiter AG
 
 ### TODO
-* [ ] Wallet generation & Storage
-* [ ] Trusted sites
+* [X] Wallet generation & Storage
+* [X] Trusted sites
 * [ ] Complete wallet interface for `wallet-adapter`
 * [ ] Ledger plugin - remote signing (0 key storage on extension)
 * [ ] EVM Plugin Interface
@@ -34,6 +39,7 @@ Open source solana wallet with a focus on simplicity & extensibility.
 
 
 ### Plugins Roadmap
+* [ ] Jupiter AG
 * [ ] AlphaBatem plugin - view metaverses
 * [ ] GenGo plugin - view drives
 * [ ] 2FA
