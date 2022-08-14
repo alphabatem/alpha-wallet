@@ -8,11 +8,19 @@ export class PriceManager extends AbstractManager {
   priceCache = null
   lastFetch = null
 
+  cacheTimeout = 5 * 60 * 1000
+
   constructor() {
     super()
     this.provider = new SonarWatch()
   }
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return PRICE_MANAGER
   }
@@ -25,7 +33,7 @@ export class PriceManager extends AbstractManager {
   async getPrices() {
     if (this.priceCache && this.lastFetch) {
       //Keep price cache for 5 mins
-      if (this.lastFetch > (new Date().getTime() - (5 * 60 * 1000))) {
+      if (this.lastFetch > (new Date().getTime() - this.cacheTimeout)) {
         return this.priceCache
       }
     }
@@ -41,10 +49,10 @@ export class PriceManager extends AbstractManager {
    * @param tokenAddr
    */
   async getPrice(tokenAddr) {
-    console.log("Getting token price", tokenAddr, this.lastFetch > (new Date().getTime() - (5 * 60 * 1000)))
+    console.log("Getting token price", tokenAddr, this.lastFetch > (new Date().getTime() - this.cacheTimeout))
     if (this.priceCache && this.lastFetch) {
       //Keep price cache for 5 mins
-      if (this.lastFetch > (new Date().getTime() - (5 * 60 * 1000))) {
+      if (this.lastFetch > (new Date().getTime() - this.cacheTimeout)) {
         return this.priceCache[tokenAddr]
       }
     }

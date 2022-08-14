@@ -9,6 +9,12 @@ export class PinManager extends AbstractManager {
   _hashKey = "hash"
   _saltKey = "salt"
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return PIN_MGR
   }

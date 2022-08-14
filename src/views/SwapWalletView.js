@@ -26,9 +26,12 @@ export default class SwapWalletView extends AbstractView {
       walletCards += await this.addSubView(NamespaceCard, {namespace: namespaces[i]}).getHtml()
     }
 
+    const noWallets = namespaces.length === 0 ? `<p class="small mt-5"><i>No wallets found, to get started click below</i></p>` : ``
+
     return `
             <h1>${this.title}</h1>
 
+<div class="col-12 text-center">${noWallets}</div>
             <div class="row mt-3">
             ${walletCards}
 	</div>

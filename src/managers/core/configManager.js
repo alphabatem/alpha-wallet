@@ -19,8 +19,16 @@ export class ConfigManager extends AbstractManager {
     rpcUrl: true,
     commitment: true,
     explorer: true,
+    lockTimeout: true,
+    language: true,
   }
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return CFG_MGR
   }
@@ -60,10 +68,12 @@ export class ConfigManager extends AbstractManager {
   }
 
   async setConfigValue(key, value) {
-    console.log("setConfigValue", key, value, this.config)
-    if (!this.allowedKeys[key])
+    if (!this.allowedKeys[key]) {
+console.warn("invalid key", key, this.allowedKeys)
       return
+    }
 
+    console.log("setConfigValue", key, value, this.config)
     this.config[key] = value
 
     return await this.setConfig(this.config)

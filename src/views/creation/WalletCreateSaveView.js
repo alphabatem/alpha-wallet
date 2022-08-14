@@ -1,8 +1,6 @@
 import AbstractView from "../../view.js";
 import * as bip39 from "bip39";
-import {Keypair} from "@solana/web3.js";
-import {derivePath} from "ed25519-hd-key";
-import {NS_MANAGER} from "../../managers/core/namespaceManager";
+import {WALLET_MGR} from "../../managers/wallets/walletManager";
 
 export default class WalletCreateSaveView extends AbstractView {
   nameInput
@@ -19,26 +17,15 @@ export default class WalletCreateSaveView extends AbstractView {
       return
     }
 
-    const walletAddr = this.getNextWalletAddr()
-    const pk = await this.getWallet().getStore().getCachedPasscode()
 
-    const store = await this.getWallet().getKeyStore(pk)
+    this.getRouter().navigateTo("auth/auth_action", {
+      redirect_to: "tokens",
+      callback: (pk) => this.onAuthSuccess(pk)
+    })
+  }
 
-    const ok = await store.setPrivateKey(walletAddr.publicKey.toString(), this._mnemonic, pk)
-    if (!ok) {
-      console.error("unable to add private key")
-      return
-    }
-
-    //Add to NS List
-    console.log("Adding to NS list", walletAddr.publicKey.toString(), this._data.name)
-    const nsMgr = this.getManager(NS_MANAGER)
-
-    await nsMgr.addNamespace(walletAddr.publicKey.toString(), this._data.name)
-    await nsMgr.setActiveNamespace(walletAddr.publicKey.toString())
-    await this.getWallet().getStore().setWalletAddr(walletAddr.publicKey.toString())
-    await this.getWallet().getStore().setWalletName(this._data.name)
-    this.getRouter().navigateTo("tokens")
+  async onAuthSuccess(pk) {
+    await this.getManager(WALLET_MGR).createNewWallet(this._data.name, this._mnemonic, pk)
   }
 
   /**
@@ -60,15 +47,6 @@ export default class WalletCreateSaveView extends AbstractView {
     }
   }
 
-  //First wallet key
-  getNextWalletAddr(i = 0) {
-    const seed = bip39.mnemonicToSeedSync(this._mnemonic, ""); // (mnemonic, password)
-    const path = `m/44'/501'/${i}'/0'`;
-    return Keypair.fromSeed(
-      derivePath(path, seed.toString("hex")).key
-    )
-  }
-
   async getHtml() {
     this.setTitle("Save Secret");
 
@@ -79,7 +57,7 @@ export default class WalletCreateSaveView extends AbstractView {
 
     const msplit = this._mnemonic.split(" ")
     for (let i = 0; i < msplit.length; i++) {
-      validate += `<input autocomplete="chrome-off" class="form-control key-input mt-1" id="validate-${i}" placeholder="${i}">`
+      validate += `<input autocomplete="chrome-off" class="form-control key-input mt-1" data-key="${i}" data-vlen="${msplit[i].length}" id="validate-${i}" placeholder="${i}">`
     }
 
     return `<div class="container-fluid">
@@ -102,6 +80,22 @@ export default class WalletCreateSaveView extends AbstractView {
 	</div></div>`;
   }
 
+  moveNextFocus(e) {
+    if (e.target.value.length < e.target.dataset.vlen)
+      return
+
+    switch (e.code){
+      case "Backspace":
+      case "Tab":
+      case "ShiftLeft":
+        return;
+    }
+
+    const nextKey = parseInt(e.target.dataset.key) + 1
+    if (this.elems[nextKey])
+      this.elems[nextKey].focus()
+  }
+
   async onMounted(app) {
     await super.onMounted(app)
     this.nameInput = document.getElementById("name-input")
@@ -111,5 +105,10 @@ export default class WalletCreateSaveView extends AbstractView {
     this.inp = document.getElementById("input")
     this.elems = document.getElementsByClassName("key-input")
     this.error = document.getElementsByClassName("validate-error")
+
+    for (let i = 0; i < this.elems.length; i++) {
+      this.elems[i].addEventListener("keyup", (e) => this.moveNextFocus(e))
+    }
+    this.elems[0].focus()
   }
 }

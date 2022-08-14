@@ -21,7 +21,7 @@ export default class SettingsView extends AbstractView {
 </div>
 
 <div class="row mt-2">
-            <div class="col-12"><button class="btn btn-danger btn-block btn-settings mt-2">Export Private Key</button></div>
+            <div class="col-12"><button data-link="settings/export_key" class="btn btn-danger btn-block btn-settings mt-2">Export Private Key</button></div>
 </div>
         `;
   }

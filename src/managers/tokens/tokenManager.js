@@ -14,6 +14,12 @@ export class TokenManager extends AbstractManager {
 
   solBalance = 0
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return TOKEN_MGR
   }
@@ -82,6 +88,7 @@ export class TokenManager extends AbstractManager {
     if (!walletAddr || walletAddr === "_default")
       return {}
 
+    console.log("WalletAddr", walletAddr)
     const accounts = await this.rpc().getParsedTokenAccountsByOwner(new web3.PublicKey(walletAddr))
 
     for (const a of accounts.value) {

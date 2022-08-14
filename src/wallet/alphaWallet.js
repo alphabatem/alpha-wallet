@@ -16,6 +16,7 @@ import {NamespaceManager} from "../managers/core/namespaceManager";
 import {PIN_MGR, PinManager} from "../managers/core/pinManager";
 import {ConfigManager} from "../managers/core/configManager";
 import {TrustedSites} from "../managers/core/trustedSites";
+import {WalletManager} from "../managers/wallets/walletManager";
 
 export class AlphaWallet {
 
@@ -58,6 +59,7 @@ export class AlphaWallet {
       //Core
       this._storageMgr,
       this._lockMgr,
+      new WalletManager(),
       new NamespaceManager(),
       new ConfigManager(),
       new EventManager(),

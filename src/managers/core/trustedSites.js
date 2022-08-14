@@ -10,6 +10,12 @@ export class TrustedSites extends AbstractManager {
     this.getManager(EVENT_MGR).subscribe(EVENTS.onConfig, (c) => this.onConfig(c))
   }
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return TRUSTED_SITE_MGR
   }

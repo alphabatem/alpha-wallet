@@ -20,7 +20,12 @@ import {
 
 export class ExampleManager extends AbstractManager {
 
-  id() {
+  
+  /**
+   * Context ID
+   * 
+   * @returns {string}
+   */
     return EXAMPLE_MANAGER
   }
 

@@ -282,3 +282,7 @@ body {
   transition-timing-function: linear;
   transition-duration: 60s;
 }
+
+.twitter-link {
+  color: cornflowerblue;
+}

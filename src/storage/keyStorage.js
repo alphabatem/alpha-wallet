@@ -7,6 +7,9 @@ export class KeyStorage extends StorageDriver {
   namespace = "hd_store"
   privateKey = "private_key"
 
+  _mnemonicKey = `mnemonic`
+  _keysUsedKey = `keys_used`
+
 
   _c = [];
   _start = new Date().getTime()
@@ -22,11 +25,11 @@ export class KeyStorage extends StorageDriver {
   }
 
   getUnlockTimeLeft() {
-    return  (this._start + this.getUnlockTimeout()) - new Date().getTime()
+    return (this._start + this.getUnlockTimeout()) - new Date().getTime()
   }
 
   getUnlockTimeout() {
-    return (60 * 1000)
+    return (5 * 60 * 1000)
   }
 
   /**
@@ -53,14 +56,28 @@ export class KeyStorage extends StorageDriver {
     return this.getEncrypted(this.namespace, `${publicKey}.${this.privateKey}`, passcode)
   }
 
-  async incrementKeysUsed(publicKey) {
-    const count = await this.getPlain(this.namespace, `${publicKey}.keys_used`).catch(e => {
-    })
-    await this.setPlain(this.namespace, `${publicKey}.keys_used`, (count || 0) + 1)
+  async isMnemonicSet() {
+    return this.existsEncrypted(this.namespace, this._mnemonicKey)
   }
 
-  async keysInUse(publicKey) {
-    return await this.getPlain(this.namespace, `${publicKey}.keys_used`).catch(e => {
+  async getMnemonic(passcode) {
+    return this.getEncrypted(this.namespace, this._mnemonicKey, passcode)
+  }
+
+  async setMnemonic(mnemonic, passcode) {
+    return this.setEncrypted(this.namespace, this._mnemonicKey, mnemonic, passcode)
+  }
+
+  async incrementKeysUsed() {
+    const count = await this.getPlain(this.namespace, this._keysUsedKey).catch(e => {
+      return 0;
+    })
+    await this.setPlain(this.namespace, this._keysUsedKey, (count || 0) + 1)
+  }
+
+  async keysInUse() {
+    return await this.getPlain(this.namespace, this._keysUsedKey).catch(e => {
+      return 0;
     })
   }
 }

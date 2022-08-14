@@ -1,6 +1,12 @@
 export class AbstractManager {
   ctx
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return "_default"
   }

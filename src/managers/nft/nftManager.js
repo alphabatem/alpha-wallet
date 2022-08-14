@@ -17,6 +17,12 @@ export class NFTManager extends AbstractManager {
   TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s')
   TOKEN_PROGRAM = new web3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return NFT_MGR
   }
@@ -25,7 +31,13 @@ export class NFTManager extends AbstractManager {
     return axios.get(file)
   }
 
-  getLiquid() {
+  getLiqu
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
+  id() {
 
   }
 

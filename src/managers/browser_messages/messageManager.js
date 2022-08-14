@@ -9,6 +9,12 @@ export class MessageManager extends AbstractManager {
 
   connected = false
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return MESSAGE_MGR
   }

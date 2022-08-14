@@ -333,6 +333,10 @@
                                    supported by Chrome, Edge, Opera and Firefox */
 }
 
+.fw-bold {
+  font-weight: bold !important;
+}
+
 
 .col-row div {
   display: inline-block;
@@ -345,4 +349,9 @@
 
 .link:hover {
   text-decoration: underline;
+}
+
+
+.w-100 {
+  width: 100% !important;
 }

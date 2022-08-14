@@ -11,6 +11,12 @@ export class EventManager extends AbstractManager {
 
   subKey = 0;
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return EVENT_MGR
   }

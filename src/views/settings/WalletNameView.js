@@ -28,15 +28,11 @@ export default class WalletNameView extends AbstractView {
 
     return `
             <h1>${this.title}</h1>
+            <h6>${this.walletAddr}</h6>
 
-            <div class="row mt-3">
+            <div class="row mt-5">
 		<div class="col-12">
 			<input id="name-input" autocomplete="chrome-off" class="form-control" placeholder="Wallet Name" value="${walletName}">
-		</div>
-		<div class="col-12 mt-3"></div>
-
-		<div class="col-12 mt-3">
-			<input id="wallet-input" disabled="true" class="form-control" placeholder="Wallet Address" value="${this.walletAddr}">
 		</div>
 
 		<div class="col-12 text-center mt-3">

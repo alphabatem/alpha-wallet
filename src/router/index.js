@@ -27,6 +27,8 @@ import SetPinCodeView from "../views/SetPinCodeView";
 import LoginPinCodeView from "../views/auth/LoginPinCodeView";
 import CreditsView from "../views/settings/CreditsView";
 import ApproveMessageView from "../views/approval/ApproveMessageView";
+import AuthActionView from "../views/auth/AuthActionView";
+import ExportKeyView from "../views/settings/ExportKeyView";
 
 const _routes = [
   {hash: "login", view: LoginPasscodeView},
@@ -61,6 +63,7 @@ const _routes = [
   {hash: "auth/trusted_site", view: ApproveTrustedSiteView},
   {hash: "auth/approve_txn", view: ApproveTxnView},
   {hash: "auth/approve_msg", view: ApproveMessageView},
+  {hash: "auth/auth_action", view: AuthActionView},
 
   {hash: "settings/trusted_apps", view: TrustedSitesView},
   {hash: "settings/language", view: LanguageView},
@@ -70,6 +73,7 @@ const _routes = [
   {hash: "settings/default_explorer", view: DefaultExplorerView},
   {hash: "settings/plugins", view: PluginSettingsView},
   {hash: "settings/credits", view: CreditsView},
+  {hash: "settings/export_key", view: ExportKeyView},
 ]
 
 export class Router {

@@ -16,6 +16,12 @@ export class PluginManager extends AbstractManager {
    * @returns {string}
    */
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return PLUGIN_MGR
   }

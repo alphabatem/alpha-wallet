@@ -20,6 +20,12 @@ export class SolanaManager extends AbstractManager {
       throw new Error("unable to register solana manager")
   }
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return SOLANA_MANAGER
   }
@@ -101,7 +107,7 @@ export class SolanaManager extends AbstractManager {
     if (!ks || ks.isLocked())
       return null
 
-    const keypair = ks.getPrivateKey(ns)
+    const keypair = ks.getPrivateKey(ns) //TODO this is base58 encoded
     // responsible for key
 
     //TODO Get message

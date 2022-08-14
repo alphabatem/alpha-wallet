@@ -13,6 +13,12 @@ export class LockManager extends AbstractManager {
 
   statusIndicatorDom
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return LOCK_MGR
   }
@@ -42,14 +48,10 @@ export class LockManager extends AbstractManager {
 
   async unlock(passcode, pincode = null) {
     if (!passcode && pincode) {
-      passcode = await this.unlockPincode(pincode)
-      if (!passcode)
-        throw new Error("invalid pin")
-
-      return this.unlockPasscode(passcode)
+      return this._unlockPincode(pincode)
     }
 
-    return this.unlockPasscode(passcode)
+    return this._unlockPasscode(passcode)
   }
 
   /**
@@ -57,17 +59,13 @@ export class LockManager extends AbstractManager {
    * @param passcode
    * @returns {Promise<boolean>}
    */
-  async unlockPasscode(passcode) {
-    const lockTimeout = await this.getTimeout()
-    console.log("Lock timeout", lockTimeout)
-
+  async _unlockPasscode(passcode) {
     //Store for the duration of our usage in encrypted session
-    const ok = await this.getStorageManager().unlock(passcode, lockTimeout)
+    const ok = await this.getStorageManager().unlock(passcode)
     if (!ok)
       throw new Error("invalid passcode")
 
     this._locked = false
-    this._lockTimeout = setTimeout(() => this.lock(), lockTimeout)
 
     //Unlock key store for period of time
     await this.getManager(STORAGE_MGR).unlockKeyStore(passcode)
@@ -84,20 +82,26 @@ export class LockManager extends AbstractManager {
    * @param pincode
    * @returns {Promise<null|*|null>}
    */
-  async unlockPincode(pincode) {
+  async _unlockPincode(pincode) {
     const pinMgr = this.getManager(PIN_MGR)
     if (!pinMgr)
       return null
 
-    return pinMgr.getPasscode(pincode).catch(e => {
-      return null
+    const pk = await pinMgr.getPasscode(pincode).catch(e => {
+      throw new Error("invalid pin")
     })
+
+    if (!pk)
+      throw new Error("invalid pin")
+
+    return this._unlockPasscode(pk)
   }
 
   /**
    * Lock the wallet
    */
   lock() {
+    console.log("LockManager::lock - Locking wallet", new Date())
     this._locked = true
     if (this._lockTimeout)
       clearTimeout(this._lockTimeout)
@@ -122,6 +126,21 @@ export class LockManager extends AbstractManager {
 
   onConfig(cfg) {
     this._defaultTimeout = cfg.lockTimeout || this._defaultTimeout
+
+    console.log("Locking wallet in", this._defaultTimeout)
+    // this._lockTimeout = setTimeout(() => this.lock(), this._defaultTimeout)
+    this._lockTimer()
+  }
+
+  _lockTimer() {
+    chrome.alarms.onAlarm.addListener((a) => {
+      if (a.name === "lock")
+        this.lock()
+    })
+
+    const minutes = this._defaultTimeout / 60 /  1000
+    console.log(`Alarm set for ${minutes} minutes`)
+    chrome.alarms.create("lock", {delayInMinutes: minutes})
   }
 
   /**

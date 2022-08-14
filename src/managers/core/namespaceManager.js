@@ -9,6 +9,12 @@ export class NamespaceManager extends AbstractManager {
 
   walletHeader
 
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
   id() {
     return NS_MANAGER
   }
@@ -22,6 +28,10 @@ export class NamespaceManager extends AbstractManager {
       console.log("NS loaded", ns)
       this._namespaces = ns
     })
+  }
+
+  namespaceExists(walletAddr) {
+    return !!this._namespaces.find((ns) => ns.key === walletAddr)
   }
 
   getActiveNamespace() {
