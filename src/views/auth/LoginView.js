@@ -1,4 +1,4 @@
-import AbstractView from "../view.js";
+import AbstractView from "../../view.js";
 
 export default class LoginView extends AbstractView {
   input
@@ -61,7 +61,7 @@ export default class LoginView extends AbstractView {
 		</div>
 
 		<div class="col-12 text-center">
-		    <button type="submit" class="btn btn-primary btn-block mt-5">LOGIN</button>
+		    <button type="submit" class="btn btn-primary btn-block mt-5"><i class="fi fi-rr-angle-double-right"></i> LOGIN</button>
 		</div>
 		</form>
 	</div>
@@ -77,13 +77,6 @@ export default class LoginView extends AbstractView {
       this.getRouter().navigateTo("set_passcode")
       return
     }
-
-
-    // const pincodeSet = await this.getWallet().isPinCodeSet()
-    // if (pincodeSet) {
-    //   this.getRouter().navigateTo("login_pin")
-    //   return
-    // }
 
     this.input = document.getElementById("input")
     this.form = document.getElementById("login-form")

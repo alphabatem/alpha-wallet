@@ -33,6 +33,9 @@ export class NFTManager extends AbstractManager {
   async getNFTs() {
     const walletAddr = await this.getStore().getWalletAddr()
 
+    if (!walletAddr || walletAddr === "_default")
+      return this._nfts
+
     await this.getLiquidNFTs(walletAddr)
     await this.getListedNFTs(walletAddr)
     await this.getStakedNFTs(walletAddr)

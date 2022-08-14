@@ -1,4 +1,4 @@
-import PinCodeView from "./PinCodeView";
+import PinCodeView from "../PinCodeView";
 
 export default class LoginPinCodeView extends PinCodeView {
 

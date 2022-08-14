@@ -16,6 +16,7 @@ export default class SettingsView extends AbstractView {
             <div class="col-12"><button data-link="settings/lock_timeout" class="btn btn-secondary btn-block btn-settings mt-2">Lock Timeout</button></div>
             <div class="col-12"><button data-link="settings/default_explorer" class="btn btn-secondary btn-block btn-settings mt-2">Default Explorer</button></div>
             <div class="col-12"><button data-link="settings/plugins" class="btn btn-secondary btn-block btn-settings mt-2">Enabled Plugins</button></div>
+            <div class="col-12"><button data-link="settings/credits" class="btn btn-secondary btn-block btn-settings mt-2">Credits</button></div>
 </div>
 
 <div class="row mt-2">

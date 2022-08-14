@@ -1,5 +1,6 @@
 import AbstractView from "../../view.js";
 import {TRUSTED_SITE_MGR} from "../../managers/core/trustedSites";
+import {NS_MANAGER} from "../../managers/core/namespaceManager";
 
 export default class ApproveTrustedSiteView extends AbstractView {
 
@@ -13,6 +14,13 @@ export default class ApproveTrustedSiteView extends AbstractView {
 
   async getHtml() {
     this.setTitle("Approval");
+
+    const tsm = this.getManager(TRUSTED_SITE_MGR)
+    if (!tsm)
+      return ``
+
+
+    this.uri = new URL(await tsm.getTrustedSiteRequest())
 
     const previousConnections = 3000
     const firstConnection = new Date().toLocaleDateString()
@@ -43,7 +51,7 @@ export default class ApproveTrustedSiteView extends AbstractView {
 
         <div class="col-8 text-start p-2">
           <h4 id="site_title">AlphaBatem Metaverse</h4>
-          <p class="small" id="site_url">metaverse.alphabatem.com</p>
+          <p class="small" id="site_url">${this.uri.host}</p>
           <div class="detail mt-3">
             <p class="xsmall mono">Connections: <span
               class="badge bg-secondary px-2 float-end"
@@ -73,12 +81,12 @@ export default class ApproveTrustedSiteView extends AbstractView {
         </div>
 
         <div class="col-12 mt-4 permission-item">
-          <span>Auto Sign TXN: </span>
+          <span>Auto Sign Transactions: </span>
           <span class="badge bg-secondary px-4 py-2 float-end">${this.autoSignTxn ? 'ON' : 'OFF'}</span>
         </div>
 
         <div class="col-12 mt-4 permission-item">
-          <span>Auto Sign MSG: </span>
+          <span>Auto Sign Messages: </span>
           <span class="badge bg-secondary px-4 py-2 float-end">${this.autoSignMsg ? 'ON' : 'OFF'}</span>
         </div>
 
@@ -111,21 +119,36 @@ export default class ApproveTrustedSiteView extends AbstractView {
     </div>`;
   }
 
+  async beforeMount() {
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    console.log("NS", ns)
+    if (!ns || ns === "_default") {
+      this.getRouter().navigateTo("wallets/swap", {redirect_to: "auth/trusted_site"})
+      return false
+    }
+    return true
+  }
 
   onApprove(e) {
     console.log("Approved", e)
 
-    this.getManager(TRUSTED_SITE_MGR).addTrustedSite(this.uri, {
+
+    chrome.runtime.sendMessage({method: "Approved"})
+
+    this.getManager(TRUSTED_SITE_MGR).addTrustedSite(this.uri.host, {
       maxSpend: this.maxSpend,
       autoSignTxn: this.autoSignTxn,
       autoSignMsg: this.autoSignMsg,
       tokenBalances: this.tokenBalances,
       autoSignLimit: this.autoSignLimit
+    }).then(r => {
+      console.log("Site added", r)
+    }).catch(e => {
+      //
+    }).finally(() => {
+      // window.close()
     })
 
-    //TODO Notify bg to allow connections
-
-    window.close()
   }
 
   onReject(e) {

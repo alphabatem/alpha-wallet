@@ -1,38 +1,34 @@
 class AlphaConnector {
   isConnected = false
 
+  isMetaMask = false
   isAlphaWallet = true
 
-  eventCallbacks = {
-    "connected": null,
-    "disconnect": null,
-    "sign": null,
-    "send": null,
-  }
+  publicKey //TODO solana public key of account
 
   constructor() {
+    //TODO Listen for connect, disconnect & swapWallet
+  }
+
+  isConnected() {
+    return this.isConnected
   }
 
   sendMessage(method, data) {
     window.postMessage({type: "alpha_msg", method: method, payload: data})
   }
 
-  on(method, callback) {
-    if (!this.eventCallbacks[method])
-      return
-
-    this.eventCallbacks[method] = callback
+  async request(req) {
+    this.sendMessage(req.method, req.params)
   }
 
-  async connect() {
+  async connect(params = {}) {
     //
-    this.sendMessage("connect")
-    this.isConnected = true
+    this.sendMessage("connect", {onlyIfTrusted: !!params.onlyIfTrusted})
   }
 
   async disconnect() {
     this.sendMessage("disconnect")
-    this.isConnected = false
   }
 
   async signAndSendTransaction(txn, sendOptions) {

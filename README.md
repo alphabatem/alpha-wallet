@@ -4,8 +4,6 @@ Open source solana wallet with a focus on simplicity & extensibility.
 
 # UNDER ACTIVE DEVELOPMENT - v0.001!
 
-
-
 ### Features
 * Minimal dependencies for reduced attack vectors
 * Fully encrypted with AES & SHA3
@@ -45,3 +43,7 @@ Open source solana wallet with a focus on simplicity & extensibility.
 * [ ] 2FA
 * [ ] Enhanced txn approval (more detail than currently provided)
 * [ ] EVM Apps (ETH etc)
+
+
+### Connection Utils
+- https://shdw-drive.genesysgo.net/BUEx7mtGafrw4xB3py37HKiYwess63X5FvndfRBRqe6M/scratch_23.html

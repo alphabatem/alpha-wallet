@@ -2,8 +2,11 @@ import {WalletStorage} from "../storage/walletStorage";
 import {ManagerContext} from "../managers/managerContext";
 import {TokenManager} from "../managers/tokens/tokenManager";
 import {NFTManager} from "../managers/nft/nftManager";
-import {SOLANA_MANAGER, SolanaManager} from "../managers/solana/solanaManager";
-import {MessageManager} from "../managers/browser_messages/messageManager";
+import {SolanaManager} from "../managers/solana/solanaManager";
+import {
+  MESSAGE_MGR,
+  MessageManager
+} from "../managers/browser_messages/messageManager";
 import {PriceManager} from "../managers/pricing/priceManager";
 import {StorageManager} from "../managers/storage/storageManager";
 import {KeyStorage} from "../storage/keyStorage";
@@ -18,7 +21,9 @@ export class AlphaWallet {
 
 
   _lockMgr = new LockManager()
-  _storageMgr = new StorageManager(new WalletStorage(), new KeyStorage())
+  _storageMgr = new StorageManager(new WalletStorage(), new KeyStorage()) //TODO move into lockManager?
+
+  //Raw context
   _managerCtx
 
   constructor() {
@@ -26,9 +31,20 @@ export class AlphaWallet {
     this._managerCtx.start()
   }
 
-  adapters = {
-    solana: SOLANA_MANAGER,
-    ethereum: null,
+  /**
+   * Default locked wallet state context
+   *
+   * @returns {ManagerContext}
+   */
+  newLockedContext() {
+    return new ManagerContext([
+      new MessageManager(),
+      new EventManager(),
+      this._storageMgr,
+      this._lockMgr,
+      new TrustedSites(),
+      new PinManager()
+    ])
   }
 
   /**
@@ -38,6 +54,7 @@ export class AlphaWallet {
    */
   newWalletContext() {
     return new ManagerContext([
+      new MessageManager(),
       //Core
       this._storageMgr,
       this._lockMgr,
@@ -55,21 +72,10 @@ export class AlphaWallet {
   registerPlugins() {
     this._managerCtx.addPlugins(
       new SolanaManager(),
-      new MessageManager(),
       new TokenManager(),
       new NFTManager(),
       new PriceManager()
     )
-  }
-
-  newLockedContext() {
-    return new ManagerContext([
-      new EventManager(),
-      this._storageMgr,
-      this._lockMgr,
-      new TrustedSites(),
-      new PinManager()
-    ])
   }
 
   /**
@@ -133,15 +139,9 @@ export class AlphaWallet {
    * @returns {Promise<void>}
    */
   async onMessage(request, sender) {
-    console.log("alphaWallet:onMessage", request, sender)
+    if (!this.getManager(MESSAGE_MGR)) return false
 
-    if (!this.adapters[request.provider]) {
-      console.error("adapter not registered", request.provider)
-      return
-    }
-
-    const response = await this.adapters[request.provider].onMessage(request, sender)
-    return response
+    return this.getManager(MESSAGE_MGR).onMessage(request)
   }
 
   /**

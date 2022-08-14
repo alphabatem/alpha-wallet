@@ -33,17 +33,17 @@ export default class TokenView extends AbstractView {
     let h = `
     <h5 class="text-start mb-3">Welcome Back, ${ns.name}!</h5>
 
-    <h1 class="mb-3">${totalPrice.toLocaleString("en-US", {
+    <h1 style="font-size: 2.5em" class="mb-3">${totalPrice.toLocaleString("en-US", {
       style: 'currency',
       currency: "USD"
     })}</h1>
 
     <div class="row mt-3 mb-3">
       <div class="col-6">
-        <button data-link="transfer/deposit" class="btn btn-primary btn-block">Deposit</button>
+        <button data-link="transfer/deposit" class="btn btn-primary btn-block"><i class="fi fi-rr-inbox-in"></i> Deposit</button>
       </div>
       <div class="col-6">
-        <button data-link="transfer/send" class="btn btn-primary btn-block">Send</button>
+        <button data-link="transfer/send" class="btn btn-primary btn-block"><i class="fi fi-rr-inbox-out"></i> Send</button>
       </div>
     </div>`
 
@@ -53,7 +53,7 @@ export default class TokenView extends AbstractView {
     <div class="token-container">
       <i class="small">No Token Assets Detected</i>
 
-      <div><button id="refresh-view" class="btn btn-primary mt-3">REFRESH</button></div>
+      <div class="col-8 mx-auto"><button id="refresh-view" class="btn btn-primary btn-block mt-5"><i class="fi fi-rr-refresh"></i> REFRESH</button></div>
     </div>`
     else {
       h += tokenViews
@@ -63,6 +63,16 @@ export default class TokenView extends AbstractView {
     return h;
   }
 
+
+  async beforeMount() {
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    console.log("NS", ns)
+    if (!ns || ns === "_default") {
+      this.getRouter().navigateTo("wallets/swap")
+      return false
+    }
+    return true
+  }
 
   async onMounted(app) {
     super.onMounted(app);

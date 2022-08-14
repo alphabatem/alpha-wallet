@@ -2,12 +2,12 @@ import TokenView from "../views/TokenView.js";
 import NFTView from "../views/NFTView.js";
 import SettingsView from "../views/SettingsView.js";
 import LanguageView from "../views/settings/LanguageView";
-import TrustedAppsView from "../views/settings/TrustedAppsView";
+import TrustedSitesView from "../views/settings/TrustedSitesView";
 import RPCSelectView from "../views/settings/RPCSelectView";
 import LockTimeoutView from "../views/settings/LockTimeoutView";
 import DefaultExplorerView from "../views/settings/DefaultExplorerView";
 import PluginSettingsView from "../views/settings/PluginsView";
-import LoginPasscodeView from "../views/LoginView";
+import LoginPasscodeView from "../views/auth/LoginView";
 import SetPasscodeView from "../views/SetPasscodeView";
 import WalletNameView from "../views/settings/WalletNameView";
 import ComingSoonView from "../views/ComingSoonView";
@@ -24,7 +24,9 @@ import CustomRPCView from "../views/settings/CustomRPCView";
 import ApproveTrustedSiteView from "../views/approval/ApproveTrustedSiteView";
 import ApproveTxnView from "../views/approval/ApproveTxnView";
 import SetPinCodeView from "../views/SetPinCodeView";
-import LoginPinCodeView from "../views/LoginPinCodeView";
+import LoginPinCodeView from "../views/auth/LoginPinCodeView";
+import CreditsView from "../views/settings/CreditsView";
+import ApproveMessageView from "../views/approval/ApproveMessageView";
 
 const _routes = [
   {hash: "login", view: LoginPasscodeView},
@@ -58,15 +60,16 @@ const _routes = [
 
   {hash: "auth/trusted_site", view: ApproveTrustedSiteView},
   {hash: "auth/approve_txn", view: ApproveTxnView},
-  {hash: "auth/approve_msg", view: TrustedAppsView},
+  {hash: "auth/approve_msg", view: ApproveMessageView},
 
-  {hash: "settings/trusted_apps", view: TrustedAppsView},
+  {hash: "settings/trusted_apps", view: TrustedSitesView},
   {hash: "settings/language", view: LanguageView},
   {hash: "settings/rpc", view: RPCSelectView},
   {hash: "settings/rpc/custom", view: CustomRPCView},
   {hash: "settings/lock_timeout", view: LockTimeoutView},
   {hash: "settings/default_explorer", view: DefaultExplorerView},
   {hash: "settings/plugins", view: PluginSettingsView},
+  {hash: "settings/credits", view: CreditsView},
 ]
 
 export class Router {
@@ -136,6 +139,10 @@ export class Router {
   async updateView(match, data = {}) {
     this.currentRoute = {hash: match.hash, data: data}
     this.currentView = new match.view(this, this.wallet, data);
+
+    if (!await this.currentView.beforeMount())
+      return //View updated dont proceed
+
     this.appContainer.innerHTML = await this.currentView.getHtml();
 
     await this.currentView.onMounted(this.appContainer);

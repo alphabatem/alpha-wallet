@@ -17,7 +17,7 @@ html {
 body {
   width: 350px;
   height: 500px;
-  font-size: 18px;
+  font-size: 16px;
 
   background: #16181a;
   color: #fcfcfc;
@@ -99,6 +99,10 @@ body {
 .be-1 {
   border-right: 1px solid #222;
   cursor: pointer;
+}
+
+.footer-link * {
+  pointer-events: none;
 }
 
 .footer-link {
@@ -262,4 +266,19 @@ body {
   text-align: center;
   height: 3rem;
   font-size: 2rem;
+}
+
+
+.btn .fi {
+  float: left;
+  margin-top: 2px;
+}
+
+#progress {
+  height: 3px;
+  background: deepskyblue;
+  width: 100%;
+  transition-property: width;
+  transition-timing-function: linear;
+  transition-duration: 60s;
 }

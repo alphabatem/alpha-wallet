@@ -6,7 +6,44 @@ import {StorageDriver} from "./storageDriver";
 export class KeyStorage extends StorageDriver {
   namespace = "hd_store"
   privateKey = "private_key"
-  pinKey = "pincode"
+
+
+  _c = [];
+  _start = new Date().getTime()
+
+  /**
+   * Lock all storage calls from being used
+   */
+  lock() {
+    console.log("Locking keystore")
+    super.lock()
+    this._c = []
+    return true
+  }
+
+  getUnlockTimeLeft() {
+    return  (this._start + this.getUnlockTimeout()) - new Date().getTime()
+  }
+
+  getUnlockTimeout() {
+    return (60 * 1000)
+  }
+
+  /**
+   * Unlock storage calls
+   */
+  async unlock(passcode) {
+    const ok = await this.testPasscode(passcode)
+    if (!ok)
+      return false
+
+    console.log("KeyStore unlocked")
+    await super.unlock()
+    this._start = new Date().getTime()
+
+    setTimeout(() => this.lock(), this.getUnlockTimeout()) //Lock in 60 seconds (timeout)
+    return true
+  }
 
   async setPrivateKey(publicKey, privateKey, passcode) {
     return this.setEncrypted(this.namespace, `${publicKey}.${this.privateKey}`, privateKey, passcode)

@@ -79,6 +79,9 @@ export class TokenManager extends AbstractManager {
    */
   async getLiquidTokens() {
     const walletAddr = await this.getStore().getWalletAddr()
+    if (!walletAddr || walletAddr === "_default")
+      return {}
+
     const accounts = await this.rpc().getParsedTokenAccountsByOwner(new web3.PublicKey(walletAddr))
 
     for (const a of accounts.value) {

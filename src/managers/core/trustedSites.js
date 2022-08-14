@@ -1,4 +1,5 @@
 import {AbstractManager} from "../abstractManager";
+import {EVENT_MGR, EVENTS} from "./eventManager";
 
 export class TrustedSites extends AbstractManager {
 
@@ -6,35 +7,58 @@ export class TrustedSites extends AbstractManager {
 
   configure(ctx) {
     super.configure(ctx);
-    this.approvedSites = this.getStore().getTrustedSites()
+    this.getManager(EVENT_MGR).subscribe(EVENTS.onConfig, (c) => this.onConfig(c))
   }
 
   id() {
     return TRUSTED_SITE_MGR
   }
 
-  isTrusted(uri) {
+  async onConfig() {
+    console.log("TrustedSite Manager", "onConfig")
+    await this.getTrustedSites()
+  }
+
+  async isTrusted(uri) {
+    await this.getTrustedSites()
     return this.approvedSites[uri]
   }
 
-  addTrustedSite(uri, cfg) {
+  async getTrustedSites() {
+    this.approvedSites = await this.getStore().getTrustedSites()
+    return this.approvedSites
+  }
+
+  async addTrustedSite(uri, cfg) {
+    if (!uri)
+      throw new Error("invalid site uri")
+
     if (this.approvedSites[uri])
       return true //Already approved
 
+    console.log("Adding trusted site", uri, cfg)
     this.approvedSites[uri] = cfg
-    this._updateSiteStore()
+    return await this._updateSiteStore()
   }
 
-  updateTrustedSite(uri, cfg) {
+  async updateTrustedSite(uri, cfg) {
     if (!this.approvedSites[uri])
       return
 
     this.approvedSites[uri] = cfg
-    this._updateSiteStore()
+    return await this._updateSiteStore()
   }
 
   async _updateSiteStore() {
     await this.getStore().setTrustedSites(this.approvedSites)
+  }
+
+  async setTrustedSiteRequest(uri) {
+    return await this.getStore().setPlain("_requests", "trusted_site", uri)
+  }
+
+  async getTrustedSiteRequest() {
+    return await this.getStore().getPlain("_requests", "trusted_site")
   }
 
   _toTrustedSite(uri, cfg) {

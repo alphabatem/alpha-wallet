@@ -1,6 +1,7 @@
 import AbstractView from "../view.js";
 import {NFT_MGR} from "../managers/nft/nftManager";
 import {NFTCard} from "../components/nfts/NFTCard";
+import {NS_MANAGER} from "../managers/core/namespaceManager";
 
 export default class NFTView extends AbstractView {
   async getHtml() {
@@ -27,6 +28,17 @@ export default class NFTView extends AbstractView {
 
   noNFTSMessage() {
     return `<div class="col-12 text-center"><i class="small">No NFT\'s Detected</i></div>`
+  }
+
+
+  async beforeMount() {
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    console.log("NS", ns)
+    if (!ns || ns === "_default") {
+      this.getRouter().navigateTo("wallets/swap")
+      return false
+    }
+    return true
   }
 
   async onMounted(app) {

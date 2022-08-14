@@ -11,7 +11,10 @@ export default class SwapWalletView extends AbstractView {
       return
 
     await this.getManager(NS_MANAGER).setActiveNamespace(ns)
-    this.getRouter().navigateTo("tokens")
+    if (this._data.redirect_to)
+      this.getRouter().navigateTo(this._data.redirect_to)
+    else
+      this.getRouter().navigateTo("tokens")
   }
 
   async getHtml() {

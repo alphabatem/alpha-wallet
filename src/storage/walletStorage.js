@@ -34,6 +34,7 @@ export class WalletStorage extends StorageDriver {
    * @returns {Promise<*>}
    */
   async setTrustedSites(trustedSites) {
+    console.log("TS", trustedSites)
     return this.setPlain(this.namespace, "trusted_sites", trustedSites)
   }
 

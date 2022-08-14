@@ -21,14 +21,21 @@ export class StorageManager extends AbstractManager {
     return this._walletStore
   }
 
-  async getKeyStore(passcode) {
-    const ok = await this._keyStore.unlock(passcode)
-    if (!ok)
-      throw new Error("invalid passcode")
+  async getKeyStore() {
+    if (await this._keyStore.isLocked())
+      return null
 
     return this._keyStore
   }
 
+
+  async unlockKeyStore(passcode) {
+    const ok = await this.getWalletStore().testPasscode(passcode)
+    if (!ok)
+      return false
+
+    return await this._keyStore.unlock(passcode)
+  }
 
   /**
    * Unlock the storage for a period of time

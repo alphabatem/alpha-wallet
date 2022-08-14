@@ -1,6 +1,7 @@
 import {AbstractManager} from "../abstractManager";
 import {PIN_MGR} from "./pinManager";
 import {EVENT_MGR, EVENTS} from "./eventManager";
+import {STORAGE_MGR} from "../storage/storageManager";
 
 export class LockManager extends AbstractManager {
 
@@ -66,6 +67,9 @@ export class LockManager extends AbstractManager {
 
     this._locked = false
     this._lockTimeout = setTimeout(() => this.lock(), lockTimeout)
+
+    //Unlock key store for period of time
+    await this.getManager(STORAGE_MGR).unlockKeyStore(passcode)
 
     if (this.statusIndicatorDom)
       this.statusIndicatorDom.innerText = "Unlocked"

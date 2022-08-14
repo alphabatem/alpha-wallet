@@ -1,5 +1,3 @@
-import {STORAGE_MGR} from "./managers/storage/storageManager";
-
 export default class AbstractView {
   title = ""
 
@@ -42,6 +40,16 @@ export default class AbstractView {
    */
   async getHtml() {
     return "";
+  }
+
+  /**
+   * Called when view is mounted, before getHtml
+   *
+   * @param app
+   * @returns {Promise<boolean>}
+   */
+  async beforeMount() {
+    return true
   }
 
   /**
