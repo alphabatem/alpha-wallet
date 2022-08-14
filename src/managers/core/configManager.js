@@ -6,9 +6,6 @@ const DEFAULT_CONFIG = {
   rpcUrl: "https://ssc-dao.genesysgo.net/",
   commitment: "finalized",
   explorer: "solscan",
-}
-
-const DEFAULT_CONFIG_GLOBAL = {
   lockTimeout: 30 * 60 * 1000,
   language: "en"
 }
@@ -30,6 +27,11 @@ export class ConfigManager extends AbstractManager {
 
   configure(ctx) {
     super.configure(ctx)
+
+    this.getManager(EVENT_MGR).subscribe(EVENTS.onWalletSelect, (ns) => this.onNamespaceSelect(ns))
+  }
+
+  onNamespaceSelect(ns) {
     this.getConfig().then((r) => {
       this.config = r
     })
@@ -42,14 +44,14 @@ export class ConfigManager extends AbstractManager {
 
   async getConfig() {
     const ns = await this.getManager(NS_MANAGER).getActiveNamespace()
-    let cfg = await this.getStore().getPlain(ns, "config").catch(e => {
+    let cfg = await this.getStore().getPlain(ns.key, "config").catch(e => {
       //
     })
 
     if (!cfg)
       cfg = DEFAULT_CONFIG
 
-    this.notify()
+    this.notify(cfg)
     return cfg
   }
 
@@ -64,12 +66,15 @@ export class ConfigManager extends AbstractManager {
 
     this.config[key] = value
 
-    return this.setConfig(this.config)
+    return await this.setConfig(this.config)
   }
 
   async setConfig(cfg = DEFAULT_CONFIG) {
     const ns = await this.getManager(NS_MANAGER).getActiveNamespace()
-    return this.getStore().setPlain(ns, "config", cfg)
+
+    console.log("Updating config", ns, cfg)
+    await this.getStore().setPlain(ns.key, "config", cfg)
+    this.notify(cfg)
   }
 
   notify(data = {}) {

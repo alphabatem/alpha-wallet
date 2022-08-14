@@ -6,6 +6,9 @@ export default class LanguageView extends AbstractView {
     this.setTitle("Language");
     return `
             <h1>${this.title}</h1>
+
+
+            <p class="mt-3">Currently only English is supported!</p>
         `;
   }
 }

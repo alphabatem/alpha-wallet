@@ -121,7 +121,6 @@ export default class ApproveTrustedSiteView extends AbstractView {
 
   async beforeMount() {
     const ns = this.getManager(NS_MANAGER).getActiveNamespace()
-    console.log("NS", ns)
     if (!ns || ns === "_default") {
       this.getRouter().navigateTo("wallets/swap", {redirect_to: "auth/trusted_site"})
       return false

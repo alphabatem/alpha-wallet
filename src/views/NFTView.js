@@ -33,9 +33,8 @@ export default class NFTView extends AbstractView {
 
   async beforeMount() {
     const ns = this.getManager(NS_MANAGER).getActiveNamespace()
-    console.log("NS", ns)
     if (!ns || ns === "_default") {
-      this.getRouter().navigateTo("wallets/swap")
+      this.getRouter().navigateTo("wallets/swap", {redirect_to: "nft"})
       return false
     }
     return true

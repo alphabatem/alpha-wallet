@@ -6,6 +6,7 @@ export class EventManager extends AbstractManager {
     "locked": [],
     "unlocked": [],
     "config_update": [],
+    "wallet_select": [],
   }
 
   subKey = 0;
@@ -71,4 +72,5 @@ export const EVENTS = new class {
   onLock = "locked"
   onUnlock = "unlocked"
   onConfig = "config_update"
+  onWalletSelect = "wallet_select"
 }

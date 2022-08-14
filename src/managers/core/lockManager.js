@@ -59,6 +59,7 @@ export class LockManager extends AbstractManager {
    */
   async unlockPasscode(passcode) {
     const lockTimeout = await this.getTimeout()
+    console.log("Lock timeout", lockTimeout)
 
     //Store for the duration of our usage in encrypted session
     const ok = await this.getStorageManager().unlock(passcode, lockTimeout)
@@ -120,7 +121,7 @@ export class LockManager extends AbstractManager {
 
 
   onConfig(cfg) {
-    this._defaultTimeout = cfg.lockTimeout
+    this._defaultTimeout = cfg.lockTimeout || this._defaultTimeout
   }
 
   /**

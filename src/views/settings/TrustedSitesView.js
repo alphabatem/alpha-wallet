@@ -33,7 +33,6 @@ export default class TrustedSitesView extends AbstractView {
 
   async beforeMount() {
     const ns = this.getManager(NS_MANAGER).getActiveNamespace()
-    console.log("NS", ns)
     if (!ns || ns === "_default") {
       this.getRouter().navigateTo("wallets/swap", {redirect_to: "settings/trusted_apps"})
       return false

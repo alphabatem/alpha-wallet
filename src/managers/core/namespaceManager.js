@@ -1,4 +1,5 @@
 import {AbstractManager} from "../abstractManager";
+import {EVENTS, EVENT_MGR} from "./eventManager";
 
 export const NS_MANAGER = "namespace_manager"
 
@@ -61,10 +62,24 @@ export class NamespaceManager extends AbstractManager {
     console.log("Setting namespace", namespace)
     this.updateWalletHeader(namespace)
     await this.getStore().setNamespace(namespace)
+    this.notify(EVENTS.onWalletSelect)
   }
 
   updateWalletHeader(ns) {
     this.walletHeader.dataset.addr = ns
     this.walletHeader.innerText = `${ns.substring(0, 6)}...${ns.substring(ns.length - 6)}`
+  }
+
+
+  /**
+   * Notify event bus of lock/unlock events
+   *
+   * @param event
+   */
+  notify(event) {
+    const mgr = this.getManager(EVENT_MGR)
+    if (!mgr) return
+
+    mgr.onEvent(event)
   }
 }

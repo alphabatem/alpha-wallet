@@ -14,7 +14,10 @@ export class SolanaRPC {
   }
 
 
-  _startConnection(endpoint = "https://ssc-dao.genesysgo.net/", commitment = "finalized") {
+  _startConnection(endpoint = "ssc-dao.genesysgo.net/", commitment = "finalized") {
+    if (endpoint.indexOf("://") === -1)
+      endpoint = `https://${endpoint}`
+
     this.connection = new web3.Connection(endpoint, commitment)
     console.log("Connected to", endpoint)
   }

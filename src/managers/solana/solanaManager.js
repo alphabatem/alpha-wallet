@@ -29,7 +29,7 @@ export class SolanaManager extends AbstractManager {
   }
 
   _onConfig(cfg) {
-    console.log("Config loaded, starting RPC")
+    console.log("Config loaded, starting RPC", cfg.rpcUrl)
     this._rpc = new SolanaRPC(cfg.rpcUrl, cfg.commitment)
     this.txnManager = new SolanaTransactionManager(this._rpc)
   }

@@ -66,7 +66,6 @@ export default class TokenView extends AbstractView {
 
   async beforeMount() {
     const ns = this.getManager(NS_MANAGER).getActiveNamespace()
-    console.log("NS", ns)
     if (!ns || ns === "_default") {
       this.getRouter().navigateTo("wallets/swap")
       return false
