@@ -196,6 +196,11 @@ body {
   margin-left: 10px;
 }
 
+#wallet_addr:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 2px white;
+}
+
 #wallet_swap {
   min-width: 20px;
   font-weight: bold;
@@ -272,6 +277,10 @@ body {
 .btn .fi {
   float: left;
   margin-top: 2px;
+}
+
+.btn:hover {
+  text-shadow: 0 0 2px white;
 }
 
 #progress {

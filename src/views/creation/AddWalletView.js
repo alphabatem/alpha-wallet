@@ -3,6 +3,7 @@ import AbstractView from "../../view.js";
 export default class AddWalletView extends AbstractView {
 
   async getHtml() {
+    this.setTitle("Wallets")
 
     const walletAddr = await this.getWallet().getStore().getWalletAddr()
     const walletName = await this.getWallet().getStore().getPlain("wallet_name").catch(e => {
@@ -26,7 +27,9 @@ export default class AddWalletView extends AbstractView {
 			</div>
 		</div>
 		</div>
-		<div class="col-12 text-center mt-2">
+		<div class="col-12 text-center mt-5">
+		<p class="mb-3 small">Coming Soon</p>
+
 		<div class="card ns-card p-3" data-link="wallets/connect">
 			<div class="card-body ns-card-body">
 			  <p class="small">(Recommended)</p>
