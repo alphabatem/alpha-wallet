@@ -29,7 +29,7 @@ export class KeyStorage extends StorageDriver {
   }
 
   getUnlockTimeout() {
-    return (5 * 60 * 1000)
+    return (60 * 1000)
   }
 
   /**

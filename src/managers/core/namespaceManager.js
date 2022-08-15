@@ -23,7 +23,6 @@ export class NamespaceManager extends AbstractManager {
     super.configure(ctx)
 
     this.walletHeader = document.getElementById("wallet_addr")
-
     this.getStore().loadNamespaces().then((ns) => {
       console.log("NS loaded", ns)
       this._namespaces = ns
@@ -79,7 +78,6 @@ export class NamespaceManager extends AbstractManager {
     this.walletHeader.dataset.addr = ns
     this.walletHeader.innerText = `${ns.substring(0, 6)}...${ns.substring(ns.length - 6)}`
   }
-
 
   /**
    * Notify event bus of lock/unlock events

@@ -15,6 +15,10 @@ export class AbstractManager {
     this.ctx = ctx
   }
 
+  async start() {
+    //
+  }
+
   /**
    * Called before manager is removed from context
    */

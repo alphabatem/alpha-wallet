@@ -31,16 +31,6 @@ export class NFTManager extends AbstractManager {
     return axios.get(file)
   }
 
-  getLiqu
-  /**
-   * Context ID
-   *
-   * @returns {string}
-   */
-  id() {
-
-  }
-
 
   async getNFTs() {
     const walletAddr = await this.getStore().getWalletAddr()
@@ -67,15 +57,10 @@ export class NFTManager extends AbstractManager {
       if (acc.info.tokenAmount.uiAmount !== 1)
         continue //Token
 
-      const meta = await this.getTokenMetadata(acc.info.mint).catch((e) => {})
-      if (!meta)
-        continue
-
       this._nfts.liquid[acc.info.mint] = {
         mint: acc.info.mint,
         owner: acc.info.owner,
         amount: acc.info.tokenAmount,
-        meta: meta
       }
     }
 

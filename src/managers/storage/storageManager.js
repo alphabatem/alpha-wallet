@@ -23,6 +23,10 @@ export class StorageManager extends AbstractManager {
     return STORAGE_MGR
   }
 
+  async start() {
+    await this.getWalletStore().getLastActiveNamespace()
+  }
+
   getWalletStore() {
     return this._walletStore
   }

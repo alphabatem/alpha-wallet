@@ -49,6 +49,11 @@
   padding-right: 1.25rem !important;
 }
 
+
+.pt-5 {
+  padding-top: 1.25rem !important;
+}
+
 .ps-2 {
   padding-left: 0.5rem !important;
 }
@@ -237,6 +242,7 @@
   color: white;
   font-weight: bold;
   background: deepskyblue;
+  border: 2px solid transparent;
 }
 
 

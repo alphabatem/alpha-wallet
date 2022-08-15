@@ -44,13 +44,26 @@ export class WalletStorage extends StorageDriver {
    * @returns {Promise<void>}
    */
   async getTrustedSites() {
-    return await this.getPlain(this.namespace, "trusted_sites").catch(() => {
+    console.log("Getting trusted sites", this.namespace)
+    return await this.getPlain(this.namespace, "trusted_sites").catch((e) => {
+      console.warn("Unable to get trusted sites", e)
       return {}
     })
   }
 
-  setNamespace(ns) {
-    console.log("Namespace set", ns)
+
+  async getLastActiveNamespace() {
+    const ns = await this.getPlain("_", "namespace").catch(e => {
+      console.log("unable to get namespace",e )
+    })
+    if (!ns)
+      return
+
+    this.namespace = ns
+  }
+
+  async setNamespace(ns) {
+    await this.setPlain("_", "namespace", ns)
     this.namespace = ns
   }
 

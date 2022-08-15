@@ -5,10 +5,6 @@ export default class AddWalletView extends AbstractView {
   async getHtml() {
     this.setTitle("Wallets")
 
-    const walletAddr = await this.getWallet().getStore().getWalletAddr()
-    const walletName = await this.getWallet().getStore().getPlain("wallet_name").catch(e => {
-    })
-
     return `<h1>${this.title}</h1>
 <div class="row p-3">
 	<div class="col-12 text-center mt-2">

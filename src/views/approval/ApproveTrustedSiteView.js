@@ -145,7 +145,7 @@ export default class ApproveTrustedSiteView extends AbstractView {
     }).catch(e => {
       //
     }).finally(() => {
-      // window.close()
+      window.close()
     })
 
   }

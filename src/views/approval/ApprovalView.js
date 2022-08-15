@@ -8,7 +8,6 @@ export class ApprovalView extends AbstractView {
   checkInterval
 
 
-
   async getRequest() {
     const msgMgr = this.getManager(MESSAGE_MGR)
     if (!msgMgr)
@@ -39,13 +38,20 @@ export class ApprovalView extends AbstractView {
     }
 
     const ttl = ks.getUnlockTimeLeft()
-    console.log("TTL", ttl)
     if (ttl <= 0) {
       this.onReject("wallet timeout")
     }
 
   }
 
+
+  /**
+   * Notify bg script of response
+   * @param data
+   */
+  notifyResponse(data) {
+    chrome.runtime.sendMessage({type: "response", data: data})
+  }
 
   startProgressBar(duration = 60) {
     this.progressBar = document.getElementById("progress")

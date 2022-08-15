@@ -1,7 +1,6 @@
 import {STORAGE_MGR} from "../../managers/storage/storageManager";
 import {NS_MANAGER} from "../../managers/core/namespaceManager";
 import AuthActionView from "../auth/AuthActionView";
-import * as bs58 from "bs58";
 
 export default class ExportKeyView extends AuthActionView {
 

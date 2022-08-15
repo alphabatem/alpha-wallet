@@ -1,4 +1,7 @@
 import {ApprovalView} from "./ApprovalView";
+import {SOLANA_MANAGER} from "../../managers/solana/solanaManager";
+import {WALLET_MGR} from "../../managers/wallets/walletManager";
+import {NS_MANAGER} from "../../managers/core/namespaceManager";
 
 export default class ApproveMessageView extends ApprovalView {
 
@@ -44,11 +47,11 @@ export default class ApproveMessageView extends ApprovalView {
 
 <div class="col-10 mx-auto">
 <div class="card">
-<div class="card-body">
-<span>${req.request.message || 'Empty Message'}</span>
+<div class="card-body" style="min-height: 100px">
+<span>${req.request.data.message || 'Empty Message'}</span>
 </div>
 </div>
-<p><i class="small">Encoding: ${req.request.display || 'Unknown'}</i></p>
+<p><i class="small">Encoding: ${req.request.data.display || 'Unknown'}</i></p>
 </div>
 </div>
 
@@ -71,7 +74,21 @@ export default class ApproveMessageView extends ApprovalView {
 
 
   onApprove(e) {
-    //TODO
+    this.getRouter().navigateTo("auth/auth_action", {
+      redirect_to: "tokens",
+      callback: (pk) => this.onAuthSuccess(pk)
+    })
+  }
+
+  async onAuthSuccess(pk) {
+    const mgr = this.getManager(SOLANA_MANAGER)
+    const req = await this.getRequest()
+
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    const kp = await this.getManager(WALLET_MGR).getKeyPair(ns.key, pk)
+    const signature = await mgr.signMessage(req.request.data, kp)
+    console.log("Signature", signature, signature.toString())
+    this.notifyResponse(signature)
   }
 
   async getRequest() {

@@ -117,4 +117,14 @@ export class SolanaRPC {
       )
     )[0]
   }
+
+  /**
+   * Returns the estimated fee for a given message
+   * 
+   * @param message
+   * @returns {Promise<*|RpcResponseAndContext<number>>}
+   */
+  async getFeeForMessage(message) {
+    return await this.connection.getFeeForMessage(message)
+  }
 }

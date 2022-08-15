@@ -1,6 +1,8 @@
 import {ApprovalView} from "./ApprovalView";
 import {MESSAGE_MGR} from "../../managers/browser_messages/messageManager";
 import {SOLANA_MANAGER} from "../../managers/solana/solanaManager";
+import {NS_MANAGER} from "../../managers/core/namespaceManager";
+import {WALLET_MGR} from "../../managers/wallets/walletManager";
 
 export default class ApproveTxnView extends ApprovalView {
 
@@ -15,7 +17,6 @@ export default class ApproveTxnView extends ApprovalView {
 
   async getHtml() {
     this.setTitle("Sign Transaction");
-
 
 
     const req = await this.getRequest()
@@ -52,7 +53,7 @@ ${this.addProgressBar()}
           </div>
 </div>
 		<div class="col-9">
-		<p class="mt-1">${uri}</p>
+		<p class="mt-1">${uri.host}</p>
 		<p class="small mt-2">Requesting to sign the following transaction</p>
 </div>
 
@@ -98,12 +99,36 @@ ${this.addProgressBar()}
   }
 
   onApprove(e) {
-    super.onApprove(e)
-    console.log("Approved", e)
+    this.getRouter().navigateTo("auth/auth_action", {
+      redirect_to: "tokens",
+      callback: (pk) => this.onAuthSuccess(pk)
+    })
+  }
 
-    //TODO Sign txn
+  async onAuthSuccess(pk) {
+    const mgr = this.getManager(SOLANA_MANAGER)
+    const req = await this.getRequest()
 
-    window.close()
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    const kp = await this.getManager(WALLET_MGR).getKeyPair(ns.key, pk)
+
+
+    let resp
+    switch (req.request.method) {
+      case "signAndSendTransaction":
+        resp = await mgr.signAndSendTransaction(req.request.data, kp)
+        break
+      case "signTransaction":
+        resp = await mgr.signTransaction(req.request.data, kp)
+        break
+      case "signAllTransactions":
+        resp = await mgr.signAllTransactions(req.request.data, kp)
+        break
+      default:
+        throw new Error(`invalid method ${req.request.method}`)
+    }
+
+    this.notifyResponse(resp)
   }
 
   async getRequest() {

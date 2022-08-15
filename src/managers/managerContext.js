@@ -10,7 +10,7 @@ export class ManagerContext {
     }
   }
 
-  addPlugins(...managers) {
+  async addPlugins(...managers) {
     const plugins = [];
     for (let i = 0; i < managers.length; i++) {
       plugins.push(managers[i].id())
@@ -21,6 +21,9 @@ export class ManagerContext {
     // dependencies)
     for (let i = 0; i < plugins.length;i++){
       this._managers[plugins[i]].configure(this)
+    }
+    for (let i = 0; i < plugins.length;i++){
+      await this._managers[plugins[i]].start()
     }
 
     this._plugins.push(...plugins)
@@ -62,13 +65,18 @@ export class ManagerContext {
   }
 
   //Bind managers & call their configure method
-  start() {
+  async start() {
 
     const ok = Object.keys(this._managers)
 
     for (let i = 0; i < ok.length; i++) {
       console.debug("Configuring", this._managers[ok[i]].id())
       this._managers[ok[i]].configure(this)
+    }
+
+    for (let i = 0; i < ok.length; i++) {
+      console.debug("Starting", this._managers[ok[i]].id())
+      await this._managers[ok[i]].start()
     }
 
     return this

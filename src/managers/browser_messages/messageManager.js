@@ -212,6 +212,10 @@ export class MessageManager extends AbstractManager {
   async getRequest() {
     return await this.getStore().getPlain("_requests", "message")
   }
+
+  async setResponse(resp) {
+    return await this.getStore().setPlain("_requests", "response", resp)
+  }
 }
 
 export const MESSAGE_MGR = "message_mgr"

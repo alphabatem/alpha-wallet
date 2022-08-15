@@ -71,8 +71,8 @@ export class AlphaWallet {
   /**
    * Register enabled plugins
    */
-  registerPlugins() {
-    this._managerCtx.addPlugins(
+  async registerPlugins() {
+    await this._managerCtx.addPlugins(
       new SolanaManager(),
       new TokenManager(),
       new NFTManager(),
@@ -112,7 +112,7 @@ export class AlphaWallet {
     console.log("Wallet unlocked", new Date())
     this._managerCtx = this.newWalletContext()
     this._managerCtx.start()
-    this.registerPlugins()
+    await this.registerPlugins()
 
     //Wallet connected
     return true

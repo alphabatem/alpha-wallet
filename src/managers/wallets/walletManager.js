@@ -2,6 +2,7 @@ import {AbstractManager} from "../abstractManager";
 import {NS_MANAGER} from "../core/namespaceManager";
 import * as bip39 from "bip39";
 import * as bs58 from "bs58";
+import {web3} from "@project-serum/anchor";
 import {Keypair} from "@solana/web3.js";
 import {derivePath} from "ed25519-hd-key";
 
@@ -41,7 +42,7 @@ export class WalletManager extends AbstractManager {
    * @returns {Promise<void>}
    */
   async importWallet(name, secret, pk) {
-    const keyPair = this.decodeKeypair(secret)
+    const keyPair = this.decodeToKeypair(secret)
     await this._storeKeypair(keyPair, pk)
     await this._updateNamespace(name, keyPair.publicKey)
   }
@@ -51,8 +52,14 @@ export class WalletManager extends AbstractManager {
    * @param secret
    * @returns {*}
    */
-  decodeKeypair(secret) {
+  decodeToKeypair(secret) {
     return Keypair.fromSecretKey(bs58.decode(secret));
+  }
+
+  async getKeyPair(publicKey, passcode) {
+    const ks = await this.getKeyStore()
+    const pk = await ks.getPrivateKey(publicKey, passcode)
+    return this.decodeToKeypair(pk)
   }
 
   decodePrivateKey(pk) {

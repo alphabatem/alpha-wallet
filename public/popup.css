@@ -73,6 +73,23 @@ body {
   font-weight: bold;
 }
 
+.bg-danger {
+  color: white;
+  background: indianred;
+  font-weight: bold;
+}
+
+.bg-warning {
+  color: white;
+  background: darkorange;
+  font-weight: bold;
+}
+
+.trait {
+  border: 1px solid white;
+  border-radius: 7px;
+  padding: 0.25rem;
+}
 
 .footer {
   border-top: 2px solid #222;
@@ -118,6 +135,7 @@ body {
 
 #app {
   padding: 10px;
+  padding-bottom: 0;
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
@@ -182,6 +200,8 @@ body {
 }
 
 .nft-detail {
+  text-align: center;
+  font-weight: bold;
   position: absolute;
   bottom: 0;
   color: white;
@@ -293,5 +313,175 @@ body {
 }
 
 .twitter-link {
-  color: cornflowerblue;
+  color: deepskyblue;
 }
+
+
+.badge-container {
+  pointer-events: none;
+  position: absolute;
+  top: 7%;
+  left: 3%;
+}
+
+.pos-relative {
+  position: relative !important;
+}
+
+.badge-container .badge {
+  float: left;
+  padding: 0.5rem;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+
+
+.select-indicator {
+  padding: 0.25rem;
+  position: absolute;
+  top: 3%;
+  left: 3%;
+  background: deepskyblue;
+  border-radius: 32px;
+  width: 30px;
+  height: 30px;
+  line-height: 22px;
+  border: 2px solid white;
+  z-index: 3;
+}
+
+
+.slider-container {
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.slider-horizontal {
+  width: fit-content;
+  height: 160px;
+  min-width: 100%;
+  text-align: center;
+}
+
+.slider-horizontal > div {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: unset;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+}
+
+code.address {
+  font-size: 0.7em;
+}
+
+
+
+
+#loading {
+  opacity: 1;
+  z-index: 99;
+  transition: opacity 0.3s ease-in-out;
+
+  font-size: 3rem;
+}
+
+
+.spinner {
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+}
+
+
+/**
+ * Animations
+ */
+
+@-moz-keyframes spin {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+

@@ -11,6 +11,8 @@ import {MESSAGE_MGR} from "./managers/browser_messages/messageManager";
 
 const alphaWallet = new AlphaWallet()
 
+let _response = null
+
 let currentWidth = 0
 chrome.windows.getCurrent().then(t => {
   currentWidth = t.width
@@ -61,37 +63,47 @@ function handleInternalMessage(request, sender, sendResponse) {
   if (!isInternalMessage(sender)) return sendResponse(); //Double check
 
   console.log("Internal msg", request, sender)
-  return alphaWallet.onMessage(request, sender).then(r => {
-    sendResponse(r)
-  })
+  if (request.type === "response" && _response)
+    _response(request.data)
+
+  _response = null
 }
 
 
 function handleMessage(request, sender, sendResponse) {
-  if (!isTrustedSite(sender.origin)) {
-    openTrustedSiteApproval(sender)
-    return sendResponse("must_auth")
-  }
 
-  //Trusted site
+  console.log("handleMessage", sender)
+  isTrustedSite(sender.origin).then(ok => {
 
-  if (request.method === "connect" || request.method === "disconnect") {
-    return alphaWallet.onMessage(request, sender).then(r => {
-      sendResponse(r)
-    })
-  }
+    if (!ok) {
+      openTrustedSiteApproval(sender)
+      return sendResponse("must_auth")
+    }
 
-  return openApprovalView(request,sender)
+
+    //Trusted site
+    _response = sendResponse
+
+    if (request.method === "connect" || request.method === "disconnect") {
+      return alphaWallet.onMessage(request, sender).then(r => {
+        sendResponse(r)
+      })
+    }
+
+    return openApprovalView(request, sender)
+  })
 }
 
-function isTrustedSite(origin) {
+async function isTrustedSite(origin) {
+  const uri = new URL(origin)
+
   const tsm = alphaWallet.getManager(TRUSTED_SITE_MGR)
   if (!tsm) {
     console.warn("Trusted site manager plugin not installed")
     return false
   }
 
-  return tsm.isTrusted(origin)
+  return await tsm.isTrusted(uri.host)
 }
 
 

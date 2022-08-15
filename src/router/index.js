@@ -29,6 +29,13 @@ import CreditsView from "../views/settings/CreditsView";
 import ApproveMessageView from "../views/approval/ApproveMessageView";
 import AuthActionView from "../views/auth/AuthActionView";
 import ExportKeyView from "../views/settings/ExportKeyView";
+import SendSOLView from "../views/transactions/SendSOLView";
+import SendConfirmView from "../views/transactions/SendConfirmView";
+import {SendTokenView} from "../views/transactions/SendTokenView";
+import {StakeSOLView} from "../views/transactions/StakeSOLView";
+import {SendNFTView} from "../views/transactions/SendNFTView";
+import SendConfirmNFTView from "../views/transactions/SendConfirmNFTView";
+import {LoadingView} from "../views/LoadingView";
 
 const _routes = [
   {hash: "login", view: LoginPasscodeView},
@@ -40,7 +47,12 @@ const _routes = [
   {hash: "nft/show", view: NFTShowView},
 
   {hash: "transfer/deposit", view: ComingSoonView},
-  {hash: "transfer/send", view: ComingSoonView},
+  {hash: "transfer/send_sol", view: SendSOLView},
+  {hash: "transfer/send_tokens", view: SendTokenView},
+  {hash: "transfer/send_nft", view: SendNFTView},
+  {hash: "transfer/stake", view: StakeSOLView},
+  {hash: "transfer/confirm/tokens", view: SendConfirmView},
+  {hash: "transfer/confirm/nfts", view: SendConfirmNFTView},
 
   {hash: "plugins", view: PluginView},
   {hash: "plugin_hub", view: ComingSoonView},
@@ -77,6 +89,8 @@ const _routes = [
 ]
 
 export class Router {
+
+  _loadingView = new LoadingView(null, null, {})
 
   appContainer
 
@@ -141,6 +155,8 @@ export class Router {
   }
 
   async updateView(match, data = {}) {
+    await this.setLoadingView(true)
+
     this.currentRoute = {hash: match.hash, data: data}
     this.currentView = new match.view(this, this.wallet, data);
 
@@ -150,6 +166,12 @@ export class Router {
     this.appContainer.innerHTML = await this.currentView.getHtml();
 
     await this.currentView.onMounted(this.appContainer);
+  }
+
+
+  async setLoadingView(show) {
+    if (show)
+    this.appContainer.innerHTML = await this._loadingView.getHtml()
   }
 
 

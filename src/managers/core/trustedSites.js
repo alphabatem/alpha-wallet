@@ -27,6 +27,7 @@ export class TrustedSites extends AbstractManager {
 
   async isTrusted(uri) {
     await this.getTrustedSites()
+    console.log("Checking trusted site", uri, JSON.stringify(this.approvedSites))
     return this.approvedSites[uri]
   }
 

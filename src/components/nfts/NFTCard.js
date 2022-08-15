@@ -1,5 +1,7 @@
 import AbstractView from "../../view.js";
 import axios from "axios";
+import {web3} from "@project-serum/anchor";
+import {NFT_MGR} from "../../managers/nft/nftManager";
 
 export class NFTCard extends AbstractView {
   // _data = {token: {}, price: 0}
@@ -13,9 +15,15 @@ export class NFTCard extends AbstractView {
   }
 
   async getHtml() {
+    const mgr = this.getManager(NFT_MGR)
+    const meta = await mgr.getTokenMetadata(new web3.PublicKey(this._data.token.mint)).catch((e) => {
+      console.log("Unable to get token metadata", e)
+    })
+    if (!meta) {
+      return ``
+    }
 
-    const metadata = this._data.token.meta ? this._data.token.meta.data : {}
-    const tokenName = metadata.name ? metadata.name.replaceAll("\u0000", "") : this._data.token.mint.substring(0, 16)
+    const metadata = meta.data || {}
     const metadataUri = metadata.uri ? metadata.uri.replaceAll("\u0000", "") : null
 
     let data = null
@@ -25,20 +33,30 @@ export class NFTCard extends AbstractView {
           method: "get",
           url: metadataUri,
           timeout: 1000,
-        }).catch(e => {})
+        }).catch(e => {
+        })
         data = r.data
       } catch (e) {
-        //
+        console.log("Unable to get metadata", e)
       }
     }
 
+    console.log("Data", data, metadata)
     if (!data)
       return ``
 
-    return `<div class="col-6"><div class="card m-1 nft-card-container">
+    const metaName = metadata.name ? metadata.name.replaceAll("\u0000", "") : ''
+    const tokenName = metaName ? metaName : (data.name || this._data.token.mint.substring(0, 16))
+
+    let selectIndicator = ``
+    if (this._data.selectActive && this._data.selectStatus) {
+      selectIndicator = `<div class="select-indicator"><i class="fi fi-rr-check"></i></div>`
+    }
+
+    return `<div class="card m-1 nft-card-container">
+    ${selectIndicator}
     <div data-mint="${this._data.token.mint}" class="nft-card" style="background-image: url('${data.image}'); background-size: cover; background-position: center"></div>
 		<div class="nft-detail noselect"><span class="small">${tokenName}</span></div>
-</div>
 </div>`
   }
 }
