@@ -23,8 +23,27 @@ export class NFTCard extends AbstractView {
       return ``
     }
 
+
     const metadata = meta.data || {}
     const metadataUri = metadata.uri ? metadata.uri.replaceAll("\u0000", "") : null
+    const metaName = metadata.name ? metadata.name.replaceAll("\u0000", "") : ''
+
+
+    let selectIndicator = ``
+    if (this._data.selectActive && this._data.selectStatus) {
+      selectIndicator = `<div class="select-indicator"><i class="fi fi-rr-check"></i></div>`
+    }
+
+    if (mgr.isTokenSuspect(meta))
+      return `<div class="card m-1 nft-card-container">
+    ${selectIndicator}
+    <div data-mint="${this._data.token.mint}" class="nft-card p-4">
+    <i class="fi fi-rr-shield-exclamation" style="font-size: 4em; color: #222222"></i>
+    <h6 style="color: #222222">Suspect Token</h6>
+</div>
+		<div class="nft-detail noselect"><span class="small">${metaName || this._data.token.mint}</span></div>
+</div>`
+
 
     let data = null
     if (metadataUri) {
@@ -45,13 +64,7 @@ export class NFTCard extends AbstractView {
     if (!data)
       return ``
 
-    const metaName = metadata.name ? metadata.name.replaceAll("\u0000", "") : ''
     const tokenName = metaName ? metaName : (data.name || this._data.token.mint.substring(0, 16))
-
-    let selectIndicator = ``
-    if (this._data.selectActive && this._data.selectStatus) {
-      selectIndicator = `<div class="select-indicator"><i class="fi fi-rr-check"></i></div>`
-    }
 
     return `<div class="card m-1 nft-card-container">
     ${selectIndicator}

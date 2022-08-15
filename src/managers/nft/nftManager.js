@@ -18,6 +18,16 @@ export class NFTManager extends AbstractManager {
   TOKEN_PROGRAM = new web3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
 
 
+
+
+  validHosts = {
+    "ipfs.io": true,
+    "arweave.net": true,
+    "nftstorage.link": true,
+    "shdw-drive.genesysgo.net": true,
+    "testlaunchmynft.mypinata.cloud": true,
+  }
+
   /**
    * Context ID
    *
@@ -98,6 +108,75 @@ export class NFTManager extends AbstractManager {
    */
   rpc() {
     return this.getManager(SOLANA_MANAGER).rpc()
+  }
+
+
+  /**
+   * Check basic params to see if scam
+   *
+   * @param nft
+   * @param metadata
+   * @returns {boolean}
+   */
+  isScam(nft, metadata) {
+    if (!nft.data || !nft.data.creators)
+      return true
+
+    if (!metadata.attributes)
+      return true
+
+    if (nft.data.sellerFeeBasisPoints !== metadata.seller_fee_basis_points)
+      return true
+
+    return false
+  }
+
+  isTokenSuspect(nft) {
+    const nftUri = new URL(nft.data.uri.replaceAll("\u0000", ""))
+    if (!this.validHosts[nftUri.host])
+      return true
+
+      return false
+  }
+
+  /**
+   * Returns if the URLs in the file look sus
+   * @param metadata
+   * @returns {boolean}
+   */
+  isMetadataSuspect(metadata) {
+    const metadataUri = new URL(metadata.image)
+    if (!this.validHosts[metadataUri.host])
+      return true
+
+    if (metadata.description.indexOf("://") > -1)
+      return true
+
+    if (metadata.attributes) {
+      for (let i = 0; i < metadata.attributes.length; i++) {
+        if (`${metadata.attributes[i].value}`.indexOf("://") > -1)
+          return true
+      }
+    }
+
+    return false
+  }
+
+  /**
+   * Returns if a provided NFT & metadata is verified correctly
+   *
+   * @param nft
+   * @param metadata
+   * @returns {boolean}
+   */
+  isVerified(nft, metadata) {
+    if (!nft.data || !nft.data.creators)
+      return false
+
+    if (!nft.data.creators[0].verified)
+      return false
+
+    return false
   }
 }
 

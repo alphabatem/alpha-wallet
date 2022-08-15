@@ -6,6 +6,7 @@ import {NS_MANAGER} from "../managers/core/namespaceManager";
 export default class NFTView extends AbstractView {
 
   selectActive = false
+  loadSuspectTokens = false
 
   selectedNFTs = [];
 
@@ -35,6 +36,7 @@ export default class NFTView extends AbstractView {
     for (let i = 0; i < nftArr.length; i++) {
       const card = await this.addSubView(NFTCard, {
         token: nftArr[i],
+        loadSus: this.loadSuspectTokens,
         selectActive: this.selectActive,
         selectStatus: this.selectedNFTs.indexOf(nftArr[i].mint) > -1
       }).getHtml()

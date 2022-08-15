@@ -5,58 +5,6 @@ import {TraitCard} from "../components/nfts/TraitCard";
 
 export default class NFTShowView extends AbstractView {
 
-  validHosts = {
-    "ipfs.io": true,
-    "arweave.net": true,
-    "nftstorage.link": true,
-    "shdw-drive.genesysgo.net": true,
-    "testlaunchmynft.mypinata.cloud": true,
-  }
-
-  isScam(nft, metadata) {
-    if (!nft.data || !nft.data.creators)
-      return true
-
-    if (!metadata.attributes)
-      return true
-
-    if (nft.data.sellerFeeBasisPoints !== metadata.seller_fee_basis_points)
-      return true
-
-    return false
-  }
-
-  isSuspectUrl(nft, metadata) {
-    const nftUri = new URL(nft.data.uri.replaceAll("\u0000", ""))
-    if (!this.validHosts[nftUri.host])
-      return true
-    const metadataUri = new URL(metadata.image)
-    if (!this.validHosts[metadataUri.host])
-      return true
-
-    if (metadata.description.indexOf("://") > -1)
-      return true
-
-    if (metadata.attributes) {
-      for (let i = 0; i < metadata.attributes.length; i++) {
-        if (`${metadata.attributes[i].value}`.indexOf("://") > -1)
-          return true
-      }
-    }
-
-    return false
-  }
-
-  isVerified(nft, metadata) {
-    if (!nft.data || !nft.data.creators)
-      return false
-
-    if (!nft.data.creators[0].verified)
-      return false
-
-    return false
-  }
-
   async getHtml() {
     this.setTitle("NFT Show");
 
@@ -88,9 +36,9 @@ export default class NFTShowView extends AbstractView {
       return ``
 
 
-    let isScam = this.isScam(nft, data)
-    let isVerified = this.isVerified(nft, data)
-    let isSuspect = this.isSuspectUrl(nft, data)
+    let isScam = mgr.isScam(nft, data)
+    let isVerified = mgr.isVerified(nft, data)
+    let isSuspect = mgr.isTokenSuspect(nft) || mgr.isMetadataSuspect(data)
 
     let traits = ``
     if (data.attributes) {
