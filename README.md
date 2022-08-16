@@ -2,11 +2,11 @@
 
 Open source solana wallet with a focus on simplicity & extensibility.
 
-![Scam NFTs](https://github.com/babilu-online/alpha-wallet/blob/main/docs/screenshots/wallet_overview.gif?raw=true)
+![Overview](https://github.com/babilu-online/alpha-wallet/blob/main/docs/screenshots/wallet_overview.gif?raw=true)
 
-### ⚠️ UNDER ACTIVE DEVELOPMENT - v0.001!
+### 🚧️ UNDER ACTIVE DEVELOPMENT - v0.001! 🚧
 
-## Features
+## ✨ Features
 * 🔽 Minimal dependencies for reduced attack vectors
 * 🔏 Fully encrypted with AES & SHA3
 * 📵 0 External servers
@@ -21,10 +21,10 @@ Open source solana wallet with a focus on simplicity & extensibility.
 * ⚙️ Fully configurable - User has full control of all plugin runtime & settings
 
 
-## Key Features
+## ✨ Key Features
 For a full breakdown of all the features Alpha Wallet has to offer, visit [`docs/README.md`](https://github.com/babilu-online/alpha-wallet/blob/main/docs/README.md).
 
-### 🥷 Scam & Tracker NFT Detection
+### 👺 Scam & Tracker NFT Detection
 Protect your privacy & reduce the risk of interacting with scam NFT's through Alpha Wallets protective NFT layer. 
 
 NFT's suspected of being a scam or tracking wallets IP & activity will be restricted from being autoloaded when visting your collections.
@@ -50,7 +50,7 @@ Users can quickly and easily send or burn multiple NFT's from the comfort of the
 
 
 
-## Completed Features
+## ✨ Completed Features
 * [X] Wallet Private Key Import & Export
 * [X] Mnemonic Key Import & Export
 * [X] Encrypted Wallet generation & Storage
@@ -65,7 +65,7 @@ Users can quickly and easily send or burn multiple NFT's from the comfort of the
 * [X] Complete wallet interface for `@solana/wallet-adapter`
   * PR: `https://github.com/solana-labs/wallet-adapter/pull/518`
 
-## Completed Plugins
+## ✨ Completed Plugins
 * Token
 * NFT
 * Storage
@@ -74,14 +74,14 @@ Users can quickly and easily send or burn multiple NFT's from the comfort of the
 * Browser Messages
 * Token Pricing
 
-## TODO
+## 🐛 TODO
 * [ ] Ledger plugin - remote signing (0 key storage on extension)
 * [ ] EVM Plugin Interface
 * [ ] Finish up settings & plugin settings binding
 * [ ] Add internal views for Staking & Sending/Recieving SOL
 
 
-## Plugins Roadmap
+## 📍 Plugins Roadmap
 * [ ] Jupiter AG
 * [ ] AlphaBatem plugin - view metaverses
 * [ ] GenGo plugin - view drives
