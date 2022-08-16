@@ -45,8 +45,9 @@ export default class PinCodeView extends AbstractView {
   <p class="small mt-5" style="line-height: 1em">This PIN is used to secure your passcode for the lockout period.</p>`
   }
 
+
+
   async getHtml() {
-    this.setTitle("Set Session PIN");
 
     const infoDom = this.getInfoDom();
 
@@ -126,6 +127,12 @@ export default class PinCodeView extends AbstractView {
     }
   }
 
+  async beforeMount() {
+    this.setTitle("Set Session PIN");
+
+    return super.beforeMount();
+  }
+
   async onDismount() {
     super.onDismount();
 
@@ -137,6 +144,10 @@ export default class PinCodeView extends AbstractView {
     super.onMounted(app)
 
     this.pinCodeParent = document.getElementsByClassName("code-container")[0]
+    if (!this.pinCodeParent)
+      return
+
+
     this.pinCodeParent.addEventListener("keyup", this.onKeyUp)
     document.getElementById("code-6").addEventListener("keyup", (e) => this.onKeyUpDone(e))
 

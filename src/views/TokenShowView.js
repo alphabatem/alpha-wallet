@@ -18,7 +18,7 @@ export default class TokenShowView extends AbstractView {
     const symbol = metadata.symbol ? metadata.symbol.replaceAll("\u0000", "") : ""
 
     let data = {
-      image: `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${token.mint}/logo.png`
+      image: metadata.image || `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${token.mint}/logo.png`
     }
     if (metadataUri) {
       console.log("Getting token metadata", metadataUri)
@@ -50,6 +50,7 @@ export default class TokenShowView extends AbstractView {
     this.setTitle("Token Show");
 
     const token = await this.getManager(TOKEN_MGR).getToken(this._data.mint)
+    console.log("TokenShow", token)
     const detail = await this.getTokenDetail(token.liquid)
 
     const history = await this.rpc().getSignaturesForAddress(token.liquid.publicKey, {
@@ -83,7 +84,8 @@ export default class TokenShowView extends AbstractView {
 				src="https://explorer.solana.com/favicon.ico" class="img-fluid" alt="solana explorer"></a></div>
 	</div>
 </div>
-<div class="row mt-3 mb-3">
+<h6>${this._data.mint}</h6>
+<div class="row mt-3 mb-1">
 	<div class="col-6">
 		<button data-link="transfer/deposit" class="btn btn-primary btn-block">Deposit</button>
 	</div>
@@ -91,7 +93,6 @@ export default class TokenShowView extends AbstractView {
 		<button data-link="transfer/send" class="btn btn-primary btn-block">Send</button>
 	</div>
 </div>
-<h6>${this._data.mint}</h6>
 <div class="row p-2">${histView}</div>`;
   }
 }

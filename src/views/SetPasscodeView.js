@@ -6,6 +6,10 @@ export default class SetPasscodeView extends AbstractView {
   existingCode
   newCode
 
+  async beforeMount() {
+    return super.beforeMount();
+  }
+
   updatePasscode(e) {
     this.error = "";
     e.preventDefault()
@@ -18,11 +22,14 @@ export default class SetPasscodeView extends AbstractView {
       return this.onValidationError("New code too short")
     }
 
+    console.log("Setting passcode")
     this.getWallet().isPasscodeSet().then(ok => {
       if (ok)
-        this.getWallet().getStore().setPasscode(this.existingCode.value, this.newCode.value).then(r => this.onUpdateResponse(r)).catch(r => this.onUpdateError)
+        this.getWallet().getStore().setPasscode(this.existingCode.value, this.newCode.value).then(r => this.onUpdateResponse(r)).catch(r => this.onValidationError(r))
       else
-        this.getWallet().getStore().setPasscode(null, this.newCode.value).then(r => this.onUpdateResponse(r)).catch(r => this.onUpdateError)
+        this.getWallet().getStore().setPasscode(null, this.newCode.value).then(r => this.onUpdateResponse(r)).catch(r => this.onValidationError(r))
+    }).catch(e => {
+      this.onValidationError(e)
     })
   }
 
@@ -30,10 +37,6 @@ export default class SetPasscodeView extends AbstractView {
     this.error = error
     this._router.refresh()
     return false
-  }
-
-  onUpdateError(r) {
-    console.error("Unable to update passcode", r)
   }
 
   onUpdateResponse(ok) {
@@ -93,9 +96,14 @@ export default class SetPasscodeView extends AbstractView {
   }
 
 
-  async onMounted() {
+  async onMounted(app) {
+    super.onMounted(app)
+
     this.existingCode = document.getElementById("existing-input")
     this.newCode = document.getElementById("new-input")
-    document.getElementById("update-code-form").addEventListener("submit", (e) => this.updatePasscode(e))
+
+    const form = document.getElementById("update-code-form")
+    if (form)
+      form.addEventListener("submit", (e) => this.updatePasscode(e))
   }
 }

@@ -1,7 +1,5 @@
 'use strict';
 
-//TODO Evaluate if page is on our whitelist
-
 function injectScript(file_path, tag) {
   const node = document.getElementsByTagName(tag)[0];
   if (!node) {
@@ -24,6 +22,10 @@ window.addEventListener("beforeunload", (e) => {
 })
 
 
+/**
+ * TODO Add promise here to return & satisfy it in `onMessageResponse`
+ * @param e
+ */
 function onMessage(e) {
   if (e.data.type && e.data.type === "alpha_msg") {
     console.log("Sending", e.data.method)
@@ -34,6 +36,10 @@ function onMessage(e) {
   }
 }
 
+/**
+ * Called upon completion of message
+ * @param r
+ */
 function onMessageResponse(r) {
   if (!r)
     return
@@ -43,4 +49,5 @@ function onMessageResponse(r) {
     case "must_auth":
       return;
   }
+  console.log("Response", r)
 }

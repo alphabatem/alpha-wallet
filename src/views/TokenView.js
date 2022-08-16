@@ -14,6 +14,7 @@ export default class TokenView extends AbstractView {
     this.tokenPrices = await this.getManager(PRICE_MANAGER).getPrices()
     const mgr = this.getManager(TOKEN_MGR)
     const tokens = await mgr.getTokens()
+    console.log("TOkens", tokens)
 
     let totalPrice = 0
     let tokenViews = ""
@@ -66,6 +67,7 @@ export default class TokenView extends AbstractView {
 
   async beforeMount() {
     const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    console.log("Active NS: ", ns)
     if (!ns || ns === "_default") {
       this.getRouter().navigateTo("wallets/swap")
       return false

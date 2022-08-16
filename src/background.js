@@ -1,10 +1,5 @@
 'use strict';
 
-// With background scripts you can communicate with popup
-// and contentScript files.
-// For more information on background script,
-// See https://developer.chrome.com/extensions/background_pages
-
 import {AlphaWallet} from "./wallet/alphaWallet";
 import {TRUSTED_SITE_MGR} from "./managers/core/trustedSites";
 import {MESSAGE_MGR} from "./managers/browser_messages/messageManager";
@@ -24,6 +19,10 @@ chrome.windows.onFocusChanged.addListener(() => {
   })
 })
 
+
+chrome.storage.local.get(null, (r) => {
+  console.log("Storage Area", r)
+})
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
   console.log("Change", areaName, changes)
@@ -76,12 +75,14 @@ function handleMessage(request, sender, sendResponse) {
   isTrustedSite(sender.origin).then(ok => {
 
     if (!ok) {
+      console.warn("Site is NOT trusted", sender)
       openTrustedSiteApproval(sender)
       return sendResponse("must_auth")
     }
 
 
     //Trusted site
+    console.log("Site is trusted", sender)
     _response = sendResponse
 
     if (request.method === "connect" || request.method === "disconnect") {

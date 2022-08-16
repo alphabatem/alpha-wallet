@@ -106,12 +106,16 @@ export class AlphaWallet {
    * @returns {Promise<boolean>}
    */
   async unlock(passcode, pincode = null) {
+    if (!this._lockMgr.isLocked())
+      return true //Already unlocked
+
     if (!await this._lockMgr.unlock(passcode, pincode))
       return false
 
     console.log("Wallet unlocked", new Date())
+
     this._managerCtx = this.newWalletContext()
-    this._managerCtx.start()
+    await this._managerCtx.start()
     await this.registerPlugins()
 
     //Wallet connected

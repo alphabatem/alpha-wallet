@@ -40,9 +40,9 @@ export class KeyStorage extends StorageDriver {
     if (!ok)
       return false
 
-    console.log("KeyStore unlocked")
     await super.unlock()
     this._start = new Date().getTime()
+    console.log("KeyStore unlocked", this._start)
 
     setTimeout(() => this.lock(), this.getUnlockTimeout()) //Lock in 60 seconds (timeout)
     return true

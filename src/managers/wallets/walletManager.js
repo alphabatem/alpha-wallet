@@ -66,6 +66,19 @@ export class WalletManager extends AbstractManager {
     return bs58.decode(pk)
   }
 
+  mnemonicToKeypairs(mnemonic, password = "") {
+    const seed = bip39.mnemonicToSeedSync(mnemonic, password);
+    const keypairs = [];
+    for (let i = 0; i < 10; i++) {
+      const path = `m/44'/501'/${i}'/0'`;
+      const keypair = Keypair.fromSeed(derivePath(path, seed.toString("hex")).key);
+      console.log(`${path} => ${keypair.publicKey.toBase58()}`);
+      keypairs.push(keypair)
+    }
+
+    return keypairs
+  }
+
   /**
    * Add a new wallet with existing mnemonic as seed
    *

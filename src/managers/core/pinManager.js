@@ -91,8 +91,8 @@ export class PinManager extends AbstractManager {
       throw new Error("invalid pincode")
 
     const salt = await this.getSalt()
+    console.log("Salt", salt)
     const enc = await this.getStore().getSessionEncrypted(this._namespace, this._codeKey, this.getSaltedValue(pin, salt))
-
     return enc
   }
 

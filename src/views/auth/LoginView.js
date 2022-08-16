@@ -23,7 +23,7 @@ export default class LoginView extends AbstractView {
         else if (this.getWallet().isPinPluginEnabled())
           this.getRouter().navigateTo("wallets/set_pin", {pk: this.input.value})
         else
-          this.getRouter().navigateTo("wallets/swap")
+          this.getRouter().navigateTo("tokens")
       } else {
         this.onError("Invalid password")
         this.input.focus()
@@ -69,14 +69,19 @@ export default class LoginView extends AbstractView {
   }
 
 
-  async onMounted(app) {
-    await super.onMounted(app)
-
+  async beforeMount() {
     const passcodeSet = await this.getWallet().isPasscodeSet()
     if (!passcodeSet) {
+      console.log("Passcode not set, moving to setup")
       this.getRouter().navigateTo("set_passcode")
-      return
+      return false
     }
+
+    return true
+  }
+
+  async onMounted(app) {
+    await super.onMounted(app)
 
     this.input = document.getElementById("input")
     this.form = document.getElementById("login-form")

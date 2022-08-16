@@ -125,6 +125,7 @@ export default class ApproveTrustedSiteView extends AbstractView {
       this.getRouter().navigateTo("wallets/swap", {redirect_to: "auth/trusted_site"})
       return false
     }
+
     return true
   }
 

@@ -10,10 +10,6 @@ class AlphaConnector {
     //TODO Listen for connect, disconnect & swapWallet
   }
 
-  isConnected() {
-    return this.isConnected
-  }
-
   sendMessage(method, data) {
     window.postMessage({type: "alpha_msg", method: method, payload: data})
   }
@@ -22,7 +18,7 @@ class AlphaConnector {
     this.sendMessage(req.method, req.params)
   }
 
-  async connect(params = {}) {
+  async connect(params = {onlyIfTrusted: false}) {
     //
     this.sendMessage("connect", {onlyIfTrusted: !!params.onlyIfTrusted})
   }

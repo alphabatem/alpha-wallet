@@ -9,7 +9,7 @@ export default class WalletImportView extends AbstractView {
   error = ""
 
   async importWallet(e) {
-    const keypair = this.getManager(WALLET_MGR).decodeKeypair(this.walletInput.value)
+    const keypair = this.getManager(WALLET_MGR).decodeToKeypair(this.walletInput.value)
     const exists = this.getManager(NS_MANAGER).namespaceExists(keypair.publicKey.toString())
     if (exists) {
       this.error = "Wallet already exists"

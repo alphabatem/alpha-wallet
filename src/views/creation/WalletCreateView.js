@@ -17,7 +17,6 @@ export default class WalletCreateView extends AbstractView {
 
     const isSet = await ks.isMnemonicSet()
     if (isSet) {
-
       this.getRouter().navigateTo("auth/auth_action", {
         redirect_to: "tokens",
         callback: (pk) => this.onAuthSuccess(pk)
@@ -29,7 +28,9 @@ export default class WalletCreateView extends AbstractView {
   }
 
   async onAuthSuccess(pk) {
-    await this.getManager(WALLET_MGR).addWallet(this.nameInput.value, pk)
+    await this.getManager(WALLET_MGR).addWallet(this.nameInput.value, pk).catch(e => {
+      console.error("Unable to add wallet", e)
+    })
   }
 
   async getHtml() {

@@ -7,9 +7,11 @@ import {decodeUTF8} from "tweetnacl-util";
 import {SolanaTransactionManager} from "./solanaTransactionManager";
 import {web3} from "@project-serum/anchor";
 import {NS_MANAGER} from "../core/namespaceManager";
-import {Keypair} from "@solana/web3.js";
-import * as bs58 from "bs58";
-import {WALLET_MGR} from "../wallets/walletManager";
+import {
+  createAssociatedTokenAccountInstruction,
+  createTransferCheckedInstruction,
+  getAssociatedTokenAddress
+} from "@solana/spl-token";
 
 export class SolanaManager extends AbstractManager {
 
@@ -111,42 +113,61 @@ export class SolanaManager extends AbstractManager {
     return nacl.sign.detached(messageBytes, keyPair.secretKey)
   }
 
-  async sendToken() {
+  async sendNFTTokens(tokens, recipientAddr) {
+    const tx = new web3.Transaction()
 
-    //TODO
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i]
+      const t = await this.sendToken(token, 1, recipientAddr)
+      tx.add(t)
+    }
+
+    return tx
   }
 
+
+  async signAndSendTransaction(data, keyPair) {
+    return await web3.sendAndConfirmTransaction(this.rpc().connection, data, [keyPair]);
+  }
 
   /**
    * Send SPL tokens to a recipientAddress
    * @param mintAddr
    * @param amount
    * @param recipientAddr
-   * @returns {Promise<void>}
+   * @returns {Promise<module:"@solana/web3.js".Transaction>}
    */
-  async sendTokens(mintAddr, amount, recipientAddr) {
+  async sendToken(mintAddr, amount, recipientAddr) {
+    console.log(`Sending ${mintAddr} - QTY: ${amount} -> ${recipientAddr}`)
+
     const walletAddr = this.getManager(NS_MANAGER).getActiveNamespace().key
-    const mint = web3.PublicKey(mintAddr)
+    const mint = new web3.PublicKey(mintAddr)
 
-    // Get the token account of the fromWallet Solana address, if it does not exist, create it
-    const fromTokenAccount = await mint.getOrCreateAssociatedAccountInfo(walletAddr);
 
-    //get the token account of the toWallet Solana address, if it does not exist, create it
-    const toTokenAccount = await mint.getOrCreateAssociatedAccountInfo(recipientAddr);
+    let tx = new web3.Transaction()
 
-    const transaction = new web3.Transaction().add(
-      splToken.Token.createTransferInstruction(
-        splToken.TOKEN_PROGRAM_ID,
-        fromTokenAccount.address,
-        toTokenAccount.address,
-        fromWallet.publicKey,
-        [],
-        amount
+    const originAccount = await getAssociatedTokenAddress(mint, new web3.PublicKey(walletAddr))
+    const recipientAccount = await getAssociatedTokenAddress(mint, new web3.PublicKey(recipientAddr))
+
+    tx.add(
+      createAssociatedTokenAccountInstruction(
+        new web3.PublicKey(walletAddr), // payer
+        recipientAccount, // ata
+        new web3.PublicKey(recipientAddr), // owner
+        mint // mint
       )
     );
 
-// Sign transaction, broadcast, and confirm
-    await web3.sendAndConfirmTransaction(this.rpc(), transaction, [fromWallet]);
+    tx.add(createTransferCheckedInstruction(
+      originAccount, // from (should be a token account)
+      mint, // mint
+      recipientAccount, // to (should be a token account)
+      new web3.PublicKey(recipientAddr), // from's owner
+      amount, // amount, if your deciamls is 8, send 10^8 for 1 token
+      8 // decimals
+    ))
+
+    return tx
   }
 
 

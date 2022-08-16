@@ -61,6 +61,15 @@ export class PriceManager extends AbstractManager {
     return this.provider.getPrice(tokenAddr)
   }
 
+  /**
+   * Returns SOL price
+   *
+   * @returns {Promise<*>}
+   */
+  async getSOLPrice() {
+    return await this.getPrice("11111111111111111111111111111111")
+  }
+
 }
 
 export const PRICE_MANAGER = "price_mgr"

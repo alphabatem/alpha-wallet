@@ -20,7 +20,11 @@ export class HashStorage {
     }
 
     const sha = CryptoJS.SHA3(passcode).toString(CryptoJS.enc.Hex)
-    return chrome.storage.local.set(`${this._zonePasscode}:pk`, sha)
+    const payload = {}
+    payload[`${this._zonePasscode}:pk`] = sha
+
+    chrome.storage.local.set(payload)
+    return true
   }
 
   /**
@@ -47,11 +51,10 @@ export class HashStorage {
    */
   async testPasscode(passcode) {
     const pkHash = await this.getPasscodeHash()
-    if (pkHash === null) {
+    if (!pkHash) {
       console.warn("Passcode not set")
       return true //Not yet set
     }
-
     const hash = CryptoJS.SHA3(passcode).toString(CryptoJS.enc.Hex)
     return pkHash === hash
   }

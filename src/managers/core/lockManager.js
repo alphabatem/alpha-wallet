@@ -47,8 +47,17 @@ export class LockManager extends AbstractManager {
   }
 
   async unlock(passcode, pincode = null) {
+    if (!this.isLocked())
+      return true
+
     if (!passcode && pincode) {
-      return this._unlockPincode(pincode)
+      return this.unlockPincode(pincode)
+    }
+
+    if (!pincode) {
+      const pinMgr = this.getManager(PIN_MGR)
+      if (pinMgr)
+        await pinMgr.clearCache()
     }
 
     return this._unlockPasscode(passcode)
@@ -70,6 +79,7 @@ export class LockManager extends AbstractManager {
     //Unlock key store for period of time
     await this.getManager(STORAGE_MGR).unlockKeyStore(passcode)
 
+    console.log("Wallet unlocked with PIN")
     if (this.statusIndicatorDom)
       this.statusIndicatorDom.innerText = "Unlocked"
 
@@ -82,7 +92,22 @@ export class LockManager extends AbstractManager {
    * @param pincode
    * @returns {Promise<null|*|null>}
    */
-  async _unlockPincode(pincode) {
+  async unlockPincode(pincode) {
+    const pinMgr = this.getManager(PIN_MGR)
+    if (!pinMgr)
+      return null
+
+    const pk = await pinMgr.getPasscode(pincode).catch(e => {
+      return new Error("invalid pin")
+    })
+
+    if (!pk)
+      throw new Error("invalid pin")
+
+    return await this._unlockPasscode(pk)
+  }
+
+  async fromPincode(pincode) {
     const pinMgr = this.getManager(PIN_MGR)
     if (!pinMgr)
       return null
@@ -94,7 +119,7 @@ export class LockManager extends AbstractManager {
     if (!pk)
       throw new Error("invalid pin")
 
-    return this._unlockPasscode(pk)
+    return pk
   }
 
   /**
@@ -157,4 +182,4 @@ export class LockManager extends AbstractManager {
 
 }
 
-const LOCK_MGR = "lock_mgr"
+export const LOCK_MGR = "lock_mgr"

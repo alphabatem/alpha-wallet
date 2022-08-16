@@ -1,6 +1,8 @@
 import AbstractView from "../../view.js";
 import {SOLANA_MANAGER} from "../../managers/solana/solanaManager";
 import {PRICE_MANAGER} from "../../managers/pricing/priceManager";
+import {WALLET_MGR} from "../../managers/wallets/walletManager";
+import {NS_MANAGER} from "../../managers/core/namespaceManager";
 
 export default class SendConfirmView extends AbstractView {
 
@@ -8,6 +10,21 @@ export default class SendConfirmView extends AbstractView {
 
   async onConfirm() {
     console.log("SendConfirmView::TODO - Complete onConfirm")
+    this.getRouter().navigateTo("auth/auth_action", {
+      callback: (pk) => this.onAuthSuccess(pk)
+    })
+  }
+
+  async onAuthSuccess(pk) {
+    const mgr = this.getManager(SOLANA_MANAGER)
+    const ns = this.getManager(NS_MANAGER).getActiveNamespace()
+    const kp = await this.getManager(WALLET_MGR).getKeyPair(ns.key, pk)
+
+    const tx = mgr.sendToken() //TODO Params
+    console.log("TX", tx)
+
+    const txn = await mgr.signAndSendTransaction(tx, kp)
+    this.getRouter().navigateTo("transfer/transaction", {txn: txn})
   }
 
   async getEstimatedFee() {

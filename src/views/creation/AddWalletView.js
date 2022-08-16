@@ -18,8 +18,16 @@ export default class AddWalletView extends AbstractView {
 		<div class="col-12 text-center mt-2">
 		<div class="card ns-card p-3" data-link="wallets/import">
 			<div class="card-body ns-card-body">
-				<h4>Import Wallet</h4>
-				<p class="small mt-2">Import an existing wallet</p>
+				<h4>Import Private Key</h4>
+				<p class="small mt-2">Import an existing wallet from private key</p>
+			</div>
+		</div>
+		</div>
+		<div class="col-12 text-center mt-2">
+		<div class="card ns-card p-3" data-link="wallets/import_mnemonic">
+			<div class="card-body ns-card-body">
+				<h4>Import Mnemonic</h4>
+				<p class="small mt-2">Import existing wallets from Mnemonic key</p>
 			</div>
 		</div>
 		</div>

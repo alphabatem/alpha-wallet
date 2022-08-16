@@ -11,12 +11,13 @@ export class TokenCard extends AbstractView {
     })
 
     const metadata = this._data.token.meta ? this._data.token.meta.data : {}
+    console.log("metadata", metadata, this._data.token)
     const tokenName = metadata.name ? metadata.name.replaceAll("\u0000", "") : this._data.token.mint.substring(0, 16)
     const metadataUri = metadata.uri ? metadata.uri.replaceAll("\u0000", "") : null
     const symbol = metadata.symbol ? metadata.symbol.replaceAll("\u0000", "") : ""
 
     let data = {
-      image: `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${this._data.token.mint}/logo.png`
+      image: metadata.image || `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${this._data.token.mint}/logo.png`
     }
     if (metadataUri) {
       console.debug("Getting token metadata", metadataUri)

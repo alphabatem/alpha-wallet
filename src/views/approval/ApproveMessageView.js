@@ -75,7 +75,6 @@ export default class ApproveMessageView extends ApprovalView {
 
   onApprove(e) {
     this.getRouter().navigateTo("auth/auth_action", {
-      redirect_to: "tokens",
       callback: (pk) => this.onAuthSuccess(pk)
     })
   }
@@ -89,6 +88,7 @@ export default class ApproveMessageView extends ApprovalView {
     const signature = await mgr.signMessage(req.request.data, kp)
     console.log("Signature", signature, signature.toString())
     this.notifyResponse(signature)
+    window.close()
   }
 
   async getRequest() {

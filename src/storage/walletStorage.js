@@ -54,7 +54,7 @@ export class WalletStorage extends StorageDriver {
 
   async getLastActiveNamespace() {
     const ns = await this.getPlain("_", "namespace").catch(e => {
-      console.log("unable to get namespace",e )
+      return
     })
     if (!ns)
       return

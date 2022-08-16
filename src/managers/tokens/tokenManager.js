@@ -48,9 +48,47 @@ export class TokenManager extends AbstractManager {
     return balance
   }
 
+  /**
+   * Returns the balance for a given token addr
+   *
+   * @param tokenAddr
+   * @returns {Promise<*>}
+   */
+  async getSOLBalance(walletAddr) {
+    const balance = await this.getManager(SOLANA_MANAGER).rpc().getBalance(walletAddr)
+    console.log("Token SOL", balance)
+
+    return balance
+  }
+
   async getTokens() {
-    await this.getLiquidTokens()
-    await this.getStakedTokens()
+    const walletAddr = await this.getStore().getWalletAddr()
+
+    await this.getLiquidTokens(walletAddr)
+    await this.getStakedTokens(walletAddr)
+
+
+    const solToken = await this.getSOLBalance(walletAddr)
+    console.log("SOLToken", solToken)
+
+    this._tokens.liquid["11111111111111111111111111111111"] = {
+      amount: {
+        amount: solToken,
+        decimals: 9,
+        uiAmount: solToken / Math.pow(10, 9),
+        uiAmountString: `${solToken / Math.pow(10, 9)}`
+      },
+      meta: {
+        data: {
+          name: "Solana (Native)",
+          symbol: "SOL",
+          image: "/images/solana.png"
+        }
+      },
+      mint: "11111111111111111111111111111111",
+      owner: walletAddr,
+      publicKey: walletAddr
+    }
 
     return this._tokens
   }
@@ -83,8 +121,7 @@ export class TokenManager extends AbstractManager {
    *
    * @returns {Promise<void>}
    */
-  async getLiquidTokens() {
-    const walletAddr = await this.getStore().getWalletAddr()
+  async getLiquidTokens(walletAddr) {
     if (!walletAddr || walletAddr === "_default")
       return {}
 
@@ -120,7 +157,7 @@ export class TokenManager extends AbstractManager {
   }
 
   //TODO complete
-  async getStakedTokens() {
+  async getStakedTokens(walletAddr) {
     //
   }
 

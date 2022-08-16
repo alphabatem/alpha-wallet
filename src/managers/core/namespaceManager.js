@@ -27,6 +27,11 @@ export class NamespaceManager extends AbstractManager {
       console.log("NS loaded", ns)
       this._namespaces = ns
     })
+
+    this.getStore().getLastActiveNamespace().then(() => {
+      console.log("Last active NS", this.getStore().getActiveNamespace())
+      this.setActiveNamespace(this.getStore().getActiveNamespace())
+    })
   }
 
   namespaceExists(walletAddr) {
@@ -64,6 +69,9 @@ export class NamespaceManager extends AbstractManager {
   }
 
   async setActiveNamespace(namespace) {
+    if (namespace === "_default")
+      return
+
     if (!this._namespaces.find((n) => n.key === namespace)) {
       throw new Error("invalid namespace")
     }

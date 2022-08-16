@@ -3,7 +3,7 @@ import {EVENT_MGR, EVENTS} from "./eventManager";
 
 export class TrustedSites extends AbstractManager {
 
-  approvedSites = {} //TODO populate onConfig
+  approvedSites = {}
 
   configure(ctx) {
     super.configure(ctx);

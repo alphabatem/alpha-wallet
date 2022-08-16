@@ -36,6 +36,11 @@ import {StakeSOLView} from "../views/transactions/StakeSOLView";
 import {SendNFTView} from "../views/transactions/SendNFTView";
 import SendConfirmNFTView from "../views/transactions/SendConfirmNFTView";
 import {LoadingView} from "../views/LoadingView";
+import {
+  MonitorTransactionView
+} from "../views/transactions/MonitorTransactionView";
+import WalletImportMnemonicView
+  from "../views/creation/WalletImportMnemonicView";
 
 const _routes = [
   {hash: "login", view: LoginPasscodeView},
@@ -51,6 +56,7 @@ const _routes = [
   {hash: "transfer/send_tokens", view: SendTokenView},
   {hash: "transfer/send_nft", view: SendNFTView},
   {hash: "transfer/stake", view: StakeSOLView},
+  {hash: "transfer/transaction", view: MonitorTransactionView},
   {hash: "transfer/confirm/tokens", view: SendConfirmView},
   {hash: "transfer/confirm/nfts", view: SendConfirmNFTView},
 
@@ -67,6 +73,7 @@ const _routes = [
   {hash: "wallets/create/save", view: WalletCreateSaveView},
   {hash: "wallets/remove", view: RemoveWalletView},
   {hash: "wallets/import", view: WalletImportView},
+  {hash: "wallets/import_mnemonic", view: WalletImportMnemonicView},
   {hash: "wallets/connect", view: ComingSoonView},
 
   //Used to set wallet_addr prior to wallet creation implemented
@@ -89,6 +96,13 @@ const _routes = [
 ]
 
 export class Router {
+
+  noLockRequired = {
+    "set_passcode": true,
+    "auth/approve_txn": true,
+    "auth/approve_msg": true,
+    "auth/auth_action": true,
+  }
 
   _loadingView = new LoadingView(null, null, {})
 
@@ -129,7 +143,7 @@ export class Router {
   }
 
   async onNavigate(hash = "login_pin", data = {}) {
-    if (this.wallet.isLocked()) {
+    if (this.wallet.isLocked() && !this.noLockRequired[hash]) {
       if (hash !== "login" && hash !== "login_pin")
         data.redirect_to = hash
 
@@ -171,7 +185,7 @@ export class Router {
 
   async setLoadingView(show) {
     if (show)
-    this.appContainer.innerHTML = await this._loadingView.getHtml()
+      this.appContainer.innerHTML = await this._loadingView.getHtml()
   }
 
 

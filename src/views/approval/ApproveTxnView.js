@@ -100,7 +100,6 @@ ${this.addProgressBar()}
 
   onApprove(e) {
     this.getRouter().navigateTo("auth/auth_action", {
-      redirect_to: "tokens",
       callback: (pk) => this.onAuthSuccess(pk)
     })
   }
@@ -129,6 +128,7 @@ ${this.addProgressBar()}
     }
 
     this.notifyResponse(resp)
+    window.close()
   }
 
   async getRequest() {

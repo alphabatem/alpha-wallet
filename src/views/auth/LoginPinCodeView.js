@@ -8,10 +8,16 @@ export default class LoginPinCodeView extends PinCodeView {
 		    <p data-link="login" class="link small mt-5">Login With Passcode</p>
 		</div>`
 
-    this.setButtonText("LOGIN")
     this.addExtraDom(d)
 
     return super.getHtml();
+  }
+
+  async beforeMount() {
+    this.setButtonText("LOGIN")
+
+
+    return super.beforeMount();
   }
 
   getInfoDom() {
@@ -52,7 +58,9 @@ export default class LoginPinCodeView extends PinCodeView {
 
     if (this._data.redirect_to)
       this.getRouter().navigateTo(this._data.redirect_to)
-    else
-      this.getRouter().navigateTo("wallets/swap")
+    else {
+console.log("Navigating to tokens")
+      this.getRouter().navigateTo("tokens")
+    }
   }
 }
