@@ -207,6 +207,10 @@
   float: right;
 }
 
+.pt-none {
+  pointer-events: none;
+}
+
 .btn {
   border: none;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);

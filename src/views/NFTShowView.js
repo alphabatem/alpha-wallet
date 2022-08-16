@@ -19,7 +19,9 @@ export default class NFTShowView extends AbstractView {
     this.setTitle("NFT Show");
 
     const mgr = this.getManager(NFT_MGR)
-    const nft = await mgr.getTokenMetadata(this._data.mint)
+    const nft = await mgr.getTokenMetadata(this._data.mint).catch(e => {
+      console.log("NFT metadata error", e)
+    })
 
     console.log("NFT", nft)
     const metadata = nft.data || {}

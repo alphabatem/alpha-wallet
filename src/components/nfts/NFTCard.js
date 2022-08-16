@@ -16,6 +16,7 @@ export class NFTCard extends AbstractView {
 
   async getHtml() {
     const mgr = this.getManager(NFT_MGR)
+    console.log("Getting html", this._data.token.mint)
     const meta = await mgr.getTokenMetadata(new web3.PublicKey(this._data.token.mint)).catch((e) => {
       console.log("Unable to get token metadata", e)
     })
@@ -38,8 +39,8 @@ export class NFTCard extends AbstractView {
       return `<div class="card m-1 nft-card-container">
     ${selectIndicator}
     <div data-mint="${this._data.token.mint}" class="nft-card p-4">
-    <i class="fi fi-rr-shield-exclamation" style="font-size: 4em; color: #222222"></i>
-    <h6 style="color: #222222">Suspect Token</h6>
+    <i class="fi fi-rr-shield-exclamation pt-none noselect" style="font-size: 4em; color: #222222"></i>
+    <h6 class="pt-none noselect" style="color: #222222">Suspect Token</h6>
 </div>
 		<div class="nft-detail noselect"><span class="small">${metaName || this._data.token.mint}</span></div>
 </div>`
@@ -60,7 +61,6 @@ export class NFTCard extends AbstractView {
       }
     }
 
-    console.log("Data", data, metadata)
     if (!data)
       return ``
 

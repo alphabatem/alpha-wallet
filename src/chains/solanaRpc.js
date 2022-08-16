@@ -72,7 +72,10 @@ export class SolanaRPC {
    * @returns {Promise<Metadata|null>}
    */
   async getTokenMetadata(tokenMint) {
-    const pda = await this.getMetadataPDA(new web3.PublicKey(tokenMint))
+    const pda = await this.getMetadataPDA(new web3.PublicKey(tokenMint)).catch(e => {
+      console.error("getMetadataPDA error", e)
+      return null
+    })
     const data = await this.connection.getAccountInfo(pda, "finalized")
     if (!data)
       return null
@@ -120,7 +123,7 @@ export class SolanaRPC {
 
   /**
    * Returns the estimated fee for a given message
-   * 
+   *
    * @param message
    * @returns {Promise<*|RpcResponseAndContext<number>>}
    */

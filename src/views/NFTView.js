@@ -107,6 +107,10 @@ ${selectStatus}
 
   onClick(e) {
     if (this.selectActive) {
+      if (!e.target.dataset.mint)
+        return;
+
+      console.log("Selected ", e.target.dataset.mint)
 
       const index = this.selectedNFTs.indexOf(e.target.dataset.mint)
       if (index > -1) {
