@@ -26,6 +26,14 @@ export default class PluginManifest {
     this.author = author
   }
 
+  getName() {
+    return this.name
+  }
+
+  getIcon() {
+    return this.icon
+  }
+
   getSlug() {
     return this.slug
   }

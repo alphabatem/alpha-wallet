@@ -47,7 +47,18 @@ export class PluginManager extends AbstractManager {
   }
 
   getRegisteredPlugins() {
+    const obs = Object.values(this._plugins)
+    const plugs = [];
 
+    for (let i = 0;i < obs.length;i++) {
+      plugs.push({
+        name: obs[i].getName(),
+        icon: obs[i].getIcon(),
+        slug: obs[i].getSlug(),
+        link: `plugins/${obs[i].getSlug()}/index`
+      })
+    }
+    return plugs
   }
 
 

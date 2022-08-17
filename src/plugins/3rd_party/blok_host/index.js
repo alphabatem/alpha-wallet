@@ -5,6 +5,6 @@ export class BlokHost extends PluginManifest {
     super("Blok Host", "@CloakdDev");
 
     this.setDescription("Blok Host web hosting")
-    this.setIcon("logo.jpg")
+    this.setIcon("https://shdw-drive.genesysgo.net/HF179Vyc4mC9vvpL1TypZqJFqHEf6qQwJSpjbRB4sWnh/blok_host.jpg")
   }
 }

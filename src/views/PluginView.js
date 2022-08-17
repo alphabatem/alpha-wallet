@@ -1,5 +1,6 @@
 import AbstractView from "../view.js";
 import {PluginCard} from "../components/plugins/PluginCard";
+import {PLUGIN_MGR} from "../managers/plugins/pluginManager";
 
 export default class PluginView extends AbstractView {
 
@@ -41,10 +42,16 @@ export default class PluginView extends AbstractView {
   async getHtml() {
     this.setTitle("Plugins");
 
+    const mgr = this.getManager(PLUGIN_MGR)
+    const plugins = mgr.getRegisteredPlugins()
+
 
     let pluginList = ``;
-    for (let i = 0; i < this.plugins.length; i++) {
-      pluginList += await this.addSubView(PluginCard, {plugin: this.plugins[i]}).getHtml()
+    // for (let i = 0; i < this.plugins.length; i++) {
+    //   pluginList += await this.addSubView(PluginCard, {plugin: this.plugins[i]}).getHtml()
+    // }
+    for (let i = 0; i < plugins.length; i++) {
+      pluginList += await this.addSubView(PluginCard, {plugin: plugins[i]}).getHtml()
     }
 
 
