@@ -18,7 +18,7 @@
 /{plugin_name}
   - settings.js
   - view.js
-  - view.css
+  - style.css
 ```
 
 #### index.js
@@ -27,5 +27,5 @@ Responsible for registering into the shared context
 ### view.js
 View controller for the plugin
 
-### view.css
+### style.css
 Css for the view controller

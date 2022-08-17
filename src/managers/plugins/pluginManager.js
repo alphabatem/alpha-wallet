@@ -1,8 +1,22 @@
 import {AbstractManager} from "../abstractManager";
+import * as Plugins from "../../plugins/3rd_party";
 
 export class PluginManager extends AbstractManager {
 
+  _router
 
+  _plugins = {
+    //
+  }
+
+  /**
+   * Context ID
+   *
+   * @returns {string}
+   */
+  id() {
+    return PLUGIN_MGR
+  }
 
   /**
    * Responsibilities:
@@ -17,41 +31,86 @@ export class PluginManager extends AbstractManager {
    */
 
 
-  /**
-   * Context ID
-   *
-   * @returns {string}
-   */
-  id() {
-    return PLUGIN_MGR
+
+  constructor(router) {
+    super();
+
+    this._router = router
+
+    const keys = Object.keys(Plugins)
+    console.log("Plugins", keys)
+
+    for (let i = 0; i < keys.length; i++) {
+      const plugin = new Plugins[keys[i]]
+      this.register(plugin)
+    }
   }
+
+  getRegisteredPlugins() {
+
+  }
+
 
   /**
    * Register a new external plugin
    * @returns {Promise<boolean>}
    */
-  async registerPlugin(plugin) {
-    let ok = await this._registerView()
+  register(plugin) {
+    console.log("Registering", plugin.getSlug())
+    this._registerPlugin(plugin).then(r => {
+      console.log("Plugin registered", plugin.getSlug())
+    })
+  }
+
+
+  async _registerPlugin(plugin) {
+    this._plugins[plugin.getSlug()] = plugin
+
+    let ok = await this._registerMenuCard(plugin)
     if (!ok) return false
-    ok = await this._registerMenuCard()
+
+    ok = await this._registerSettingsView(plugin)
     if (!ok) return false
-    ok = await this._registerSettingsView()
-    if (!ok) return false
 
-    ok = await this._registerRoute()
+    ok = await this._registerRoute(plugin)
+    return ok
   }
 
-  async _registerView() {
+  async _registerMenuCard(plugin) {
   }
 
-  async _registerMenuCard() {
+  /**
+   * Registers the settings view into plugin settings *if set*
+   * @param plugin
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _registerSettingsView(plugin) {
+    //TODO
   }
 
-  async _registerSettingsView() {
+  /**
+   * Registers the plugins routes into our router
+   * @param plugin
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _registerRoute(plugin) {
+    const slug = plugin.getSlug()
+    const hash = `${slug}/index`
 
-  }
+    this._router.addPluginRoute(hash, plugin.getView())
 
-  async _registerRoute() {
+    if (plugin.getSettingsView())
+      this._router.addSettingRoute(slug, plugin.getSettingsView())
+
+    if (plugin.hasExtraRoutes()) {
+      const routes = plugin.getExtraRoutes()
+      for (let i = 0; i < routes.length; i++) {
+        const route = routes[i]
+        this._router.addPluginRoute(`${slug}/${route.hash}`, route.view)
+      }
+    }
 
   }
 

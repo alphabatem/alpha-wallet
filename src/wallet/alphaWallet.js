@@ -17,9 +17,12 @@ import {PIN_MGR, PinManager} from "../managers/core/pinManager";
 import {ConfigManager} from "../managers/core/configManager";
 import {TrustedSites} from "../managers/core/trustedSites";
 import {WalletManager} from "../managers/wallets/walletManager";
+import {PluginManager} from "../managers/plugins/pluginManager";
+import {Router} from "../router";
 
 export class AlphaWallet {
 
+  _router
 
   _lockMgr = new LockManager()
   _storageMgr = new StorageManager(new WalletStorage(), new KeyStorage()) //TODO move into lockManager?
@@ -30,6 +33,12 @@ export class AlphaWallet {
   constructor() {
     this._managerCtx = this.newLockedContext()
     this._managerCtx.start()
+
+    this._router = new Router(this)
+  }
+
+  getRouter() {
+    return this._router
   }
 
   /**
@@ -76,7 +85,8 @@ export class AlphaWallet {
       new SolanaManager(),
       new TokenManager(),
       new NFTManager(),
-      new PriceManager()
+      new PriceManager(),
+      new PluginManager()
     )
   }
 

@@ -1,4 +1,4 @@
-import AbstractView from "../../view.js";
+import AbstractView from "../../../view.js";
 import {JupAg} from "./jup_ag";
 
 export default class JupAGView extends AbstractView {

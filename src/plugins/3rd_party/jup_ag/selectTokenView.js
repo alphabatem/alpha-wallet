@@ -1,4 +1,4 @@
-import AbstractView from "../../view";
+import AbstractView from "../../../view";
 
 export class SelectTokenView extends AbstractView {
 

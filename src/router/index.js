@@ -117,8 +117,29 @@ export class Router {
   currentRoute = null
   lastRoute = null
 
+  _routes
+
   constructor(wallet) {
+    this._routes = _routes
     this.wallet = wallet
+  }
+
+  addRoute(hash, view) {
+    if (this._routes.find((r) => r.hash === r.hash))
+      throw new Error("addRoute - hash already defined")
+
+    this._routes.push({
+      hash: hash,
+      view: view
+    })
+  }
+
+  addPluginRoute(hash, view) {
+    return this.addRoute(`plugins/${hash}`, view)
+  }
+
+  addSettingRoute(hash, view) {
+    return this.addRoute(`settings/plugins/${hash}`, view)
   }
 
   back() {
@@ -139,7 +160,7 @@ export class Router {
    * @returns {[]}
    */
   getRoutes() {
-    return _routes.concat(this.pluginRoutes)
+    return this._routes.concat(this.pluginRoutes)
   }
 
   async onNavigate(hash = "login_pin", data = {}) {

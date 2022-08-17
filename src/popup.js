@@ -7,7 +7,6 @@ import {AlphaWallet} from "./wallet/alphaWallet";
 
 (function () {
   const wallet = new AlphaWallet()
-  const router = new Router(wallet)
 
 
   function setupHeader() {
@@ -24,23 +23,23 @@ import {AlphaWallet} from "./wallet/alphaWallet";
     })
 
     walletSwapper.addEventListener("click", (e) => {
-      router.navigateTo("wallets/swap")
+      wallet.getRouter().navigateTo("wallets/swap")
     })
   }
 
   function beforeMount() {
     setupHeader()
 
-    router.bind(document)
+    wallet.getRouter().bind(document)
 
     mounted() //Call next step
   }
 
   function mounted() {
     if (window.alphaNav)
-      router.onNavigate(window.alphaNav.path, window.alphaNav.data)
+      wallet.getRouter().onNavigate(window.alphaNav.path, window.alphaNav.data)
     else
-      router.onNavigate("login_pin")
+      wallet.getRouter().onNavigate("login_pin")
   }
 
   document.addEventListener('DOMContentLoaded', beforeMount);
