@@ -1,4 +1,4 @@
-.plugin-container {
+#app.juicy_stake {
   background: #fee500;
   color: #000;
 
@@ -9,7 +9,7 @@
 
 .btn-juicy {
   display: inline-block;
-  padding: 21px 35px;
+  padding: 21px 20px;
   grid-auto-columns: 1fr;
   grid-column-gap: 16px;
   grid-row-gap: 16px;
@@ -26,9 +26,56 @@
   color: #000;
   font-weight: 600;
   text-align: center;
+  transition: all 0.3s ease-in-out;
+  -webkit-backface-visibility: hidden;
+  outline: 1px solid transparent;
+}
+
+.amount-staked {
+  -webkit-animation: wiggle 3s infinite linear;
+  animation: wiggle 3s infinite linear;
+  font-weight: bolder;
 }
 
 .btn-juicy:hover {
   background-color: #fff;
   box-shadow: 0 4px 0 0 #000;
+}
+
+.rotate-right {
+  transform: rotate(1deg);
+}
+
+.rotate-left {
+  transform: rotate(-1deg);
+}
+
+.juicy-intro {
+  border: 2px dashed #000;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: bold;
+  font-family: monospace;
+}
+
+.wiggle-anim {
+  -webkit-animation: wiggle 3s infinite linear;
+  animation: wiggle 3s infinite linear;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(-9deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+  100% {
+    transform: rotate(-9deg);
+  }
+}
+
+a {
+  text-decoration: none;
+  color: black;
 }

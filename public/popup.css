@@ -411,6 +411,16 @@ code.address {
   animation: spin 3s infinite linear;
 }
 
+.social-container img, .social-container i {
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+.social-container img:hover, .social-container i:hover {
+  -webkit-filter: invert(100%); /* Safari/Chrome */
+  filter: invert(100%);
+}
+
 
 /**
  * Animations

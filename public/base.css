@@ -343,6 +343,10 @@ input::placeholder {
   border-radius: 9px;
 }
 
+.img-thumb {
+  max-height: 21px;
+}
+
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -376,4 +380,9 @@ input::placeholder {
 
 .w-100 {
   width: 100% !important;
+}
+
+
+.w-90 {
+  width: 90% !important;
 }

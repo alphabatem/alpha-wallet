@@ -86,7 +86,7 @@ export class AlphaWallet {
       new TokenManager(),
       new NFTManager(),
       new PriceManager(),
-      new PluginManager()
+      new PluginManager(this._router)
     )
   }
 

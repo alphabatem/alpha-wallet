@@ -45,6 +45,8 @@ export default class PluginView extends AbstractView {
     const mgr = this.getManager(PLUGIN_MGR)
     const plugins = mgr.getRegisteredPlugins()
 
+    this.getRouter().printRoutes()
+
 
     let pluginList = ``;
     // for (let i = 0; i < this.plugins.length; i++) {

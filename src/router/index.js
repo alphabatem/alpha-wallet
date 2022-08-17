@@ -112,7 +112,7 @@ export class Router {
 
   currentView
 
-  pluginRoutes = [];
+  _pluginRoutes = [];
 
   currentRoute = null
   lastRoute = null
@@ -134,8 +134,17 @@ export class Router {
     })
   }
 
-  addPluginRoute(hash, view) {
-    return this.addRoute(`plugins/${hash}`, view)
+  addPluginRoute(plugin, hash, view) {
+    const phash = `plugins/${plugin.getSlug()}/${hash}`
+
+    if (this._pluginRoutes.find((r) => r.hash === phash))
+      throw new Error("addPluginRoute - hash already defined")
+
+    this._pluginRoutes.push({
+      hash: phash,
+      view: view,
+      plugin: plugin.getSlug()
+    })
   }
 
   addSettingRoute(hash, view) {
@@ -160,7 +169,7 @@ export class Router {
    * @returns {[]}
    */
   getRoutes() {
-    return this._routes.concat(this.pluginRoutes)
+    return this._routes.concat(this._pluginRoutes)
   }
 
   async onNavigate(hash = "login_pin", data = {}) {
@@ -194,6 +203,12 @@ export class Router {
 
     this.currentRoute = {hash: match.hash, data: data}
     this.currentView = new match.view(this, this.wallet, data);
+
+    if (match.plugin) {
+      this.appContainer.className = match.plugin
+    } else {
+      this.appContainer.className = ""
+    }
 
     if (!await this.currentView.beforeMount())
       return //View updated dont proceed
@@ -231,5 +246,14 @@ export class Router {
         this.navigateTo(e.target.dataset.link);
       }
     });
+  }
+
+
+  printRoutes() {
+    const routes = this.getRoutes()
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i]
+      console.log(`${route.hash}`)
+    }
   }
 }

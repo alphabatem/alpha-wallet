@@ -50,7 +50,7 @@ export class PluginManager extends AbstractManager {
     const obs = Object.values(this._plugins)
     const plugs = [];
 
-    for (let i = 0;i < obs.length;i++) {
+    for (let i = 0; i < obs.length; i++) {
       plugs.push({
         name: obs[i].getName(),
         icon: obs[i].getIcon(),
@@ -77,40 +77,43 @@ export class PluginManager extends AbstractManager {
   async _registerPlugin(plugin) {
     this._plugins[plugin.getSlug()] = plugin
 
-    let ok = await this._registerMenuCard(plugin)
-    if (!ok) return false
+    if (!this._registerMenuCard(plugin))
+      return false
 
-    ok = await this._registerSettingsView(plugin)
-    if (!ok) return false
+    if (!this._registerSettingsView(plugin))
+      return false
 
-    ok = await this._registerRoute(plugin)
-    return ok
+    if (!this._registerRoute(plugin))
+      return false
+
+    return true
   }
 
-  async _registerMenuCard(plugin) {
+  _registerMenuCard(plugin) {
+    return true
   }
 
   /**
    * Registers the settings view into plugin settings *if set*
    * @param plugin
-   * @returns {Promise<void>}
+   * @returns {boolean}
    * @private
    */
-  async _registerSettingsView(plugin) {
+  _registerSettingsView(plugin) {
     //TODO
+    return true
   }
 
   /**
    * Registers the plugins routes into our router
    * @param plugin
-   * @returns {Promise<void>}
+   * @returns {boolean}
    * @private
    */
-  async _registerRoute(plugin) {
+  _registerRoute(plugin) {
     const slug = plugin.getSlug()
-    const hash = `${slug}/index`
 
-    this._router.addPluginRoute(hash, plugin.getView())
+    this._router.addPluginRoute(plugin, "index", plugin.getView())
 
     if (plugin.getSettingsView())
       this._router.addSettingRoute(slug, plugin.getSettingsView())
@@ -119,10 +122,11 @@ export class PluginManager extends AbstractManager {
       const routes = plugin.getExtraRoutes()
       for (let i = 0; i < routes.length; i++) {
         const route = routes[i]
-        this._router.addPluginRoute(`${slug}/${route.hash}`, route.view)
+        this._router.addPluginRoute(plugin, route.hash, route.view)
       }
     }
 
+    return true
   }
 
 }

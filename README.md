@@ -35,6 +35,7 @@ NFT's suspected of being a scam or tracking wallets IP & activity will be restri
 Custom plugins allow users & communities to extend the functionality of Alpha Wallet. This could be through showing the users active SHDW drives, or showing the users staked NFT's or rewards.
 
 ![Plugins](https://github.com/babilu-online/alpha-wallet/blob/main/docs/screenshots/wallet_plugins.gif?raw=true)
+![Plugins](https://github.com/babilu-online/alpha-wallet/blob/main/docs/screenshots/plugin_juicy_stake.gif?raw=true)
 
 ### ℹ️ Informative Trusted Sites
 Enhanced information is provided on trusted sites authorization to allow users to make a more informed choice on what sites to connect with, limiting wallet drainer scams etc.
