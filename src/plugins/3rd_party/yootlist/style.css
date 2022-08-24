@@ -1,0 +1,112 @@
+#app.y00tlist {
+  background: white;
+  color: black;
+  font-family: 'Azeret Mono', sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.status {
+  margin-top: 4%;
+  padding: 4%;
+  border-radius: 14px;
+  text-transform: uppercase;
+  border: 2px solid transparent;
+  font-size: 0.9rem;
+}
+
+.apply-now {
+  margin-top: 10%;
+}
+
+.btn-apply {
+  background: #2044FF;
+  border: none;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  font-weight: normal;
+  padding: 5% 10%;
+  font-size: 0.8rem;
+  border-radius: .5rem;
+  width: 80%;
+}
+
+.btn-apply:hover {
+  background: #1C3DE5;
+}
+
+.logo-container {
+  margin-top: 10%;
+}
+
+.mt-10 {
+  margin-top: 10%;
+}
+
+.mb-10 {
+  margin-bottom: 10%;
+}
+
+.logo-container img {
+  max-width: 100%;
+  margin: auto;
+  min-height: 100px;
+}
+
+.status.applied {
+  border-color: orange;
+  background: orange;
+  color: white;
+}
+
+.status.rejected {
+  border-color: red;
+  background: red;
+  color: white;
+}
+
+.status.accepted {
+  border-color: green;
+  background: green;
+  color: white;
+}
+
+.status.not-applied {
+  border-color: lightcoral;
+  background: lightcoral;
+  color: white;
+}
+
+.status h1 {
+  margin-bottom: 0;
+}
+
+.rotate-right {
+  transform: rotate(1deg);
+}
+
+.rotate-left {
+  transform: rotate(-1deg);
+}
+
+.wiggle-anim {
+  -webkit-animation: wiggle 1s infinite linear;
+  animation: wiggle 1s infinite linear;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
