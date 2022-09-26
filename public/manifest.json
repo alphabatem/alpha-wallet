@@ -19,7 +19,7 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage", "tabs", "alarms"
+    "storage", "alarms"
   ],
   "web_accessible_resources": [{
     "resources": ["injectScript.js"],
