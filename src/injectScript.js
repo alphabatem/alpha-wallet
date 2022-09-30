@@ -45,10 +45,9 @@ class AlphaConnector {
                 signatureArray.push(data.payload[keys[i]])
               }
 
-              //TODO still not correct
               response = {
                 signature: {
-                  data: new Uint8Array(signatureArray),
+                  data: signatureArray,
                   type: "Buffer"
                 },
               }
@@ -117,20 +116,9 @@ class AlphaConnector {
     console.log("Registering event: ", event)
   }
 
-  /**
-   * Convert JSON to Uint8Array
-   * @param json
-   * @returns {Uint8Array}
-   * @constructor
-   */
-  jsonToArray(json) {
-    let str = JSON.stringify(json, null, 0);
-    let ret = new Uint8Array(str.length);
-    for (let i = 0; i < str.length; i++) {
-      ret[i] = str.charCodeAt(i);
-    }
-    return ret
-  };
+  off(event) {
+    console.log("Deregistering event: ", event)
+  }
 }
 
 window.alpha = new AlphaConnector()
