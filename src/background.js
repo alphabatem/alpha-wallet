@@ -6,7 +6,7 @@ import {MESSAGE_MGR} from "./managers/browser_messages/messageManager";
 
 const alphaWallet = new AlphaWallet()
 
-let _response = null
+let pendingRequest = null
 
 let currentWidth = 0
 chrome.windows.getCurrent().then(t => {
@@ -21,11 +21,11 @@ chrome.windows.onFocusChanged.addListener(() => {
 
 
 chrome.storage.local.get(null, (r) => {
-  console.log("Storage Area", r)
+  // console.log("Storage Area", r)
 })
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  console.log("Change", areaName, changes)
+  // console.log("Change", areaName, changes)
 })
 
 
@@ -41,15 +41,19 @@ chrome.alarms.create("pin-clear", {delayInMinutes: 20})
 
 console.log("BG Script running")
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log("BG::onMessage: ", request, sender)
+  console.log("BG::onMessage: ", request)
 
   //Internal Sender
   if (isInternalMessage(sender)) {
-    handleInternalMessage(request, sender, sendResponse)
+    _handleInternalMessage(request, sender, sendResponse)
     return true
   }
 
-  handleMessage(request, sender, sendResponse)
+  pendingRequest = {
+    method: request.method,
+    responder: sendResponse
+  }
+  _handleMessage(request, sender, sendResponse)
   return true
 });
 
@@ -58,36 +62,36 @@ function isInternalMessage(sender) {
   return sender.id === chrome.runtime.id && sender.origin === `chrome-extension://${chrome.runtime.id}`
 }
 
-function handleInternalMessage(request, sender, sendResponse) {
-  if (!isInternalMessage(sender)) return sendResponse(); //Double check
-
-  console.log("Internal msg", request, sender)
-  if (request.type === "response" && _response)
-    _response(request.data)
-
-  _response = null
+function _handleInternalMessage(request, sender, sendResponse) {
+  console.log("_handleInternalMessage", request, sender)
+  if (request.type === "response") {
+    if (pendingRequest) {
+      sendMethodResponse(pendingRequest.responder, pendingRequest.method, request.data)
+    } else {
+      console.debug("no pendingRequest, forwarding internal message")
+      sendMethodResponse(sendResponse, request.type, request.data)
+    }
+  } else
+    console.log("_handleInternalMessage::skipped - ", request.type)
 }
 
 
-function handleMessage(request, sender, sendResponse) {
-
-  console.log("handleMessage", sender)
+function _handleMessage(request, sender, sendResponse) {
+  console.log("handleMessage", request)
   isTrustedSite(sender.origin).then(ok => {
-
     if (!ok) {
       console.warn("Site is NOT trusted", sender)
       openTrustedSiteApproval(sender)
-      return sendResponse("must_auth")
+      return sendMethodResponse(sendResponse, request.method, "must_auth")
     }
 
 
     //Trusted site
     console.log("Site is trusted", sender)
-    _response = sendResponse
-
     if (request.method === "connect" || request.method === "disconnect") {
       return alphaWallet.onMessage(request, sender).then(r => {
-        sendResponse(r)
+        console.log("Sending onMessage Response: ", r)
+        sendMethodResponse(sendResponse, request.method, r)
       })
     }
 
@@ -132,6 +136,15 @@ function openApprovalView(request, sender) {
     return openPopup(`approve_txn.html`)
   })
 
+}
+
+function sendMethodResponse(channel, method, payload) {
+  console.log("Sending response", method)
+  channel({
+    method: method,
+    data: payload
+  })
+  pendingRequest = null
 }
 
 function openPopup(view) {

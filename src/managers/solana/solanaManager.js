@@ -3,7 +3,7 @@ import {SolanaRPC} from "../../chains/solanaRpc";
 import {EVENT_MGR, EVENTS} from "../core/eventManager";
 import {MESSAGE_MGR} from "../browser_messages/messageManager";
 import nacl from "tweetnacl";
-import {decodeUTF8} from "tweetnacl-util";
+import {decodeUTF8, encodeUTF8} from "tweetnacl-util";
 import {SolanaTransactionManager} from "./solanaTransactionManager";
 import {web3} from "@project-serum/anchor";
 import {NS_MANAGER} from "../core/namespaceManager";
@@ -108,9 +108,18 @@ export class SolanaManager extends AbstractManager {
    * @param keyPair
    */
   async signMessage(data, keyPair) {
+    console.log("Signing Message", data)
     const message = data.message
     const messageBytes = decodeUTF8(message)
-    return nacl.sign.detached(messageBytes, keyPair.secretKey)
+    const signature = nacl.sign.detached(messageBytes, keyPair.secretKey)
+    const signatureArray = []
+    const keys = Object.keys(signature)
+
+    for (let i = 0; i < keys.length; i++) {
+      signatureArray.push(signature[keys[i]])
+    }
+
+    return Uint8Array.from(signatureArray)
   }
 
   async sendNFTTokens(tokens, recipientAddr) {

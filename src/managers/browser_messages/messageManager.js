@@ -69,14 +69,27 @@ export class MessageManager extends AbstractManager {
   onMessage(request) {
     console.log("onMessage", request)
 
-    if (!this._canExecute() || !request)
-      return false
+    if (!request)
+      return "invalid request"
 
     //TODO check if this is ok with EVM requests
     if (request.method === "request") {
       request = request.data
     }
 
+    //Try unprotected methods first
+    switch (request.method) {
+      case "connect":
+        return this.connect(request.data)
+      case "disconnect":
+        return this.disconnect(request.data)
+    }
+
+    //Verify if wallet is unlocked
+    if (!this._canExecute())
+      return "wallet locked"
+
+    //Try protected methods
     switch (request.method) {
       case "connect":
         return this.connect(request.data)
@@ -139,9 +152,9 @@ export class MessageManager extends AbstractManager {
    *
    * @param data
    */
-  connect(data) {
+  async connect(data) {
     this.connected = true
-    return true
+    return await this.getStore().getWalletAddr()
   }
 
   /**

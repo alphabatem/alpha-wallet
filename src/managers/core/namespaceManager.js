@@ -54,6 +54,8 @@ export class NamespaceManager extends AbstractManager {
     if (this._namespaces.find((n) => n.key === walletAddr)) {
       throw new Error("namespace already exists")
     }
+
+    console.debug("Creating namespace", walletAddr, name)
     this._namespaces.push({
       key: walletAddr,
       name: name

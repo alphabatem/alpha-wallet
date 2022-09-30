@@ -105,6 +105,7 @@ ${this.addProgressBar()}
   }
 
   async onAuthSuccess(pk) {
+    console.log("onAuthSuccess")
     const mgr = this.getManager(SOLANA_MANAGER)
     const req = await this.getRequest()
 
@@ -127,7 +128,7 @@ ${this.addProgressBar()}
         throw new Error(`invalid method ${req.request.method}`)
     }
 
-    this.notifyResponse(resp)
+    await this.notifyResponse(req, resp)
     window.close()
   }
 
@@ -144,7 +145,7 @@ ${this.addProgressBar()}
       return ``
 
     const txn = await msgMgr.getRequest();
-    return this.getManager(SOLANA_MANAGER).getTransactionManager().analyseTransaction("", txn)
+    return this.getManager(SOLANA_MANAGER).getTransactionManager().analyseTransaction("", txn) //TODO PK
   }
 
   buildSimulationResultContainer(r) {

@@ -83,12 +83,15 @@ export default class SetPasscodeView extends AbstractView {
 			<input autocomplete="chrome-off" id="new-input" type="password" class="form-control" placeholder="">
 		</div>
 
+
+	<i class="small">Passcodes must be 12 characters or longer</i>
+
 		<div class="col-12 text-center">
 		    <button type="submit" class="btn btn-primary btn-block mt-5">${isPasscodeSet ? 'UPDATE' : 'CREATE'}</button>
 		</div>
 
-		<div class="col-12 text-center">
-		    <p>${this.error}</p>
+		<div class="col-12 text-center mt-3">
+		    <p class="text-danger">${this.error}</p>
 		</div>
 		</form>
 	</div>

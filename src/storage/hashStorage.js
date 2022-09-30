@@ -52,7 +52,7 @@ export class HashStorage {
   async testPasscode(passcode) {
     const pkHash = await this.getPasscodeHash()
     if (!pkHash) {
-      console.warn("Passcode not set")
+      console.debug("Passcode not set")
       return true //Not yet set
     }
     const hash = CryptoJS.SHA3(passcode).toString(CryptoJS.enc.Hex)

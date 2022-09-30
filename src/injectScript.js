@@ -1,56 +1,136 @@
+import {web3} from "@project-serum/anchor";
+
 class AlphaConnector {
   isConnected = false
 
   isMetaMask = false
+  isAlpha = true
   isAlphaWallet = true
 
-  publicKey //TODO solana public key of account
+  channel = null
+
+  publicKey
 
   constructor() {
-    //TODO Listen for connect, disconnect & swapWallet
+    window.addEventListener("message", (e) => {
+      this.onMessage(e)
+    })
+  }
+
+  onMessage(e) {
+    if (e.data.type && e.data.type === "alpha_msg_resp") {
+      this.channel.port2.postMessage(e.data)
+    }
   }
 
   sendMessage(method, data) {
-    window.postMessage({type: "alpha_msg", method: method, payload: data})
+    return new Promise((res, rej) => {
+      this.channel = new MessageChannel();
+      this.channel.port1.onmessage = ({data}) => {
+        if (data.type && data.type === "alpha_msg_resp") {
+          let response = null
+
+          console.log("inject Response", data)
+          //TODO move to outside this function
+          switch (data.method) {
+            case "connect":
+              this.isConnected = true;
+              this.publicKey = new web3.PublicKey(data.payload)
+              break
+            case "signMessage":
+              const signatureArray = []
+              const keys = Object.keys(data.payload)
+
+              for (let i = 0; i < keys.length; i++) {
+                signatureArray.push(data.payload[keys[i]])
+              }
+
+              //TODO still not correct
+              response = {
+                signature: {
+                  data: new Uint8Array(signatureArray),
+                  type: "Buffer"
+                },
+              }
+              break
+          }
+
+          // this.channel.port1.close();
+          this.channel = null //Clear channel
+          if (data.error) {
+            rej(data.error);
+          } else {
+            res(response);
+          }
+        }
+      };
+
+      window.postMessage({
+        type: "alpha_msg",
+        method: method,
+        payload: data
+      })
+    })
   }
 
   async request(req) {
-    this.sendMessage(req.method, req.params)
+    return this.sendMessage(req.method, req.params)
   }
 
   async connect(params = {onlyIfTrusted: false}) {
     //
-    this.sendMessage("connect", {onlyIfTrusted: !!params.onlyIfTrusted})
+    return this.sendMessage("connect", {onlyIfTrusted: !!params.onlyIfTrusted})
   }
 
   async disconnect() {
-    this.sendMessage("disconnect")
+    return this.sendMessage("disconnect")
   }
 
   async signAndSendTransaction(txn, sendOptions) {
-    this.sendMessage("signAndSendTransaction", {
+    return this.sendMessage("signAndSendTransaction", {
       transaction: txn,
       opts: sendOptions
     })
   }
 
   async signTransaction(txn) {
-    this.sendMessage("signTransaction", {
+    return this.sendMessage("signTransaction", {
       transaction: txn
     })
   }
 
   async signAllTransactions(txns) {
-    this.sendMessage("signAllTransactions", {
+    return this.sendMessage("signAllTransactions", {
       transactions: txns
     })
   }
 
   async signMessage(msg) {
-    this.sendMessage("signMessage", {
-      message: msg
+    const smsg = new TextDecoder().decode(msg)
+    console.log("Signing message", smsg)
+    return this.sendMessage("signMessage", {
+      message: smsg
     })
   }
+
+  on(event) {
+    console.log("Registering event: ", event)
+  }
+
+  /**
+   * Convert JSON to Uint8Array
+   * @param json
+   * @returns {Uint8Array}
+   * @constructor
+   */
+  jsonToArray(json) {
+    let str = JSON.stringify(json, null, 0);
+    let ret = new Uint8Array(str.length);
+    for (let i = 0; i < str.length; i++) {
+      ret[i] = str.charCodeAt(i);
+    }
+    return ret
+  };
 }
 
 window.alpha = new AlphaConnector()

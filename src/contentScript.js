@@ -3,6 +3,7 @@
 function injectScript(file_path, tag) {
   const node = document.getElementsByTagName(tag)[0];
   if (!node) {
+    console.error("Invalid node", tag)
     throw new Error("invalid node")
   }
 
@@ -28,7 +29,7 @@ window.addEventListener("beforeunload", (e) => {
  */
 function onMessage(e) {
   if (e.data.type && e.data.type === "alpha_msg") {
-    console.log("Sending", e.data.method)
+    console.log("Sending", e.data.method, e.data)
     chrome.runtime.sendMessage({
       method: e.data.method,
       data: e.data.payload
@@ -41,13 +42,17 @@ function onMessage(e) {
  * @param r
  */
 function onMessageResponse(r) {
+  console.log('onMessageResponse', r)
+
   if (!r)
     return
   console.log("Message response", r)
 
   switch (r) {
     case "must_auth":
+      console.warn("must_auth")
       return;
   }
   console.log("Response", r)
+  window.postMessage({type: "alpha_msg_resp", method: r.method, payload: r.data})
 }

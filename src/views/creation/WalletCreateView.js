@@ -7,9 +7,12 @@ export default class WalletCreateView extends AbstractView {
 
   async createWallet(e) {
     e.preventDefault()
+    console.debug("Creating wallet")
 
-    if (this.nameInput.value.length < 1)
+    if (this.nameInput.value.length < 1) {
+      console.debug("Wallet name too short")
       return
+    }
 
     const ks = await this.getManager(STORAGE_MGR).getKeyStore()
     if (!ks)

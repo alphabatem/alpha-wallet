@@ -47,10 +47,11 @@ export class ApprovalView extends AbstractView {
 
   /**
    * Notify bg script of response
+   * @param request
    * @param data
    */
-  notifyResponse(data) {
-    chrome.runtime.sendMessage({type: "response", data: data})
+  notifyResponse(request, data) {
+    return chrome.runtime.sendMessage({type: "response", method: request.method, data: data})
   }
 
   startProgressBar(duration = 60) {

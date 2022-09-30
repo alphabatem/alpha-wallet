@@ -12,6 +12,7 @@ export default class ApproveMessageView extends ApprovalView {
 
     const req = await this.getRequest()
     console.log("msg", req)
+    console.log("msg2", String.fromCharCode(req.request.data.message))
 
 
     const uri = new URL(req.sender.origin)
@@ -86,8 +87,8 @@ export default class ApproveMessageView extends ApprovalView {
     const ns = this.getManager(NS_MANAGER).getActiveNamespace()
     const kp = await this.getManager(WALLET_MGR).getKeyPair(ns.key, pk)
     const signature = await mgr.signMessage(req.request.data, kp)
-    console.log("Signature", signature, signature.toString())
-    this.notifyResponse(signature)
+    console.log("Signature", signature)
+    await this.notifyResponse(req, signature)
     window.close()
   }
 

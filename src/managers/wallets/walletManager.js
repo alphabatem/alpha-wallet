@@ -152,6 +152,7 @@ export class WalletManager extends AbstractManager {
     const nsMgr = this.getManager(NS_MANAGER)
     await nsMgr.addNamespace(publicKey.toString(), name)
     await nsMgr.setActiveNamespace(publicKey.toString())
+    await this.getStore().setTrustedSites([])
     await this.getStore().setWalletAddr(publicKey.toString())
     await this.getStore().setWalletName(name)
   }

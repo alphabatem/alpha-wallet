@@ -28,7 +28,10 @@ export default class AuthActionView extends PinCodeView {
     }
 
     const mgr = this.getManager(LOCK_MGR)
-    if (!mgr || mgr.isLocked()) return
+    if (!mgr || mgr.isLocked()) {
+      this.onError("Unable to unlock wallet")
+      return
+    }
 
     let ok
     if (this.isPincode) {
@@ -36,9 +39,12 @@ export default class AuthActionView extends PinCodeView {
         console.error("mgr::fromPincode", e)
         this.onError(e)
       })
-      if (!v)
+      if (!v) {
+        this.onError("No response received")
         return
+      }
 
+      console.log("onSubmit::_handleCallback", v)
       ok = await this._handleCallback(v)
     } else {
       ok = await this._handleCallback(this.input.value)
@@ -54,6 +60,7 @@ export default class AuthActionView extends PinCodeView {
   }
 
   async _handleCallback(v) {
+    console.log("AuthActionView::_handleCallback")
     const cb = this._data.callback
     if (!cb) {
       return true

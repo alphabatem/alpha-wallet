@@ -155,7 +155,10 @@ export class AlphaWallet {
    * @returns {Promise<void>}
    */
   async onMessage(request, sender) {
-    if (!this.getManager(MESSAGE_MGR)) return false
+    if (!this.getManager(MESSAGE_MGR)) {
+      console.error("Unable to get MESSAGE_MGR")
+      return false
+    }
 
     return this.getManager(MESSAGE_MGR).onMessage(request)
   }
